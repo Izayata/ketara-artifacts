@@ -1,0 +1,1158 @@
+<title>Ketara prototípus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@500;700&family=Atkinson+Hyperlegible+Next:wght@400;600;700&display=swap">
+<style>
+:root{
+  --desk:#E4E7E1; --paper:#F4F5F0; --surface:#FFFFFF; --ink:#1E2621; --muted:#5B655F; --faint:#8C958F;
+  --line:#DCE0D9; --accent:#1F6B4F; --accent-ink:#FFFFFF; --accent-soft:#E2EEE7;
+  --amber:#9A5B00; --amber-soft:#FBF0DC; --amber-line:#E9C98F; --ok:#2B7A4B; --scrim:rgba(20,28,24,.38);
+  --sans:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Atkinson Hyperlegible Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--desk);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.4;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px;border-radius:8px}
+.stage{height:100%;display:flex;align-items:center;justify-content:center;gap:40px}
+.phone{position:relative;width:100%;height:100%;background:var(--paper);overflow:hidden;display:flex;flex-direction:column}
+.caption{display:none}
+@media (min-width:560px){
+  .stage{padding-block:24px}
+  .phone{width:390px;height:min(844px,100%);border-radius:36px;box-shadow:0 0 0 10px #1E2621,0 24px 60px rgba(20,28,24,.25)}
+}
+@media (min-width:900px){
+  .caption{display:block;max-width:250px;color:var(--muted);font-size:14px}
+  .caption h1{font-size:20px;color:var(--ink);margin:0 0 8px;text-wrap:balance}
+  .caption p{margin:0 0 10px}
+  .caption ul{margin:0;padding-left:18px}
+  .caption li{margin-bottom:6px}
+}
+.screen{flex:1;display:flex;flex-direction:column;min-height:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px 6px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.tb-btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 10px;border-radius:12px;font-weight:600;color:var(--accent)}
+.tb-btn svg{width:22px;height:22px}
+.tb-title{font-weight:700;font-size:17px}
+.target{margin:0 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;width:calc(100% - 32px);text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.target small{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.target b{font-family:var(--mono);font-weight:500;font-size:15px;font-variant-numeric:tabular-nums}
+.target svg{width:20px;height:20px;color:var(--muted);flex:none}
+.origin{margin:8px 16px 0;font-size:14px;color:var(--muted)}
+.origin b{color:var(--ink)}
+.scroll{flex:1;overflow-y:auto;min-height:0;padding:10px 16px 16px}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:1fr auto 48px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;min-height:68px;transition:background-color .9s ease}
+.row.flash{background:var(--accent-soft);transition:none}
+.row .nm{padding:10px 4px 10px 14px;text-align:left;min-height:66px;display:flex;flex-direction:column;justify-content:center}
+.row .nm span{font-size:17px;font-weight:600}
+.row .nm small{color:var(--muted);font-size:13px}
+.row .gr{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;min-height:66px;padding:0 6px;border-radius:12px}
+.row .gr b{font-family:var(--mono);font-size:24px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.1}
+.row .gr small{font-size:12px;color:var(--muted)}
+.row.pinned .gr b{font-weight:700;color:var(--accent)}
+.row.pinned .gr small{color:var(--accent)}
+.row.zero .gr b,.row.zero .gr small{color:var(--amber)}
+.row .pin{width:48px;height:66px;display:flex;align-items:center;justify-content:center;color:var(--faint)}
+.row.pinned .pin{color:var(--accent)}
+.row .pin svg{width:22px;height:22px}
+.row input{width:92px;font-family:var(--mono);font-size:22px;text-align:right;padding:6px 8px;border:2px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--ink)}
+.add{margin-top:10px;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;border-radius:14px;font-weight:600;color:var(--accent);border:1.5px dashed color-mix(in srgb,var(--accent) 45%,var(--line))}
+.add svg{width:20px;height:20px}
+.empty{padding:36px 8px 8px;text-align:center;color:var(--muted);font-size:16px;display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.empty p{margin:0 0 12px;text-wrap:balance}
+.panel{position:relative;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(20,28,24,.06);border-radius:22px 22px 0 0;display:flex;flex-direction:column;max-height:62%;padding-bottom:env(safe-area-inset-bottom,0px)}
+.macros{display:flex;flex-wrap:wrap;gap:4px 12px;padding:12px 16px 0;font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.macros .v{color:var(--ink)}
+.macros .bad{color:var(--amber);font-weight:700}
+.pbody{overflow-y:auto;padding:10px 16px 4px;display:flex;flex-direction:column;gap:10px}
+.pbody p{margin:0}
+.head{font-size:17px;font-weight:700;display:flex;gap:8px;align-items:flex-start;text-wrap:pretty}
+.head .ic{flex:none;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;margin-top:-1px}
+.head.ok .ic{background:var(--accent-soft);color:var(--ok)}
+.head.warn .ic{background:var(--amber-soft);color:var(--amber)}
+.head.warn{color:var(--amber)}
+.sub{color:var(--muted)}
+.note{font-size:14px;color:var(--muted)}
+.preview{border:1.5px dashed var(--line);border-radius:14px;padding:10px 12px;font-size:14px;color:var(--ink);background:var(--paper)}
+.preview b{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.evlist{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-family:var(--mono);font-size:15px}
+.evlist .bad{color:var(--amber)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;padding:8px 16px 14px}
+.btn{flex:1 1 auto;min-height:50px;padding:0 16px;border-radius:14px;font-weight:700;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.secondary{background:var(--accent-soft);color:var(--accent)}
+.btn.text{flex-basis:100%;min-height:44px;color:var(--muted);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.btn:disabled{opacity:.45;cursor:default}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(100% + 10px);background:var(--ink);color:#F4F5F0;border-radius:14px;padding:10px 12px 10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;box-shadow:0 8px 24px rgba(20,28,24,.25);z-index:5}
+.toast button{color:#9FD9BD;font-weight:700;min-height:36px;padding:0 6px}
+.sheetwrap{position:absolute;inset:0;background:var(--scrim);display:flex;flex-direction:column;justify-content:flex-end;z-index:10}
+.sheet{background:var(--surface);border-radius:22px 22px 0 0;max-height:88%;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+.sh-head{display:flex;align-items:center;justify-content:space-between;padding:14px 12px 6px 18px}
+.sh-head h2{margin:0;font-size:18px}
+.x{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.x svg{width:22px;height:22px}
+.sh-body{overflow-y:auto;padding:4px 16px 12px;display:flex;flex-direction:column;gap:12px}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:14px;padding:0 12px;background:var(--paper)}
+.search svg{width:20px;height:20px;color:var(--muted);flex:none}
+.search input{flex:1;border:0;background:none;min-height:46px;font:inherit;font-size:16px;color:var(--ink);outline:none}
+.lbl{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:4px 0 -4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:0 14px;border-radius:20px;border:1px solid var(--line);background:var(--surface);font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip.had{color:var(--faint);border-style:dashed}
+.chip svg{width:16px;height:16px}
+.cat{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cat>button{width:100%;min-height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-weight:600;font-size:16px}
+.cat>button svg{width:18px;height:18px;color:var(--muted);transition:transform .15s}
+.cat.open>button svg{transform:rotate(90deg)}
+.cat .chips{padding:0 12px 12px}
+.hint{background:var(--amber-soft);border:1px solid var(--amber-line);color:var(--amber);border-radius:12px;padding:8px 12px;font-size:14px;font-weight:600}
+.menu{display:flex;flex-direction:column}
+.menu button{min-height:54px;text-align:left;padding:0 6px;font-size:17px;font-weight:600;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.menu button:last-child{border-bottom:0}
+.menu button.danger{color:var(--amber)}
+.menu svg{width:22px;height:22px;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.field .fl{font-weight:600;font-size:14px}
+.inp{min-height:48px;border:1px solid var(--line);border-radius:12px;padding:0 12px;font:inherit;font-size:17px;background:var(--surface);color:var(--ink);width:100%}
+.inp.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.inp.bad{border-color:var(--amber);background:var(--amber-soft)}
+.err{color:var(--amber);font-size:14px;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{min-height:44px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:14px;padding:0 4px}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.nutr{display:grid;grid-template-columns:1fr 110px 20px;align-items:center;gap:8px 10px}
+.form{flex:1;overflow-y:auto;padding:6px 16px 16px;display:flex;flex-direction:column;gap:18px}
+.intro{font-size:17px;margin:0;text-wrap:pretty}
+.band{display:grid;grid-template-columns:1fr 78px 12px 78px 34px;align-items:center;gap:8px}
+.band .nm{font-weight:600}
+.band .u{color:var(--muted);font-size:14px}
+.band .dash{text-align:center;color:var(--muted)}
+.band .err{grid-column:1/-1}
+.single{display:grid;grid-template-columns:1fr 78px 46px;align-items:center;gap:8px}
+.single .nm{font-weight:600}
+.meal{border-radius:16px;background:var(--accent-soft);padding:14px 16px}
+.meal small{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px}
+.meal b{font-family:var(--mono);font-weight:500;font-size:17px;font-variant-numeric:tabular-nums}
+.meal p{margin:4px 0 0;font-size:14px;color:var(--muted)}
+.confirm{border:1px solid var(--amber-line);background:var(--amber-soft);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.confirm p{margin:0;color:var(--ink)}
+.confirm .actions{padding:0}
+.footer{padding:10px 16px 14px;border-top:1px solid var(--line);background:var(--paper);padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.footer .btn{width:100%}
+.plist{display:flex;flex-direction:column;gap:8px}
+.pitem{display:grid;grid-template-columns:1fr 48px;background:var(--surface);border:1px solid var(--line);border-radius:16px;align-items:center}
+.pitem>button:first-child{text-align:left;padding:12px 4px 12px 16px;min-height:64px}
+.pitem b{display:block;font-size:17px}
+.pitem span{color:var(--muted);font-size:14px}
+.pitem .more{height:64px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.pitem .more svg{width:22px;height:22px}
+.pitem .inline{grid-column:1/-1;border-top:1px solid var(--line);padding:10px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pitem .inline p{margin:0;flex-basis:100%;font-size:14px}
+.pitem .inline .btn{min-height:42px;font-size:15px}
+.proto{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:8px}
+.proto small{color:var(--muted)}
+.proto .btn{min-height:44px;font-size:14px;font-weight:600}
+@media (prefers-reduced-motion:reduce){.row,.cat>button svg{transition:none}}
+</style>
+
+<div class="stage">
+  <div class="phone" id="app" aria-live="polite"></div>
+  <aside class="caption">
+    <h1>Ketara prototípus</h1>
+    <p>Kattintható prototípus a felhasználói teszthez. Valódi megoldó fut benne, a PRD v0.9 szabályai szerint.</p>
+    <ul>
+      <li>Koppints a grammra, és írj be egy számot: ez rögzíti.</li>
+      <li>A kör ikon a jelenlegi grammot rögzíti.</li>
+      <li>A névre koppintva: rögzítés, csere, törlés.</li>
+      <li>A tápértékek illusztratívak.</li>
+    </ul>
+  </aside>
+</div>
+
+<script>
+/* Ketara megoldó — PRD v0.9, 6.3 és 6.4 szerint.
+   Lineáris program (kétfázisú szimplex, Bland-szabály), utána egész grammra kerekítés ±1 g igazítással. */
+var KetaraSolver = (function () {
+  var EPS = 1e-9;
+
+  // minimize c·x, x >= 0, rows: {a:[...], op:'<='|'>='|'=', b}
+  function simplex(nv, c, rows) {
+    var R = rows.map(function (r) {
+      var a = r.a.slice(), b = r.b, op = r.op;
+      if (b < 0) { a = a.map(function (v) { return -v; }); b = -b; op = op === '<=' ? '>=' : op === '>=' ? '<=' : '='; }
+      return { a: a, b: b, op: op };
+    });
+    var m = R.length, ns = 0, na = 0;
+    R.forEach(function (r) { if (r.op !== '=') ns++; if (r.op !== '<=') na++; });
+    var N = nv + ns + na, T = [], basis = [], art = {}, si = nv, ai = nv + ns;
+    R.forEach(function (r) {
+      var row = new Float64Array(N + 1);
+      for (var j = 0; j < nv; j++) row[j] = r.a[j] || 0;
+      row[N] = r.b;
+      if (r.op === '<=') { row[si] = 1; basis.push(si); si++; }
+      else if (r.op === '>=') { row[si] = -1; si++; row[ai] = 1; basis.push(ai); art[ai] = 1; ai++; }
+      else { row[ai] = 1; basis.push(ai); art[ai] = 1; ai++; }
+      T.push(row);
+    });
+    function pivot(r, col) {
+      var pr = T[r], pv = pr[col], j, i;
+      for (j = 0; j <= N; j++) pr[j] /= pv;
+      for (i = 0; i < m; i++) {
+        if (i === r) continue;
+        var f = T[i][col];
+        if (Math.abs(f) > 1e-13) { var ri = T[i]; for (j = 0; j <= N; j++) ri[j] -= f * pr[j]; }
+      }
+      basis[r] = col;
+    }
+    function run(cost, allowed) {
+      for (var it = 0; it < 20000; it++) {
+        var inB = {}; basis.forEach(function (b) { inB[b] = 1; });
+        var enter = -1;
+        for (var j = 0; j < N; j++) {
+          if (!allowed(j) || inB[j]) continue;
+          var d = cost[j];
+          for (var i = 0; i < m; i++) d -= cost[basis[i]] * T[i][j];
+          if (d < -EPS) { enter = j; break; }
+        }
+        if (enter < 0) return true;
+        var r = -1, best = Infinity;
+        for (var k = 0; k < m; k++) {
+          var v = T[k][enter];
+          if (v > EPS) {
+            var q = T[k][N] / v;
+            if (q < best - 1e-12 || (Math.abs(q - best) <= 1e-12 && basis[k] < basis[r])) { best = q; r = k; }
+          }
+        }
+        if (r < 0) return false;
+        pivot(r, enter);
+      }
+      return false;
+    }
+    var c1 = new Float64Array(N), j;
+    for (j = 0; j < N; j++) c1[j] = art[j] ? 1 : 0;
+    run(c1, function () { return true; });
+    var infeas = 0;
+    for (var i = 0; i < m; i++) if (art[basis[i]]) infeas += T[i][N];
+    if (infeas > 1e-7) return null;
+    for (i = 0; i < m; i++) {
+      if (!art[basis[i]]) continue;
+      for (j = 0; j < nv + ns; j++) if (Math.abs(T[i][j]) > 1e-9) { pivot(i, j); break; }
+    }
+    var c2 = new Float64Array(N);
+    for (j = 0; j < nv; j++) c2[j] = c[j] || 0;
+    if (!run(c2, function (k) { return !art[k]; })) return null;
+    var x = new Array(nv).fill(0);
+    for (i = 0; i < m; i++) if (basis[i] < nv) x[basis[i]] = Math.max(0, T[i][N]);
+    return x;
+  }
+
+  var MAC = ['ch', 'fe', 'zs'];
+
+  // items: [{id, ch, fe, zs (100 g-ra), ref, pin (null|g)}], K: {ch:[lo,hi], fe, zs, kcal:[lo,hi]|null, min}
+  function evaluate(items, grams, K) {
+    var t = { ch: 0, fe: 0, zs: 0 };
+    items.forEach(function (it) { var g = grams[it.id]; MAC.forEach(function (k) { t[k] += it[k] * g / 100; }); });
+    var ev = { tot: t, over: {}, under: {}, overshoot: 0, inBand: true };
+    MAC.forEach(function (k) {
+      var o = Math.max(0, t[k] - K[k][1]), u = Math.max(0, K[k][0] - t[k]);
+      if (o < 1e-9) o = 0; if (u < 1e-9) u = 0;
+      ev.over[k] = o; ev.under[k] = u; ev.overshoot += o + u;
+      if (o > 0 || u > 0) ev.inBand = false;
+    });
+    ev.ratio = t.fe > 0 ? t.zs / t.fe : Infinity;
+    ev.ratioViol = Math.max(0, K.min * t.fe - t.zs);
+    if (ev.ratioViol < 1e-9) ev.ratioViol = 0;
+    if (ev.ratioViol > 0) ev.inBand = false;
+    ev.kcal = 4 * t.ch + 4 * t.fe + 9 * t.zs;
+    ev.kcalOver = 0; ev.kcalUnder = 0;
+    if (K.kcal) { ev.kcalOver = Math.max(0, ev.kcal - K.kcal[1]); ev.kcalUnder = Math.max(0, K.kcal[0] - ev.kcal); }
+    var dist = 0;
+    items.forEach(function (it) { if (it.pin == null) dist += Math.abs(grams[it.id] - it.ref) / it.ref; });
+    ev.dist = dist;
+    return ev;
+  }
+
+  function keyOf(ev) { return [ev.inBand ? 0 : 1, r6(ev.ratioViol), r6(ev.overshoot), r6(ev.kcalOver + ev.kcalUnder), r6(ev.dist)]; }
+  function r6(x) { return Math.round(x * 1e6) / 1e6; }
+  function less(a, b) { for (var i = 0; i < a.length; i++) { if (a[i] < b[i]) return true; if (a[i] > b[i]) return false; } return false; }
+
+  // mode: 'kcal' (sávok + kcal kemény), 'strict' (sávok kemény), 'warn' (lexikografikus: arány → kilógás → referencia)
+  function lpStage(items, K, mode) {
+    var free = items.filter(function (i) { return i.pin == null; });
+    var k = free.length, P = { ch: 0, fe: 0, zs: 0 };
+    items.forEach(function (it) { if (it.pin != null) MAC.forEach(function (m) { P[m] += it[m] * it.pin / 100; }); });
+    var warn = mode === 'warn';
+    // változók: g(k), d(k), [o_ch,u_ch,o_fe,u_fe,o_zs,u_zs, s]
+    var nv = 2 * k + (warn ? 7 : 0);
+    var oIdx = function (mi) { return 2 * k + 2 * mi; }, uIdx = function (mi) { return 2 * k + 2 * mi + 1; }, sIdx = 2 * k + 6;
+    function vec() { return new Array(nv).fill(0); }
+    var rows = [];
+    free.forEach(function (it, i) {
+      var a = vec(); a[k + i] = 1; a[i] = -1; rows.push({ a: a, op: '>=', b: -it.ref });
+      var b = vec(); b[k + i] = 1; b[i] = 1; rows.push({ a: b, op: '>=', b: it.ref });
+    });
+    MAC.forEach(function (m, mi) {
+      var hi = vec(), lo = vec();
+      free.forEach(function (it, i) { hi[i] = it[m] / 100; lo[i] = it[m] / 100; });
+      if (warn) { hi[oIdx(mi)] = -1; lo[uIdx(mi)] = 1; }
+      rows.push({ a: hi, op: '<=', b: K[m][1] - P[m] });
+      rows.push({ a: lo, op: '>=', b: K[m][0] - P[m] });
+    });
+    var ra = vec();
+    free.forEach(function (it, i) { ra[i] = (it.zs - K.min * it.fe) / 100; });
+    if (warn) ra[sIdx] = 1;
+    rows.push({ a: ra, op: '>=', b: -(P.zs - K.min * P.fe) });
+    if (mode === 'kcal' && K.kcal) {
+      var kc = vec(), kl = vec(), Pk = 4 * P.ch + 4 * P.fe + 9 * P.zs;
+      free.forEach(function (it, i) { var v = (4 * it.ch + 4 * it.fe + 9 * it.zs) / 100; kc[i] = v; kl[i] = v; });
+      rows.push({ a: kc, op: '<=', b: K.kcal[1] - Pk });
+      rows.push({ a: kl, op: '>=', b: K.kcal[0] - Pk });
+    }
+    var cDist = vec(); free.forEach(function (it, i) { cDist[k + i] = 1 / it.ref; });
+    var x;
+    if (!warn) {
+      x = simplex(nv, cDist, rows);
+    } else {
+      var cS = vec(); cS[sIdx] = 1;
+      x = simplex(nv, cS, rows); if (!x) return null;
+      var sStar = x[sIdx];
+      var rs = vec(); rs[sIdx] = 1; rows.push({ a: rs, op: '<=', b: sStar + 1e-7 + 1e-7 * sStar });
+      var cO = vec(); for (var q = 0; q < 6; q++) cO[2 * k + q] = 1;
+      x = simplex(nv, cO, rows); if (!x) return null;
+      var oStar = 0; for (q = 0; q < 6; q++) oStar += x[2 * k + q];
+      rows.push({ a: cO.slice(), op: '<=', b: oStar + 1e-7 + 1e-7 * oStar });
+      x = simplex(nv, cDist, rows);
+    }
+    if (!x) return null;
+    var g = {};
+    free.forEach(function (it, i) { g[it.id] = x[i]; });
+    return g;
+  }
+
+  function roundBest(items, K, frac) {
+    var free = items.filter(function (i) { return i.pin == null; });
+    var base = {};
+    items.forEach(function (it) { base[it.id] = it.pin != null ? it.pin : Math.max(0, Math.round(frac[it.id])); });
+    var best = base, bestEv = evaluate(items, base, K), bestKey = keyOf(bestEv);
+    var n = free.length;
+    if (n > 7) return { grams: best, ev: bestEv };
+    var total = Math.pow(3, n);
+    for (var c = 0; c < total; c++) {
+      var g = Object.assign({}, base), cc = c, ok = true;
+      for (var i = 0; i < n; i++) {
+        var off = (cc % 3) - 1; cc = Math.floor(cc / 3);
+        var v = base[free[i].id] + off; if (v < 0) { ok = false; break; }
+        g[free[i].id] = v;
+      }
+      if (!ok) continue;
+      var ev = evaluate(items, g, K), key = keyOf(ev);
+      if (less(key, bestKey)) { best = g; bestEv = ev; bestKey = key; }
+    }
+    return { grams: best, ev: bestEv };
+  }
+
+  function solveCore(items, K) {
+    var frac = null, kcalMissed = false;
+    if (K.kcal) frac = lpStage(items, K, 'kcal');
+    if (!frac) { frac = lpStage(items, K, 'strict'); if (frac && K.kcal) kcalMissed = true; }
+    if (!frac) frac = lpStage(items, K, 'warn');
+    if (!frac) { frac = {}; items.forEach(function (it) { if (it.pin == null) frac[it.id] = it.ref; }); }
+    var r = roundBest(items, K, frac);
+    r.zero = items.filter(function (it) { return it.pin == null && r.grams[it.id] === 0; }).map(function (it) { return it.id; });
+    r.ok = r.ev.inBand && r.zero.length === 0;
+    return r;
+  }
+
+  function unpin(items, ids) {
+    return items.map(function (it) { return ids.indexOf(it.id) >= 0 ? Object.assign({}, it, { pin: null }) : it; });
+  }
+
+  function solvePlate(items, K) {
+    if (items.length < 3) return { status: 'few', need: 3 - items.length };
+    var pinned = items.filter(function (i) { return i.pin != null; });
+    var allPinned = pinned.length === items.length;
+    var core;
+    if (allPinned) {
+      var g = {}; items.forEach(function (it) { g[it.id] = it.pin; });
+      core = { grams: g, ev: evaluate(items, g, K), zero: [] };
+      core.ok = core.ev.inBand;
+    } else core = solveCore(items, K);
+    var res = { status: allPinned ? 'allpinned' : (core.ok ? 'ok' : 'warn'), grams: core.grams, ev: core.ev, zero: core.zero };
+    res.kcalNote = core.ev.inBand && K.kcal && (core.ev.kcalOver > 0 || core.ev.kcalUnder > 0);
+    if (core.ok || !pinned.length) return res;
+    // egyenkénti feloldás
+    var best = null;
+    pinned.forEach(function (p) {
+      var its = unpin(items, [p.id]), r = solveCore(its, K);
+      var cand = { id: p.id, grams: r.grams, ev: r.ev, ok: r.ok, key: keyOf(r.ev) };
+      if (!best || (cand.ok && !best.ok) || (cand.ok === best.ok && less(cand.key, best.key))) best = cand;
+    });
+    res.release = best;
+    if (!best.ok) {
+      if (pinned.length > 1) {
+        var all = solveCore(unpin(items, pinned.map(function (p) { return p.id; })), K);
+        res.releaseAll = { ok: all.ok, grams: all.grams, ev: all.ev };
+        res.deadEnd = !all.ok;
+      } else res.deadEnd = true;
+    }
+    return res;
+  }
+
+  return { solvePlate: solvePlate, evaluate: evaluate, solveCore: solveCore };
+})();
+if (typeof module !== 'undefined') module.exports = KetaraSolver;
+
+</script>
+<script>
+(function(){
+/* ---------- adatok ---------- */
+var THRESH = { kcalLow: 1200, proteinLow: 50, narrow: 0.10 }; // helykitöltő küszöbök (PRD 6.1), a dietetikus erősíti meg
+
+var CATS = [
+  { id:'feh', name:'Fehérjeforrás', def:100 },
+  { id:'gab', name:'Gabonaköret', def:10 },
+  { id:'zol', name:'Zöldség', def:100 },
+  { id:'zsi', name:'Zsiradék', def:30 },
+  { id:'gyu', name:'Gyümölcs', def:50 },
+  { id:'tej', name:'Tejtermék', def:50 }
+];
+var CAT = {}; CATS.forEach(function(c){ CAT[c.id] = c; });
+
+// [id, név, kategória, CH, Fe, Zs (100 g, nyersen), tárgyeset, egyedi felülírás]
+var RAW = [
+ ['tojas','Tojás','feh',0.7,12.6,10,'tojást'],
+ ['csirkemell','Csirkemell','feh',0,23,1.5,'csirkemellet'],
+ ['csirkecomb','Csirkecomb, bőr nélkül','feh',0,19,6,'csirkecombot'],
+ ['tarja','Sertéstarja','feh',0,17,20,'sertéstarját'],
+ ['daraltmarha','Darált marhahús','feh',0,17,20,'darált marhahúst'],
+ ['lazac','Lazac','feh',0,20,13,'lazacot'],
+ ['makrela','Makréla','feh',0,19,14,'makrélát'],
+ ['pulyka','Pulykamell','feh',0,24,1,'pulykamellet'],
+ ['bacon','Bacon','feh',1.3,13,40,'bacont',40],
+ ['tonhal','Tonhal olajban','feh',0,25,8,'tonhalat'],
+ ['rizs','Rizs','gab',78,7,0.6,'rizst'],
+ ['zab','Zabpehely','gab',60,13,7,'zabpelyhet'],
+ ['hajdina','Hajdina','gab',71,13,3.4,'hajdinát'],
+ ['quinoa','Quinoa','gab',64,14,6,'quinoát'],
+ ['brokkoli','Brokkoli','zol',7,2.8,0.4,'brokkolit'],
+ ['zoldbab','Zöldbab','zol',7,1.8,0.2,'zöldbabot'],
+ ['karfiol','Karfiol','zol',5,1.9,0.3,'karfiolt'],
+ ['cukkini','Cukkini','zol',3.1,1.2,0.3,'cukkinit'],
+ ['spenot','Spenót','zol',3.6,2.9,0.4,'spenótot'],
+ ['paprika','Paprika','zol',6,1,0.3,'paprikát'],
+ ['uborka','Uborka','zol',3.6,0.7,0.1,'uborkát'],
+ ['salata','Jégsaláta','zol',3,0.9,0.1,'jégsalátát',50],
+ ['gomba','Csiperkegomba','zol',3.3,3.1,0.3,'csiperkegombát'],
+ ['olaj','Olaj','zsi',0,0,100,'olajat'],
+ ['olivaolaj','Olívaolaj','zsi',0,0,100,'olívaolajat'],
+ ['vaj','Vaj','zsi',0.6,0.9,81,'vajat'],
+ ['kokuszolaj','Kókuszolaj','zsi',0,0,100,'kókuszolajat'],
+ ['dio','Dió','zsi',14,15,65,'diót',20],
+ ['mandula','Mandula','zsi',22,21,50,'mandulát',20],
+ ['malna','Málna','gyu',12,1.2,0.7,'málnát'],
+ ['eper','Eper','gyu',7.7,0.7,0.3,'epret'],
+ ['afonya','Áfonya','gyu',14,0.7,0.3,'áfonyát'],
+ ['avokado','Avokádó','gyu',8.5,2,14.7,'avokádót'],
+ ['tejszin','Tejszín 30%','tej',3,2.2,30,'tejszínt'],
+ ['tejfol','Tejföl 20%','tej',3.5,2.8,20,'tejfölt'],
+ ['trappista','Trappista sajt','tej',0.4,26,28,'trappista sajtot',30],
+ ['mozzarella','Mozzarella','tej',2,18,20,'mozzarellát'],
+ ['turo','Túró, félzsíros','tej',3.5,13,4.5,'túrót',100],
+ ['gorog','Görög joghurt 10%','tej',4,6,10,'görög joghurtot'],
+ ['mascarpone','Mascarpone','tej',4,5,42,'mascarponét',30]
+];
+var BASE_FOODS = RAW.map(function(r){ return { id:r[0], name:r[1], cat:r[2], ch:r[3], fe:r[4], zs:r[5], acc:r[6], ov:r[7]||null }; });
+
+var MAC = { ch:{ n:'Szénhidrát', l:'szénhidrát', acc:'szénhidrátot', s:'CH' }, fe:{ n:'Fehérje', l:'fehérje', acc:'fehérjét', s:'Fe' }, zs:{ n:'Zsír', l:'zsír', acc:'zsírt', s:'Zs' } };
+var MK = ['ch','fe','zs'];
+var LOW_CAT = { ch:'zol', fe:'feh', zs:'zsi' };
+
+/* ---------- állapot ---------- */
+var KEY = 'ketara-proto-v1';
+var S, ui = { screen:'plate', sheet:null, editing:null, toast:null, keretDraft:null, keretConfirm:null, plMenu:null, plConfirm:null, customDraft:null };
+
+function sampleState(){
+  var st = {
+    firstRun:false,
+    keret:{ ch:[15,30], fe:[60,75], zs:[135,210], kcal:null, meals:3, min:2 },
+    custom:[], saved:[], lastUsed:{},
+    plate:{ items:[{fid:'tojas',pin:null},{fid:'brokkoli',pin:null},{fid:'olaj',pin:null}], origin:null, dirty:true }
+  };
+  var samples = [['Csütörtöki csirkés',['csirkemell','cukkini','vaj']],['Reggeli túrós',['turo','dio','tejszin']],['Tojásos vacsora',['tojas','brokkoli','olaj']]];
+  var t = Date.now() - 3*86400000;
+  S = st;
+  samples.forEach(function(sm, i){
+    var items = sm[1].map(function(f){ return { fid:f, pin:null }; });
+    var r = computeFor(items, null);
+    var p = { id:'p'+i, name:sm[0], items:items.map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; }), used:t + i*3600000 };
+    st.saved.push(p);
+    p.items.forEach(function(it){ st.lastUsed[it.fid] = { g:it.g, ts:p.used }; });
+  });
+  return st;
+}
+function firstRunState(){
+  return { firstRun:true, keret:null, custom:[], saved:[], lastUsed:{}, plate:{ items:[], origin:null, dirty:false } };
+}
+function load(){
+  try { var s = localStorage.getItem(KEY); if (s) { S = JSON.parse(s); return; } } catch(e){}
+  S = sampleState();
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+
+function foods(){ return BASE_FOODS.concat(S.custom); }
+function food(id){ var f = foods(); for (var i=0;i<f.length;i++) if (f[i].id===id) return f[i]; return null; }
+function savedById(id){ for (var i=0;i<S.saved.length;i++) if (S.saved[i].id===id) return S.saved[i]; return null; }
+
+function mealTarget(k){
+  k = k || S.keret; var m = k.meals, o = {};
+  MK.forEach(function(x){ o[x] = [k[x][0]/m, k[x][1]/m]; });
+  o.kcal = k.kcal ? [k.kcal[0]/m, k.kcal[1]/m] : null; o.min = k.min;
+  return o;
+}
+function refOf(fid, originId){
+  var sp = originId ? savedById(originId) : null;
+  if (sp) for (var i=0;i<sp.items.length;i++) if (sp.items[i].fid===fid && sp.items[i].g>0) return sp.items[i].g;
+  if (S.lastUsed[fid] && S.lastUsed[fid].g>0) return S.lastUsed[fid].g;
+  var f = food(fid); if (f.ov) return f.ov;
+  return CAT[f.cat].def;
+}
+var memo = { key:null, val:null };
+function computeFor(items, originId){
+  var its = items.map(function(it){ var f = food(it.fid); return { id:it.fid, ch:f.ch, fe:f.fe, zs:f.zs, ref:refOf(it.fid, originId), pin:it.pin }; });
+  var K = mealTarget();
+  var key = JSON.stringify([its, K]);
+  if (memo.key === key) return memo.val;
+  var r = KetaraSolver.solvePlate(its, K);
+  r.K = K; r.its = its;
+  memo = { key:key, val:r };
+  return r;
+}
+
+/* ---------- formázás ---------- */
+function f1(x){ return (Math.round(x*10)/10).toFixed(1).replace('.',','); }
+function fn(x){ var r = Math.round(x*10)/10; return (r%1===0 ? String(r) : r.toFixed(1)).replace('.',','); }
+function art(w){ return /^[aáeéiíoóöőuúüű]/i.test(w) ? 'az' : 'a'; }
+function Art(w){ var a = art(w); return a.charAt(0).toUpperCase()+a.slice(1); }
+function low(f){ return f.custom ? f.name : f.name.charAt(0).toLowerCase()+f.name.slice(1); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
+function gramsList(items, grams){ return items.map(function(it){ return grams[it.fid]+' g '+low(food(it.fid)); }).join(' · ')+' (nyersen)'; }
+function num(v){ if (v==null) return null; v = String(v).trim().replace(',','.'); if (v==='') return null; var x = Number(v); return isFinite(x) ? x : NaN; }
+
+/* ---------- ikonok ---------- */
+var I = {
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  ring:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V8a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1zm2 0h6V8a3 3 0 0 0-6 0v2z"/></svg>',
+  unlock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="10" width="14" height="11" rx="1.5"/><path d="M8 10V7.5a4 4 0 0 1 7.6-1.7"/></svg>',
+  swap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
+};
+
+/* ---------- segédek ---------- */
+var app = document.getElementById('app');
+var prevGrams = null, flashSkip = null;
+
+function currentResult(){ return computeFor(S.plate.items, S.plate.origin); }
+function displayGrams(r){ return r && r.grams ? r.grams : {}; }
+function snapshot(){ return JSON.stringify(S.plate); }
+function toast(text, undoSnap){
+  ui.toast = { text:text, undo:undoSnap||null, id:Math.random() };
+  var id = ui.toast.id;
+  setTimeout(function(){ if (ui.toast && ui.toast.id===id){ ui.toast=null; render(); } }, undoSnap ? 5000 : 2600);
+}
+function modified(){ S.plate.dirty = true; }
+function differsFromSaved(r){
+  var sp = S.plate.origin ? savedById(S.plate.origin) : null; if (!sp) return true;
+  if (sp.items.length !== S.plate.items.length) return true;
+  var m = {}; sp.items.forEach(function(it){ m[it.fid]=it.g; });
+  return S.plate.items.some(function(it){ return !(it.fid in m) || m[it.fid] !== r.grams[it.fid]; });
+}
+
+/* ---------- render ---------- */
+function render(){
+  save();
+  var h = '';
+  if (S.firstRun || ui.screen==='keret') h = renderKeret();
+  else if (ui.screen==='plates') h = renderPlates();
+  else if (ui.screen==='custom') h = renderCustom();
+  else h = renderPlate();
+  if (ui.sheet) h += renderSheet();
+  app.innerHTML = h;
+  afterRender();
+}
+
+function renderPlate(){
+  var K = mealTarget(), r = currentResult(), items = S.plate.items, g = displayGrams(r);
+  var sp = S.plate.origin ? savedById(S.plate.origin) : null;
+  var h = '<div class="screen">';
+  h += '<div class="topbar"><button class="tb-btn" data-a="go-plates">'+I.list+'Tányérjaim</button><span class="tb-title">Tányér</span><span style="width:44px"></span></div>';
+  h += '<button class="target" data-a="go-keret" aria-label="Étkezési cél, koppints a Keret szerkesztéséhez"><span><small>Étkezési cél</small><b>CH '+fn(K.ch[0])+'–'+fn(K.ch[1])+' · Fe '+fn(K.fe[0])+'–'+fn(K.fe[1])+' · Zs '+fn(K.zs[0])+'–'+fn(K.zs[1])+'</b></span>'+I.gear+'</button>';
+  if (sp) h += '<p class="origin"><b>'+esc(sp.name)+'</b> — a mai célra újraszámolva.</p>';
+  h += '<div class="scroll">';
+  if (!items.length){
+    h += '<div class="empty"><p>Még nincs alapanyag. Válassz legalább hármat, és kiszámolom az adagokat.</p>'+
+      '<button class="btn primary" data-a="picker">'+I.plus+'Alapanyag</button>'+
+      '<button class="btn secondary" data-a="go-plates">Tányérjaim</button></div></div></div>';
+    return h;
+  }
+  h += '<div class="rows">';
+  items.forEach(function(it, i){
+    var f = food(it.fid), pinned = it.pin!=null, v = r.status==='few' ? null : g[it.fid];
+    var zero = r.zero && r.zero.indexOf(it.fid)>=0;
+    h += '<div class="row'+(pinned?' pinned':'')+(zero?' zero':'')+'" data-fid="'+it.fid+'">';
+    h += '<button class="nm" data-a="row" data-i="'+i+'"><span>'+esc(f.name)+'</span><small>'+CAT[f.cat].name.toLowerCase()+'</small></button>';
+    if (ui.editing===i){
+      h += '<div class="gr"><input id="gram-edit" inputmode="numeric" pattern="[0-9]*" aria-label="'+esc(f.name)+' grammja" value="'+(v!=null?v:'')+'"><small>g, rögzítéshez</small></div>';
+    } else {
+      h += '<button class="gr" data-a="edit" data-i="'+i+'" aria-label="'+esc(f.name)+', '+(v==null?'még nincs':v+' gramm')+' nyersen'+(pinned?', rögzítve':'')+'. Koppints a gramm beírásához."><b>'+(v==null?'— g':v+' g')+'</b><small>'+(pinned?'rögzítve · nyersen':'nyersen')+'</small></button>';
+    }
+    h += '<button class="pin" data-a="pin" data-i="'+i+'" aria-label="'+(pinned?'Feloldás':'Rögzítés')+'">'+(pinned?I.lock:I.ring)+'</button>';
+    h += '</div>';
+  });
+  h += '</div>';
+  h += '<button class="add" data-a="picker">'+I.plus+'Alapanyag</button>';
+  h += '</div>';
+  h += renderPanel(r, K);
+  h += '</div>';
+  return h;
+}
+
+function macroLine(r, K){
+  if (r.status==='few') return '<div class="macros">CH — · Fe — · Zs — · arány —</div>';
+  var ev = r.ev, h = '<div class="macros">';
+  MK.forEach(function(k){
+    var bad = ev.over[k]>0 ? ' ↑' : ev.under[k]>0 ? ' ↓' : '';
+    h += '<span class="'+(bad?'bad':'')+'">'+MAC[k].s+' <span class="v">'+f1(ev.tot[k])+'</span>'+bad+'</span>';
+  });
+  h += '<span class="'+(ev.ratioViol>0?'bad':'')+'"><span class="v">'+(isFinite(ev.ratio)?f1(ev.ratio):'–')+' : 1</span>'+(ev.ratioViol>0?' ↓':'')+'</span>';
+  if (K.kcal) h += '<span class="'+(ev.kcalOver||ev.kcalUnder?'bad':'')+'"><span class="v">'+Math.round(ev.kcal)+'</span> kcal</span>';
+  return h+'</div>';
+}
+
+function violLines(ev){
+  var out = [];
+  MK.forEach(function(k){
+    if (ev.over[k]>0) out.push({ k:k, amt:ev.over[k], dir:'fölött', t:MAC[k].n+': '+f1(ev.over[k])+' g-mal a sáv fölött.' });
+    if (ev.under[k]>0) out.push({ k:k, amt:ev.under[k], dir:'alatt', t:MAC[k].n+': '+f1(ev.under[k])+' g-mal a sáv alatt.' });
+  });
+  out.sort(function(a,b){ return b.amt-a.amt; });
+  return out;
+}
+function ratioLine(ev, K){ return 'Zsír–fehérje arány: '+f1(ev.ratio)+' : 1, a minimum '+fn(K.min)+' : 1.'; }
+function outcome(ev, K){
+  if (ev.inBand) return 'minden érték a sávon belül.';
+  var v = violLines(ev);
+  if (v.length) return v[0].t.charAt(0).toLowerCase()+v[0].t.slice(1);
+  return ratioLine(ev, K).charAt(0).toLowerCase()+ratioLine(ev,K).slice(1);
+}
+function releasePreview(rel, K){
+  var f = food(rel.id);
+  var lead = f.acc ? 'Ha feloldod '+art(f.acc)+' '+f.acc+':' : f.name+' feloldásával:';
+  return '<div class="preview"><b>Előzetes</b>'+esc(lead)+' '+esc(gramsList(S.plate.items, rel.grams))+' → '+esc(outcome(rel.ev, K))+'</div>';
+}
+
+function renderPanel(r, K){
+  var h = '<div class="panel">';
+  if (ui.toast) h += '<div class="toast" role="status"><span>'+esc(ui.toast.text)+'</span>'+(ui.toast.undo?'<button data-a="undo">Visszavonás</button>':'')+'</div>';
+  h += macroLine(r, K);
+  var body = '', acts = '';
+  if (r.status==='few'){
+    body = '<p class="head"><span>'+(r.need===1?'Még egy alapanyag kell a számoláshoz.':'Még két alapanyag kell a számoláshoz.')+'</span></p>';
+    acts = '<button class="btn primary" data-a="picker">'+I.plus+'Alapanyag</button>';
+  } else if (r.status==='ok' || (r.status==='allpinned' && r.ev.inBand)){
+    if (r.status==='allpinned') body += '<p class="sub">Nincs mit kiszámolni — minden adag rögzítve.</p>';
+    body += '<p class="head ok"><span class="ic">'+I.check.replace('<svg','<svg width="14" height="14"')+'</span><span>Minden érték a sávon belül.</span></p>';
+    if (r.kcalNote) body += '<p class="note">Kalória: '+Math.round(r.ev.kcalOver||r.ev.kcalUnder)+' kcal-lal a sáv '+(r.ev.kcalOver?'fölött':'alatt')+'.</p>';
+    var sp = S.plate.origin ? savedById(S.plate.origin) : null;
+    if (!sp) acts = '<button class="btn primary" data-a="save-open">Tányér mentése</button>';
+    else if (differsFromSaved(r)) acts = '<button class="btn primary" data-a="update">'+esc(sp.name)+' frissítése</button><button class="btn secondary" data-a="save-open" data-new="1">Mentés új néven</button>';
+  } else {
+    body = renderWarn(r, K);
+    acts = warnActions(r, K);
+  }
+  h += '<div class="pbody">'+body+'</div>';
+  if (acts) h += '<div class="actions">'+acts+'</div>';
+  return h+'</div>';
+}
+
+function renderWarn(r, K){
+  var ev = r.ev, items = S.plate.items, h = '', v = violLines(ev);
+  var pinned = items.filter(function(it){ return it.pin!=null; });
+  if (r.status==='allpinned'){
+    h += '<p class="sub">Nincs mit kiszámolni — minden adag rögzítve.</p><div class="evlist">';
+    MK.forEach(function(k){
+      var st = ev.over[k]>0 ? 'sáv fölött' : ev.under[k]>0 ? 'sáv alatt' : '✓';
+      h += '<span>'+MAC[k].s+'</span><span class="'+(st!=='✓'?'bad':'')+'">'+f1(ev.tot[k])+' g '+(st==='✓'?'✓':'('+st+')')+'</span>';
+    });
+    h += '<span>Arány</span><span class="'+(ev.ratioViol>0?'bad':'')+'">'+f1(ev.ratio)+' : 1'+(ev.ratioViol>0?' (minimum '+fn(K.min)+' : 1)':' ✓')+'</span></div>';
+  } else {
+    var first = true;
+    v.forEach(function(x){
+      h += first ? '<p class="head warn"><span class="ic">!</span><span>'+x.t+'</span></p>' : '<p class="head warn" style="font-size:15px"><span class="ic" style="visibility:hidden">!</span><span>'+x.t+'</span></p>';
+      first = false;
+    });
+    if (ev.ratioViol>0) h += '<p class="head warn"'+(first?'':' style="font-size:15px"')+'><span class="ic"'+(first?'':' style="visibility:hidden"')+'>!</span><span>'+ratioLine(ev, K)+'</span></p>', first=false;
+    if (r.zero && r.zero.length){
+      var zf = food(r.zero[0]);
+      h += '<p class="head warn"'+(first?'':' style="font-size:15px"')+'><span class="ic"'+(first?'':' style="visibility:hidden"')+'>!</span><span>'+Art(low(zf))+' '+esc(low(zf))+' 0 g-ra szorult — nélküle jönne ki. Cseréld vagy vedd ki.</span></p>';
+    }
+    // ok
+    if (pinned.length && v.length){
+      var top = v[0], k = top.k;
+      if (top.dir==='fölött'){
+        var best = null;
+        pinned.forEach(function(p){ var f = food(p.fid), c = f[k]*p.pin/100; if (!best || c>best.c) best = { f:f, p:p, c:c }; });
+        if (best.c > K[k][1]) h += '<p class="sub">A rögzített '+best.p.pin+' g '+esc(low(best.f))+' önmagában '+f1(best.c)+' g '+MAC[k].acc+' hoz. A sáv teteje '+fn(K[k][1])+' g.</p>';
+        else h += '<p class="sub">A rögzített adagok miatt a '+MAC[k].l+' nem fér a sávba.</p>';
+      } else {
+        var rp = r.release ? food(r.release.id) : food(pinned[0].fid), rpin = null;
+        pinned.forEach(function(p){ if (p.fid===rp.id) rpin = p.pin; });
+        h += '<p class="sub">A rögzített '+rpin+' g '+esc(low(rp))+' mellett '+art(MAC[k].l)+' '+MAC[k].l+' legfeljebb '+f1(ev.tot[k])+' g lehet. A sáv alja '+fn(K[k][0])+' g.</p>';
+      }
+    }
+    if (!pinned.length && !(r.zero && r.zero.length && ev.inBand)){
+      var hint = noPinHint(r, K);
+      if (hint) h += '<p class="sub">'+esc(hint.text)+'</p>';
+    }
+  }
+  if (r.release){
+    h += releasePreview(r.release, K);
+    if (r.deadEnd) h += '<p class="sub">Ebből '+(/^(1|5)\d?$/.test(String(items.length))?'az':'a')+' '+items.length+' alapanyagból nem jön ki. Adj hozzá egy újat, vagy cserélj egyet.</p>';
+  }
+  return h;
+}
+
+function noPinHint(r, K){
+  var ev = r.ev, v = violLines(ev);
+  var lowFat = ev.ratioViol>0 && !v.some(function(x){ return x.k==='zs' && x.dir==='fölött'; });
+  var top = v[0];
+  if ((!top && lowFat) || (top && top.dir==='alatt')){
+    var k = top ? top.k : 'zs', cat = CAT[LOW_CAT[k]];
+    return { type:'low', cat:cat.id, text:'Kevés '+art(MAC[k].l)+' '+MAC[k].l+' — adj hozzá '+art(cat.name)+' '+cat.name+' közül.' };
+  }
+  if (top && top.dir==='fölött'){
+    var best = null;
+    S.plate.items.forEach(function(it){ var f = food(it.fid), c = f[top.k]*r.grams[it.fid]/100; if (!best || c>best.c) best = { f:f, c:c }; });
+    var acc = best.f.acc || best.f.name;
+    return { type:'high', fid:best.f.id, text:'Sok '+art(MAC[top.k].l)+' '+MAC[top.k].l+' — cseréld '+art(acc)+' '+acc+' egy másik '+CAT[best.f.cat].name.toLowerCase()+'-félére.' };
+  }
+  return null;
+}
+
+function warnActions(r, K){
+  var items = S.plate.items, a = '';
+  var pinned = items.filter(function(it){ return it.pin!=null; });
+  if (r.release){
+    var f = food(r.release.id);
+    a += '<button class="btn primary" data-a="release" data-fid="'+f.id+'">'+esc(f.name)+' feloldása</button>';
+    if (pinned.length>1 && !r.release.ok) a += '<button class="btn secondary" data-a="release-all">Rögzítések feloldása</button>';
+    if (r.status!=='allpinned') a += '<button class="btn secondary" data-a="picker">'+I.plus+'Alapanyag</button>';
+  } else if (r.zero && r.zero.length && r.ev.inBand){
+    var zf = food(r.zero[0]), zi = items.findIndex(function(it){ return it.fid===zf.id; });
+    a += '<button class="btn primary" data-a="swap" data-i="'+zi+'">'+esc(zf.name)+' cseréje</button><button class="btn secondary" data-a="delete" data-i="'+zi+'">Kivétel</button>';
+  } else {
+    var hint = noPinHint(r, K);
+    if (hint && hint.type==='low') a += '<button class="btn primary" data-a="picker" data-cat="'+hint.cat+'">'+I.plus+esc(CAT[hint.cat].name)+'</button>';
+    else if (hint && hint.type==='high'){ var hi = items.findIndex(function(it){ return it.fid===hint.fid; }); a += '<button class="btn primary" data-a="swap" data-i="'+hi+'">'+esc(food(hint.fid).name)+' cseréje</button>'; }
+    a += '<button class="btn secondary" data-a="picker">'+I.plus+'Alapanyag</button>';
+  }
+  var sp = S.plate.origin ? savedById(S.plate.origin) : null;
+  if (!sp || differsFromSaved(r)) a += '<button class="btn text" data-a="save-open" data-asis="1">Mentés így</button>';
+  return a;
+}
+
+/* ---------- alsó lapok ---------- */
+function sheetHead(t){ return '<div class="sh-head"><h2>'+esc(t)+'</h2><button class="x" data-a="close" aria-label="Bezárás">'+I.x+'</button></div>'; }
+function renderSheet(){
+  var s = ui.sheet, h = '<div class="sheetwrap" data-a="scrim"><div class="sheet" role="dialog" aria-modal="true">';
+  if (s.type==='picker') h += renderPicker(s);
+  else if (s.type==='row') h += renderRowSheet(s);
+  else if (s.type==='swap') h += renderSwap(s);
+  else if (s.type==='save') h += renderSave(s);
+  return h+'</div></div>';
+}
+function onPlate(fid){ return S.plate.items.some(function(it){ return it.fid===fid; }); }
+function chip(f, s){
+  var on = s.added.indexOf(f.id)>=0, had = !on && onPlate(f.id);
+  return '<button class="chip'+(on?' on':'')+(had?' had':'')+'" data-a="pick" data-fid="'+f.id+'"'+(had?' aria-disabled="true"':'')+'>'+((on||had)?I.check:'')+esc(f.name)+'</button>';
+}
+function renderPicker(s){
+  var h = sheetHead('Alapanyag');
+  h += '<div class="sh-body">';
+  h += '<label class="search">'+I.search+'<input id="pick-q" type="search" placeholder="Keresés" value="'+esc(s.q)+'" autocomplete="off"></label>';
+  h += '<div id="pick-res" style="display:flex;flex-direction:column;gap:12px">'+pickerResults(s)+'</div>';
+  h += '</div><div class="actions"><button class="btn primary" data-a="close">'+(s.added.length?'Kész ('+s.added.length+')':'Kész')+'</button></div>';
+  return h;
+}
+function pickerResults(s){
+  var h = '';
+  if (s.q.trim()){
+    var q = norm(s.q.trim()), res = foods().filter(function(f){ return norm(f.name).indexOf(q)>=0; });
+    if (!res.length) return '<p style="margin:0">Nincs ilyen a listában. Felviszed sajátként?</p><button class="btn secondary" data-a="custom-new">'+I.plus+'Saját alapanyag: '+esc(s.q.trim())+'</button>';
+    return '<div class="chips">'+res.map(function(f){ return chip(f, s); }).join('')+'</div>';
+  }
+  if (s.hint) h += '<div class="hint">'+esc(s.hint)+'</div>';
+  var recent = Object.keys(S.lastUsed).sort(function(a,b){ return S.lastUsed[b].ts-S.lastUsed[a].ts; }).slice(0,8).map(food).filter(Boolean);
+  if (recent.length) h += '<p class="lbl">Legutóbb használt</p><div class="chips">'+recent.map(function(f){ return chip(f, s); }).join('')+'</div>';
+  h += '<p class="lbl">Kategóriák</p>';
+  CATS.forEach(function(c){
+    var open = s.open===c.id;
+    h += '<div class="cat'+(open?' open':'')+'"><button data-a="cat" data-cat="'+c.id+'" aria-expanded="'+open+'">'+c.name+I.chev+'</button>';
+    if (open) h += '<div class="chips">'+foods().filter(function(f){ return f.cat===c.id; }).map(function(f){ return chip(f, s); }).join('')+'</div>';
+    h += '</div>';
+  });
+  h += '<button class="btn secondary" data-a="custom-new">'+I.plus+'Saját alapanyag</button>';
+  return h;
+}
+function renderRowSheet(s){
+  var it = S.plate.items[s.i], f = food(it.fid), pinned = it.pin!=null;
+  var h = sheetHead(f.name)+'<div class="sh-body"><div class="menu">';
+  h += '<button data-a="pin" data-i="'+s.i+'">'+(pinned?I.unlock+'Feloldás':I.lock+'Rögzítés')+'</button>';
+  h += '<button data-a="swap" data-i="'+s.i+'">'+I.swap+'Csere</button>';
+  h += '<button class="danger" data-a="delete" data-i="'+s.i+'">'+I.trash+'Törlés</button>';
+  return h+'</div></div>';
+}
+function renderSwap(s){
+  var it = S.plate.items[s.i], f = food(it.fid);
+  var h = sheetHead('Csere: '+f.name)+'<div class="sh-body">';
+  if (it.pin!=null) h += '<p class="note" style="margin:0">A csere leveszi a rögzítést.</p>';
+  var cats = s.all ? CATS : [CAT[f.cat]];
+  cats.forEach(function(c){
+    var list = foods().filter(function(x){ return x.cat===c.id && x.id!==f.id && !onPlate(x.id); });
+    if (!list.length) return;
+    h += '<p class="lbl">'+c.name+'</p><div class="chips">'+list.map(function(x){ return '<button class="chip" data-a="swap-to" data-fid="'+x.id+'">'+esc(x.name)+'</button>'; }).join('')+'</div>';
+  });
+  if (!s.all) h += '<button class="btn secondary" data-a="swap-all">Másik kategóriából…</button>';
+  return h+'</div>';
+}
+function renderSave(s){
+  var sp = S.plate.origin ? savedById(S.plate.origin) : null, r = currentResult();
+  var h = sheetHead(s.asis ? 'Mentés így' : 'Tányér mentése')+'<div class="sh-body">';
+  if (s.asis){
+    var v = violLines(r.ev), t = v.length ? v[0].t : (r.ev.ratioViol>0 ? ratioLine(r.ev, r.K) : 'Egy alapanyag 0 g-ra szorult.');
+    h += '<div class="hint">'+esc(t)+'</div>';
+  }
+  if (sp && s.asis) h += '<button class="btn primary" data-a="update">'+esc(sp.name)+' frissítése</button><p class="lbl">Vagy új tányérként</p>';
+  h += '<div class="field"><label for="save-name">Név</label><input class="inp" id="save-name" value="'+esc(s.name)+'" autocomplete="off"></div>';
+  h += '</div><div class="actions"><button class="btn '+(sp&&s.asis?'secondary':'primary')+'" data-a="save-do">'+(sp?'Mentés új néven':'Mentés')+'</button></div>';
+  return h;
+}
+
+/* ---------- Tányérjaim ---------- */
+function renderPlates(){
+  var h = '<div class="screen"><div class="topbar"><button class="tb-btn" data-a="go-plate">'+I.back+'Tányér</button><span class="tb-title">Tányérjaim</span><span style="width:44px"></span></div><div class="scroll">';
+  var list = S.saved.slice().sort(function(a,b){ return b.used-a.used; });
+  if (!list.length) h += '<div class="empty"><p>Még nincs mentett tányérod. Számolj ki egyet, és mentsd el — legközelebb innen indulhatsz.</p></div>';
+  h += '<div class="plist">';
+  list.forEach(function(p){
+    h += '<div class="pitem"><button data-a="open-plate" data-id="'+p.id+'"><b>'+esc(p.name)+'</b><span>'+p.items.map(function(it){ var f=food(it.fid); return f?esc(low(f)):''; }).join(' · ')+'</span></button><button class="more" data-a="pl-menu" data-id="'+p.id+'" aria-label="Továbbiak: '+esc(p.name)+'">'+I.more+'</button>';
+    if (ui.plConfirm && ui.plConfirm.id===p.id) h += '<div class="inline"><p>A mostani tányér nincs elmentve. Lecseréled?</p><button class="btn primary" data-a="open-plate" data-id="'+p.id+'" data-force="1">Lecserélem</button><button class="btn secondary" data-a="pl-cancel">Mégse</button></div>';
+    else if (ui.plMenu && ui.plMenu.id===p.id){
+      if (ui.plMenu.rename) h += '<div class="inline"><input class="inp" id="rename" value="'+esc(p.name)+'" aria-label="Új név"><button class="btn primary" data-a="rename-do" data-id="'+p.id+'">Átnevezés</button><button class="btn secondary" data-a="pl-cancel">Mégse</button></div>';
+      else h += '<div class="inline"><button class="btn secondary" data-a="rename" data-id="'+p.id+'">Átnevezés</button><button class="btn secondary" data-a="pl-del" data-id="'+p.id+'">Törlés</button></div>';
+    }
+    h += '</div>';
+  });
+  h += '</div>';
+  if (ui.plConfirm && ui.plConfirm.id==='new') h += '<div class="confirm" style="margin-top:10px"><p>A mostani tányér nincs elmentve. Lecseréled?</p><div class="actions"><button class="btn primary" data-a="new-plate" data-force="1">Lecserélem</button><button class="btn secondary" data-a="pl-cancel">Mégse</button></div></div>';
+  h += '<button class="add" data-a="new-plate">'+I.plus+'Új tányér</button>';
+  h += '<div class="proto"><small>Csak a prototípusban:</small><button class="btn secondary" data-a="reset">Prototípus alaphelyzetbe</button><button class="btn secondary" data-a="reset-first">Első indítás kipróbálása</button></div>';
+  h += '</div>';
+  if (ui.toast) h += '<div class="panel" style="border:0;box-shadow:none;background:none;min-height:0"><div class="toast" role="status"><span>'+esc(ui.toast.text)+'</span>'+(ui.toast.undo?'<button data-a="undo-pl">Visszavonás</button>':'')+'</div></div>';
+  return h+'</div>';
+}
+
+/* ---------- Saját alapanyag ---------- */
+function renderCustom(){
+  var d = ui.customDraft;
+  var h = '<div class="screen"><div class="topbar"><button class="tb-btn" data-a="custom-cancel">'+I.back+'Vissza</button><span class="tb-title">Saját alapanyag</span><span style="width:44px"></span></div><div class="form">';
+  h += '<div class="field"><label for="c-name">Név</label><input class="inp" id="c-name" value="'+esc(d.name)+'" autocomplete="off"></div>';
+  h += '<div class="field"><span class="fl">Kategória</span><div class="seg" role="radiogroup">'+CATS.map(function(c){ return '<button role="radio" aria-checked="'+(d.cat===c.id)+'" class="'+(d.cat===c.id?'on':'')+'" data-a="c-cat" data-cat="'+c.id+'">'+c.name+'</button>'; }).join('')+'</div></div>';
+  h += '<div class="field"><span class="fl">100 grammban, nyersen</span><div class="nutr">';
+  [['ch','Szénhidrát'],['fe','Fehérje'],['zs','Zsír']].forEach(function(x){ h += '<label for="c-'+x[0]+'">'+x[1]+'</label><input class="inp num" id="c-'+x[0]+'" inputmode="decimal" value="'+esc(d[x[0]])+'"><span>g</span>'; });
+  h += '</div><div id="c-err" class="err">'+customErr(d)+'</div></div>';
+  h += '</div><div class="footer"><button class="btn primary" id="c-save" data-a="custom-save"'+(customValid(d)?'':' disabled')+'>Mentés</button></div></div>';
+  return h;
+}
+function customErr(d){
+  var v = ['ch','fe','zs'].map(function(k){ return num(d[k]); });
+  if (v.some(function(x){ return x!=null && (isNaN(x) || x<0); })) return 'Csak számot írj be, például 4,5.';
+  var sum = v.reduce(function(a,x){ return a+(x||0); }, 0);
+  if (sum>100) return '100 grammban ennyi nem fér el. Nézd meg a csomagolást.';
+  return '';
+}
+function customValid(d){
+  if (!d.name.trim() || !d.cat || customErr(d)) return false;
+  return ['ch','fe','zs'].every(function(k){ var x = num(d[k]); return x!=null && !isNaN(x); });
+}
+
+/* ---------- Keret ---------- */
+function keretDraftFrom(k){
+  if (!k) return { ch:['',''], fe:['',''], zs:['',''], kcal:['',''], meals:'', min:'2' };
+  var s = function(x){ return x==null ? '' : fn(x); };
+  return { ch:[s(k.ch[0]),s(k.ch[1])], fe:[s(k.fe[0]),s(k.fe[1])], zs:[s(k.zs[0]),s(k.zs[1])], kcal:k.kcal?[s(k.kcal[0]),s(k.kcal[1])]:['',''], meals:String(k.meals), min:s(k.min) };
+}
+function keretParse(d){
+  var k = {}, err = {}, missing = false;
+  ['ch','fe','zs'].forEach(function(m){
+    var a = num(d[m][0]), b = num(d[m][1]);
+    if (a==null || b==null) missing = true;
+    else if (isNaN(a) || isNaN(b) || a<0 || b<0) err[m] = 'Csak számot írj be.';
+    else if (a>b) err[m] = 'Az alsó határ nagyobb a felsőnél. Nézd meg a papírt.';
+    k[m] = [a,b];
+  });
+  var ka = num(d.kcal[0]), kb = num(d.kcal[1]);
+  if (ka==null && kb==null) k.kcal = null;
+  else if (ka==null || kb==null) err.kcal = 'Add meg mindkét határt, vagy hagyd üresen mindkettőt.';
+  else if (isNaN(ka) || isNaN(kb)) err.kcal = 'Csak számot írj be.';
+  else if (ka>kb) err.kcal = 'Az alsó határ nagyobb a felsőnél. Nézd meg a papírt.';
+  if (!err.kcal && ka!=null) k.kcal = [ka,kb];
+  var ml = num(d.meals);
+  if (ml==null) missing = true; else if (isNaN(ml) || ml<1 || ml>10 || ml%1) err.meals = 'Egész szám 1 és 10 között.';
+  k.meals = ml;
+  var mn = num(d.min);
+  if (mn==null) missing = true; else if (isNaN(mn) || mn<=0) err.min = 'Pozitív szám, például 2.';
+  k.min = mn;
+  if (!err.zs && !err.fe && !err.min && !missing && k.zs[1] < k.min*k.fe[0]) err.zs = 'A zsírsáv teteje kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jönne ki.';
+  var ok = !missing && !Object.keys(err).length;
+  return { k:k, err:err, missing:missing, ok:ok };
+}
+function keretSuspicious(k){
+  var out = [];
+  if ((k.kcal && k.kcal[0] < THRESH.kcalLow) || k.fe[0] < THRESH.proteinLow) out.push('Ez alacsonyabb, mint amit dietetikusok általában adnak. Biztosan így van a papíron?');
+  var narrow = [];
+  ['ch','fe','zs'].forEach(function(m){ if (k[m][1]-k[m][0] < THRESH.narrow*k[m][0]) narrow.push(MAC[m].l); });
+  if (k.kcal && k.kcal[1]-k.kcal[0] < THRESH.narrow*k.kcal[0]) narrow.push('kalória');
+  if (narrow.length) out.push('A '+narrow.join(', ')+' sáv nagyon szűk, kevés tányér fog beleférni. Biztosan így van a papíron?');
+  return out;
+}
+function mealPreview(p){
+  if (!p.ok) return '<small>Egy étkezésre ez jön ki</small><b>—</b><p>'+(p.missing?'Töltsd ki a sávokat, az étkezések számát és az arányt.':'Javítsd a jelölt sort.')+'</p>';
+  var t = mealTarget(p.k);
+  var s = 'CH '+fn(t.ch[0])+'–'+fn(t.ch[1])+' · Fe '+fn(t.fe[0])+'–'+fn(t.fe[1])+' · Zs '+fn(t.zs[0])+'–'+fn(t.zs[1]);
+  if (t.kcal) s += ' · '+Math.round(t.kcal[0])+'–'+Math.round(t.kcal[1])+' kcal';
+  return '<small>Egy étkezésre ez jön ki</small><b>'+s+'</b><p>Zsír legalább '+fn(p.k.min)+' × fehérje. Ha ez nem egyezik azzal, amit fejből tudsz, nézd meg újra a papírt.</p>';
+}
+function renderKeret(){
+  if (!ui.keretDraft) ui.keretDraft = keretDraftFrom(S.keret);
+  var d = ui.keretDraft, p = keretParse(d), fr = S.firstRun;
+  var h = '<div class="screen"><div class="topbar">'+(fr?'<span style="width:44px"></span>':'<button class="tb-btn" data-a="keret-cancel">'+I.back+'Tányér</button>')+'<span class="tb-title">Keret</span><span style="width:44px"></span></div><div class="form">';
+  if (fr) h += '<p class="intro">Írd be a dietetikusod számait. Csak egyszer kell.</p>';
+  h += '<div class="field"><span class="fl">Napi sávok</span>';
+  [['ch','Szénhidrát','g'],['fe','Fehérje','g'],['zs','Zsír','g'],['kcal','Kalória','kcal']].forEach(function(x){
+    var m = x[0];
+    if (m==='kcal') h += '<p class="note" style="margin:6px 0 -4px">Kalória: ha a papíron van.</p>';
+    h += '<div class="band"><label class="nm" for="k-'+m+'-0">'+x[1]+'</label><input class="inp num'+(p.err[m]?' bad':'')+'" id="k-'+m+'-0" data-k="'+m+'" data-j="0" inputmode="decimal" value="'+esc(d[m][0])+'" aria-label="'+x[1]+' alsó határ"><span class="dash">–</span><input class="inp num'+(p.err[m]?' bad':'')+'" id="k-'+m+'-1" data-k="'+m+'" data-j="1" inputmode="decimal" value="'+esc(d[m][1])+'" aria-label="'+x[1]+' felső határ"><span class="u">'+x[2]+'</span><div class="err" id="e-'+m+'">'+(p.err[m]||'')+'</div></div>';
+  });
+  h += '</div>';
+  h += '<div class="single"><label class="nm" for="k-meals">Étkezések száma naponta</label><input class="inp num'+(p.err.meals?' bad':'')+'" id="k-meals" data-k="meals" inputmode="numeric" value="'+esc(d.meals)+'"><span></span></div><div class="err" id="e-meals" style="margin-top:-12px">'+(p.err.meals||'')+'</div>';
+  h += '<div class="single"><label class="nm" for="k-min">Zsír : fehérje, legalább</label><input class="inp num'+(p.err.min?' bad':'')+'" id="k-min" data-k="min" inputmode="decimal" value="'+esc(d.min)+'"><span class="u">: 1</span></div><div class="err" id="e-min" style="margin-top:-12px">'+(p.err.min||'')+'</div>';
+  h += '<div class="meal" id="meal">'+mealPreview(p)+'</div>';
+  if (ui.keretConfirm) h += '<div class="confirm">'+ui.keretConfirm.map(function(t){ return '<p>'+esc(t)+'</p>'; }).join('')+'<div class="actions"><button class="btn primary" data-a="keret-save" data-force="1">Igen, így van</button><button class="btn secondary" data-a="keret-fix">Javítom</button></div></div>';
+  h += '</div><div class="footer"><button class="btn primary" id="k-save" data-a="keret-save"'+(p.ok?'':' disabled')+'>'+(fr?'Ez stimmel, kezdjük':'Mentés')+'</button></div></div>';
+  return h;
+}
+
+/* ---------- utómunka ---------- */
+function afterRender(){
+  var r = (!S.firstRun && ui.screen==='plate' && S.plate.items.length) ? currentResult() : null;
+  var g = r && r.status!=='few' ? r.grams : null;
+  if (g && prevGrams){
+    Object.keys(g).forEach(function(fid){
+      if (fid===flashSkip) return;
+      if (prevGrams[fid]!=null && prevGrams[fid]!==g[fid]){
+        var el = app.querySelector('.row[data-fid="'+fid+'"]');
+        if (el){ el.classList.add('flash'); requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.remove('flash'); }); }); }
+      }
+    });
+  }
+  prevGrams = g ? Object.assign({}, g) : prevGrams; flashSkip = null;
+  var ge = document.getElementById('gram-edit');
+  if (ge){ ge.focus(); ge.select(); }
+  var rn = document.getElementById('rename'); if (rn){ rn.focus(); rn.select(); }
+  var sn = document.getElementById('save-name'); if (sn && !sn.dataset.done){ sn.dataset.done='1'; sn.focus(); sn.select(); }
+}
+
+/* ---------- műveletek ---------- */
+function closeSheet(){ ui.sheet = null; }
+function openPicker(cat){
+  var hint = null;
+  if (cat){ var r = currentResult(), k = null;
+    MK.forEach(function(m){ if (r.ev && r.ev.under[m]>0 && LOW_CAT[m]===cat) k = m; });
+    if (!k && cat==='zsi') k = 'zs';
+    if (k) hint = 'A '+{ch:'szénhidráthoz',fe:'fehérjéhez',zs:'zsírhoz'}[k]+' ezek segítenek a legtöbbet.';
+  }
+  ui.sheet = { type:'picker', q:'', open:cat||null, added:[], hint:hint };
+}
+function setPin(i, val){
+  var it = S.plate.items[i];
+  if (val===undefined){
+    if (it.pin!=null) it.pin = null;
+    else { var r = currentResult(); it.pin = r.status==='few' ? refOf(it.fid, S.plate.origin) : r.grams[it.fid]; }
+  } else it.pin = val;
+  modified();
+}
+function commitGram(){
+  var el = document.getElementById('gram-edit'); if (!el || ui.editing==null) return;
+  var i = ui.editing, v = num(el.value); ui.editing = null;
+  if (v!=null && !isNaN(v) && v>=1){ S.plate.items[i].pin = Math.round(v); flashSkip = S.plate.items[i].fid; modified(); }
+  render();
+}
+function doSave(name, asNew){
+  var r = currentResult(), now = Date.now();
+  var items = S.plate.items.map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; });
+  var p = { id:'p'+now, name:name, items:items, used:now };
+  S.saved.push(p);
+  items.forEach(function(it){ S.lastUsed[it.fid] = { g:it.g, ts:now }; });
+  S.plate.origin = p.id; S.plate.dirty = false;
+  closeSheet(); toast('Mentve: '+name);
+}
+function doUpdate(){
+  var r = currentResult(), sp = savedById(S.plate.origin), now = Date.now();
+  sp.items = S.plate.items.map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; });
+  sp.used = now;
+  sp.items.forEach(function(it){ S.lastUsed[it.fid] = { g:it.g, ts:now }; });
+  S.plate.dirty = false; closeSheet(); toast('Frissítve. Legközelebb innen indul.');
+}
+function openPlate(id){
+  var sp = savedById(id); sp.used = Date.now();
+  S.plate = { items:sp.items.map(function(it){ return { fid:it.fid, pin:null }; }), origin:id, dirty:false };
+  prevGrams = null; ui.plMenu = null; ui.plConfirm = null; ui.screen = 'plate';
+}
+function hasUnsaved(){ return S.plate.items.length && S.plate.dirty; }
+
+app.addEventListener('click', function(e){
+  var t = e.target.closest('[data-a]'); if (!t) return;
+  var a = t.dataset.a, i = t.dataset.i!=null ? +t.dataset.i : null;
+  if (a==='scrim'){ if (e.target===t){ closeSheet(); render(); } return; }
+  if (ui.editing!=null && a!=='edit'){ var el = document.getElementById('gram-edit'); if (el) { ui.editing = null; } }
+  switch(a){
+    case 'go-plates': ui.screen='plates'; ui.plMenu=null; ui.plConfirm=null; break;
+    case 'go-plate': ui.screen='plate'; break;
+    case 'go-keret': ui.screen='keret'; ui.keretDraft=null; ui.keretConfirm=null; break;
+    case 'picker': openPicker(t.dataset.cat); break;
+    case 'close': closeSheet(); break;
+    case 'row': ui.sheet = { type:'row', i:i }; break;
+    case 'edit': ui.editing = i; break;
+    case 'pin': setPin(i); flashSkip = S.plate.items[i].fid; closeSheet(); break;
+    case 'delete': {
+      var snap = snapshot(), f = food(S.plate.items[i].fid);
+      S.plate.items.splice(i,1); modified(); closeSheet(); toast(f.name+' törölve.', snap); break; }
+    case 'swap': ui.sheet = { type:'swap', i:i, all:false }; break;
+    case 'swap-all': ui.sheet.all = true; break;
+    case 'swap-to': {
+      var s2 = snapshot(), it = S.plate.items[ui.sheet.i], old = food(it.fid), nf = food(t.dataset.fid), wasPinned = it.pin!=null;
+      it.fid = nf.id; it.pin = null; modified(); closeSheet();
+      toast(wasPinned ? 'A rögzítés lekerült, mert az alapanyag változott.' : old.name+' helyett '+low(nf)+'.', s2); break; }
+    case 'undo': if (ui.toast && ui.toast.undo){ S.plate = JSON.parse(ui.toast.undo); } ui.toast = null; break;
+    case 'pick': {
+      var fid = t.dataset.fid, s = ui.sheet, k = s.added.indexOf(fid);
+      if (k>=0){ s.added.splice(k,1); S.plate.items = S.plate.items.filter(function(x){ return x.fid!==fid; }); modified(); }
+      else if (!onPlate(fid)){ s.added.push(fid); S.plate.items.push({ fid:fid, pin:null }); modified(); }
+      document.getElementById('pick-res').innerHTML = pickerResults(s);
+      t = null; var btn = app.querySelector('.sheet .actions .btn'); if (btn) btn.textContent = s.added.length ? 'Kész ('+s.added.length+')' : 'Kész';
+      var sc = app.querySelector('.screen'); if (sc){ var tmp = document.createElement('div'); tmp.innerHTML = renderPlate(); sc.replaceWith(tmp.firstChild); afterRender(); }
+      save(); return; }
+    case 'cat': ui.sheet.open = ui.sheet.open===t.dataset.cat ? null : t.dataset.cat; document.getElementById('pick-res').innerHTML = pickerResults(ui.sheet); return;
+    case 'custom-new': ui.customDraft = { name:(ui.sheet && ui.sheet.q) ? ui.sheet.q.trim() : '', cat:null, ch:'', fe:'', zs:'', fromPicker:true }; closeSheet(); ui.screen='custom'; break;
+    case 'c-cat': ui.customDraft.cat = t.dataset.cat; break;
+    case 'custom-cancel': ui.screen='plate'; break;
+    case 'custom-save': {
+      var d = ui.customDraft; if (!customValid(d)) return;
+      var nfood = { id:'c'+Date.now(), name:d.name.trim(), cat:d.cat, ch:num(d.ch), fe:num(d.fe), zs:num(d.zs), acc:null, ov:null, custom:true };
+      S.custom.push(nfood);
+      if (d.fromPicker && !onPlate(nfood.id)){ S.plate.items.push({ fid:nfood.id, pin:null }); modified(); }
+      ui.screen='plate'; toast(nfood.name+' felvéve a listába.'); break; }
+    case 'release': S.plate.items.forEach(function(x){ if (x.fid===t.dataset.fid) x.pin = null; }); modified(); break;
+    case 'release-all': S.plate.items.forEach(function(x){ x.pin = null; }); modified(); break;
+    case 'save-open': {
+      var nm = S.plate.items.map(function(x,j){ var f=food(x.fid); return j ? low(f) : f.name; }).join(', ');
+      ui.sheet = { type:'save', name:nm, asis:!!t.dataset.asis }; break; }
+    case 'save-do': { var n = document.getElementById('save-name').value.trim(); if (!n) return; doSave(n); break; }
+    case 'update': doUpdate(); break;
+    case 'open-plate':
+      if (hasUnsaved() && !t.dataset.force){ ui.plConfirm = { id:t.dataset.id }; ui.plMenu = null; break; }
+      openPlate(t.dataset.id); toast(savedById(t.dataset.id).name+' betöltve.'); break;
+    case 'new-plate':
+      if (hasUnsaved() && !t.dataset.force){ ui.plConfirm = { id:'new' }; break; }
+      S.plate = { items:[], origin:null, dirty:false }; prevGrams=null; ui.plConfirm=null; ui.screen='plate'; break;
+    case 'pl-menu': ui.plMenu = (ui.plMenu && ui.plMenu.id===t.dataset.id) ? null : { id:t.dataset.id }; ui.plConfirm=null; break;
+    case 'pl-cancel': ui.plMenu=null; ui.plConfirm=null; break;
+    case 'rename': ui.plMenu = { id:t.dataset.id, rename:true }; break;
+    case 'rename-do': { var v = document.getElementById('rename').value.trim(); if (v) savedById(t.dataset.id).name = v; ui.plMenu=null; break; }
+    case 'pl-del': {
+      var snapS = JSON.stringify(S.saved), p = savedById(t.dataset.id);
+      S.saved = S.saved.filter(function(x){ return x.id!==p.id; });
+      if (S.plate.origin===p.id) S.plate.origin = null;
+      ui.plMenu=null; toast(p.name+' törölve.', snapS); break; }
+    case 'undo-pl': if (ui.toast && ui.toast.undo) S.saved = JSON.parse(ui.toast.undo); ui.toast=null; break;
+    case 'reset': S = sampleState(); ui.screen='plate'; prevGrams=null; toast('Alaphelyzetbe állítva.'); break;
+    case 'reset-first': S = firstRunState(); ui.screen='keret'; ui.keretDraft=null; ui.keretConfirm=null; prevGrams=null; break;
+    case 'keret-cancel': ui.screen='plate'; ui.keretDraft=null; ui.keretConfirm=null; break;
+    case 'keret-fix': ui.keretConfirm=null; break;
+    case 'keret-save': {
+      var pk = keretParse(ui.keretDraft); if (!pk.ok) return;
+      if (!t.dataset.force){ var sus = keretSuspicious(pk.k); if (sus.length){ ui.keretConfirm = sus; break; } }
+      var wasFirst = S.firstRun;
+      S.keret = pk.k; S.firstRun = false; ui.keretDraft=null; ui.keretConfirm=null; ui.screen='plate'; memo.key=null;
+      if (!wasFirst) toast('Keret mentve.');
+      break; }
+  }
+  render();
+});
+
+app.addEventListener('input', function(e){
+  var t = e.target;
+  if (t.id==='pick-q'){ ui.sheet.q = t.value; document.getElementById('pick-res').innerHTML = pickerResults(ui.sheet); return; }
+  if (t.id==='save-name'){ ui.sheet.name = t.value; return; }
+  if (/^c-(name|ch|fe|zs)$/.test(t.id)){
+    ui.customDraft[t.id.slice(2)] = t.value;
+    document.getElementById('c-err').textContent = customErr(ui.customDraft);
+    document.getElementById('c-save').disabled = !customValid(ui.customDraft); return;
+  }
+  if (t.dataset.k){
+    var d = ui.keretDraft, k = t.dataset.k;
+    if (t.dataset.j!=null) d[k][+t.dataset.j] = t.value; else d[k] = t.value;
+    ui.keretConfirm = null; var cf = app.querySelector('.confirm'); if (cf) cf.remove();
+    var p = keretParse(d);
+    ['ch','fe','zs','kcal','meals','min'].forEach(function(m){
+      var el = document.getElementById('e-'+m); if (el) el.textContent = p.err[m]||'';
+      app.querySelectorAll('[data-k="'+m+'"]').forEach(function(x){ x.classList.toggle('bad', !!p.err[m]); });
+    });
+    document.getElementById('meal').innerHTML = mealPreview(p);
+    document.getElementById('k-save').disabled = !p.ok;
+  }
+});
+app.addEventListener('keydown', function(e){
+  if (e.target.id==='gram-edit'){
+    if (e.key==='Enter'){ e.preventDefault(); commitGram(); }
+    else if (e.key==='Escape'){ ui.editing=null; render(); }
+  } else if (e.key==='Enter' && e.target.id==='save-name'){ e.preventDefault(); var b = app.querySelector('[data-a="save-do"]'); if (b) b.click(); }
+  else if (e.key==='Enter' && e.target.id==='rename'){ e.preventDefault(); var b2 = app.querySelector('[data-a="rename-do"]'); if (b2) b2.click(); }
+  else if (e.key==='Enter' && e.target.dataset && e.target.dataset.k){
+    e.preventDefault(); var ins = Array.prototype.slice.call(app.querySelectorAll('.form input')), ix = ins.indexOf(e.target);
+    if (ins[ix+1]) ins[ix+1].focus(); else e.target.blur();
+  }
+  else if (e.key==='Escape' && ui.sheet){ closeSheet(); render(); }
+});
+app.addEventListener('focusout', function(e){
+  if (e.target.id==='gram-edit') setTimeout(function(){ if (ui.editing!=null) commitGram(); }, 0);
+});
+
+load();
+if (S.firstRun) ui.screen = 'keret';
+render();
+})();
+</script>
