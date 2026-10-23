@@ -1,11 +1,11 @@
-# Ketara — UX-terv v0.3
+# Ketara — UX-terv v0.4
 
-*Kísérőanyag a PRD v1.0-hoz és a Folyamatok és képernyők v0.7-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.1-hez és a Folyamatok és képernyők v0.8-hoz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-10-08*
+*Utolsó frissítés: 2026-10-23*
 
-A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
-fiókját és nyilvános weboldalát követi (10. fejezet).
+A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.4 a PRD v1.1-et
+követi: nyilvános weboldal, fiók nélkül, az adat a böngészőben (10. fejezet).
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -24,7 +24,7 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 5. **Nincs várakozás.** A megoldó egy lineáris program 3–8 változóval: a számolás
    észrevétlen. Nincs pörgő ikon, nincs „Számolás…" gomb.
 6. **Öt képernyő.** Minden új igény előbb egy meglévő képernyő állapotaként próbálkozik.
-   (A Belépés és a Hozzájárulás eszközönként egyszer látszik, nem számít bele.)
+   (Belépés és hozzájárulás nincs: az első indítás egyből a Keret.)
 
 ---
 
@@ -35,16 +35,16 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
   (a rendszer-visszalépés mellett). Platformspecifikus minta (iOS-kapcsoló, Android FAB)
   nincs.
 - **Böngészőben fut** (nyilvános weboldal, PRD 2). Telefonon teljes képernyős; a kezdőképernyőre
-  tehető, így appként nyílik.
+  tehető, így appként nyílik (és így a Safari sem törli az adatát 7 nap használaton
+  kívül után).
 - Álló tájolás, egy oszlop. **Számítógépen ugyanez az oszlop, középre igazítva** (a
   felhasználó döntése); külön asztali elrendezés nincs. Tablet és fekvő nézet v1-ben nincs.
 - Csak magyar nyelv, tegező hangnem (PRD 10: több nyelv „dísz").
 - Csak világos téma (PRD 10: sötét mód „dísz"). A színek úgy készülnek, hogy később
   sötét változat is kijöhessen belőlük.
-- **Fiók, de a konyhában észrevétlen.** A belépés eszközönként egyszer történik. Utána
-  minden helyben fut: a megoldó és az adatok az eszközön vannak, hálózat nélkül is
-  működik, a szinkron a háttérben megy. A Tányéron nincs szinkron- vagy offline-jelzés; a
-  szinkron állapota csak a Keret alján, a Fiók blokkban látszik (8. fejezet).
+- **Fiók nélkül, helyben.** Nincs belépés. A megoldó és az adatok a böngészőben vannak,
+  hálózat nélkül is működik. A Tányéron nincs mentési vagy offline-jelzés; a biztonsági
+  mentés a Keret alján (8.3), az emlékeztetője a Tányérjaimban (7. fejezet) látszik.
 - **Az utolsó tányér megmarad.** Ha a felhasználó bezárja az appot főzés közben, és
   újranyitja, ugyanaz a tányér várja, ugyanazokkal a rögzítésekkel.
 
@@ -225,28 +225,29 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - Hosszú nyomás vagy „…" menü: `Átnevezés` · `Törlés` (visszavonással).
 - Üres állapot: a Folyamatok 6.3 szövege.
 - `+ Új tányér`: üres Tányér (ugyanaz a figyelmeztetés, ha van nem mentett munka).
+- **Mentési emlékeztető** a lista alján, ha van tányér, amely a legutóbbi biztonsági
+  mentés óta készült vagy frissült: halk sor + `Mentés fájlba` szöveges gomb
+  (Folyamatok 6.3). Nem ugrik fel, nem színes, és a Tányéron soha nem jelenik meg.
 
 ---
 
-## 8. Belépés, Keret és első indítás
+## 8. Első indítás, Keret és biztonsági mentés
 
-### 8.1 Belépés és hozzájárulás
+### 8.1 Első indítás
 
-- **Belépés:** a termék ígérete egy mondatban, egy e-mail-mező (e-mail-billentyűzettel,
-  automatikus kitöltéssel), egy gomb. Jelszó nincs (Folyamatok 6.5).
-- Elküldés után ugyanaz a képernyő mutatja, hova ment a link, `Újraküldés` és
-  `Másik e-mail-cím` gombbal. Lejárt vagy felhasznált linknél egy sor és egy gomb: új link.
-- **Hozzájárulás** csak új fióknál: figyelmeztetés + egy jelölőnégyzet, az adatvédelmi
-  tájékoztató linkjével; a `Tovább` pipa nélkül nem aktív (Folyamatok 6.6).
+- Nincs belépés és nincs hozzájárulási képernyő: az első képernyő a Keret.
+- A Keret tetején egy mondat, másodlagos szövegként: „A Ketara számol, nem tanácsot ad.
+  Nem helyettesíti a dietetikust." és az `Adatvédelmi tájékoztató` link.
+- Alatta egy halk sor: „Van biztonsági mentésed? `Visszaállítás fájlból`". Sikeres
+  visszaállítás után rögtön a Tányér jön, a visszaállított adatokkal; a Keret nem
+  kérdeződik újra.
 - **Süti-sáv** az első megnyitáskor a képernyő alján. Két egyenrangú gomb, azonos
   méretben és súlyban: `Elfogadom` · `Csak a szükségesek`. Egyik sem hangsúlyosabb, és a
-  sáv bezárás nélkül nem tűnik el. Amíg nincs választás, a Belépés használható mellette.
-- Új eszközön, meglévő fióknál a link után rögtön a Tányér jön, a fiók adataival; a
-  Keret nem kérdeződik újra.
+  sáv bezárás nélkül nem tűnik el. Amíg nincs választás, a Keret használható mellette.
 
 ### 8.2 Keret
 
-- Első indításkor (új fióknál) a Keret egyetlen képernyőn nyílik, fölötte egy mondat:
+- Első indításkor a Keret egyetlen képernyőn nyílik, fölötte egy mondat:
   „Írd be a dietetikusod számait. Csak egyszer kell."
 - Mezők párban (alsó–felső), numerikus billentyűzettel; a „Tovább" gomb a következő mezőre
   ugrik, így végig lehet menni rajta a papír sorrendjében.
@@ -256,20 +257,25 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - Logikai hiba: a hibás sor alatt, borostyán színnel, mentés tiltva. Gyanús érték: mentéskor
   párbeszéd a Folyamatok 6.4 szövegével, „Igen, így van" / „Javítom".
 - A kcal-sáv mezői fölött: „Ha a papíron van." — hogy üresen hagyni is természetes legyen.
-- A Mentés gomb alatt a figyelmeztetés egy sorban, másodlagos szövegként: „A Ketara
-  számol, nem tanácsot ad. Nem helyettesíti a dietetikust."
+- Később a Mentés gomb alatt a figyelmeztetés egy sorban, másodlagos szövegként: „A Ketara
+  számol, nem tanácsot ad. Nem helyettesíti a dietetikust." (Első indításkor a képernyő
+  tetején áll, 8.1.)
 
-### 8.3 Fiók (a Keret alján)
+### 8.3 Biztonsági mentés (a Keret alján)
 
-- A figyelmeztetés alatt, elválasztó után: e-mail-cím · szinkron állapota · Sütik
-  (a jelenlegi választás, koppintásra a süti-sáv két gombja alsó lapon) · Adatvédelmi
-  tájékoztató · Kijelentkezés · Fiók törlése.
-- Az első indításkor a Fiók blokk nem látszik: ott a Keret egyetlen dolga a beállítás.
-- **Kijelentkezés** visszavonás nélkül, de megerősítés nélkül is: az adat a fiókban
-  megmarad, újra be lehet lépni.
-- **Fiók törlése** az egyetlen megerősítő kérdés a termékben, mert nem vonható vissza:
-  alsó lap a következményekkel, `Végleg törlöm` (borostyán keretes, nem kitöltött) és
-  `Mégse` (elsődleges). Törlés után a Belépés képernyő jön.
+- A figyelmeztetés alatt, elválasztó után a **Biztonsági mentés** blokk: állapotsor
+  („Utolsó mentés: {dátum}." / „Még nincs biztonsági mentésed.", változás esetén alatta
+  „Azóta változott valami.") · `Mentés fájlba` (másodlagos gomb) · `Visszaállítás
+  fájlból` (szöveges gomb).
+- Újabb elválasztó után: Sütik (a jelenlegi választás, koppintásra a süti-sáv két gombja
+  alsó lapon) · Adatvédelmi tájékoztató · Adataim törlése.
+- Az első indításkor a blokk nem látszik: ott a Keret egyetlen dolga a beállítás, a
+  visszaállítás a képernyő tetején kínálkozik (8.1).
+- **Mentés fájlba** a böngésző letöltését indítja; utána egy rövid sáv alul: „Mentve."
+- **Visszaállítás** és **Adataim törlése** a két megerősítő kérdés a termékben, mert nem
+  vonhatók vissza: alsó lap a következményekkel, `Visszaállítom` / `Végleg törlöm`
+  (borostyán keretes, nem kitöltött) és `Mégse` (elsődleges). Törlés után az első indítás
+  jön. Hibás fájlnál nincs kérdés, csak egy sor: a mostani adat megmaradt.
 
 ---
 
@@ -297,7 +303,11 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 | Melyik telefonon fut? | Platformfüggetlen (2. fejezet) |
 | Lássa-e a makrókat ✓ állapotban is? | Igen (4.4) |
 | Kell-e kattintható prototípus a teszthez? | Igen: `ux/prototipus/ketara-prototipus.html` |
-| Hol vannak a fiókbeállítások? (2026-10-08) | A Keret alján, nem külön képernyőn (8.3) |
+| Hol van a biztonsági mentés? (2026-10-23) | A Keret alján, nem külön képernyőn (8.3) |
+| Hol látszik a figyelmeztetés első indításkor? (2026-10-23) | Egy mondat a Keret tetején, külön képernyő nélkül (8.1) |
+| Hogy hívjuk a mentés gombjait? (2026-10-23) | „Biztonsági mentés": `Mentés fájlba` · `Visszaállítás fájlból` (8.3) |
+| Hol emlékeztet a mentésre? (2026-10-23) | A Keret alján és egy halk sorban a Tányérjaimban; felugró nincs (7., 8.3) |
+| Legyen-e adattörlés gomb? (2026-10-23) | Igen: „Adataim törlése" a Keret alján, megerősítéssel (8.3) |
 | Hogy néz ki számítógépen? (2026-10-08) | Ugyanaz az oszlop, középre igazítva (2. fejezet) |
 
 ## 11. A prototípusról
@@ -310,6 +320,6 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
   végleges 40–60 tételes lista) és két mentett mintatányért.
 - Az állapotot a böngésző helyben megőrzi; „Prototípus alaphelyzetbe" gomb a
   Tányérjaim alján állítja vissza.
-- Nem része: haptika, rendszerértesítések, valódi adattárolás, és a v0.3 fiókrésze
-  (Belépés, Hozzájárulás, süti-sáv, Fiók blokk). A végfelhasználó a prototípus
-  viselkedését 2026-10-08-án elfogadta; a fiók képernyői a prototípusban nem szerepelnek.
+- Nem része: haptika, rendszerértesítések, valódi adattárolás, és a v0.4 mentésrésze
+  (biztonsági mentés, visszaállítás, emlékeztető, adattörlés, süti-sáv, a figyelmeztetés a
+  Keret tetején). A végfelhasználó a prototípus viselkedését 2026-10-08-án elfogadta.

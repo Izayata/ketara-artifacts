@@ -265,19 +265,25 @@ egy gombbal visszatölti.
 - **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak. A konyhában
   ez nem luxus.
 - A termék **tartós tárolást kér** a böngészőtől, hogy az adat ne törlődjön magától.
-- **Mentésfájl készítése:** a Keret képernyőn egy gomb letölt egy fájlt, benne minden
-  felhasználói adattal. A fájl a felhasználónál van; a termék nem küldi sehova.
-- **Mentésfájl visszatöltése:** a Keret képernyőn egy gomb beolvassa a fájlt. A
-  visszatöltés **felülírja** a böngészőben lévő adatot, ezért a termék előtte egyszer
-  rákérdez.
-- Ha a legutóbbi mentésfájl óta változott a keret, saját alapanyag vagy tányér, a Keret
-  képernyőn egy sor jelzi, mikor készült az utolsó mentés (vagy hogy még nem készült).
+- A felületen a neve **Biztonsági mentés**, a Keret alján.
+- **Mentés fájlba:** letölt egy mentésfájlt, benne minden felhasználói adattal. A fájl a
+  felhasználónál van; a termék nem küldi sehova.
+- **Visszaállítás fájlból:** beolvassa a mentésfájlt. A visszaállítás **felülírja** a
+  böngészőben lévő adatot, ezért a termék előtte egyszer rákérdez (első indításkor nem,
+  mert nincs mit felülírni).
+- **Emlékeztető:** a Keret alján egy sor mutatja, mikor volt az utolsó mentés, és jelzi,
+  ha azóta változott valami. Ha van tányér, amely a legutóbbi mentés óta készült vagy
+  frissült, a Tányérjaim alján is egy halk sor és egy `Mentés fájlba` gomb látszik. Felugró
+  emlékeztető nincs, a Tányéron nem jelenik meg.
+- **Adataim törlése:** a Keret alján; egy megerősítés után minden felhasználói adatot
+  töröl ebből a böngészőből.
 
 ### 6.7 Jogi szövegek
 - **Egészségügyi figyelmeztetés:** a Ketara számol, nem tanácsot ad; nem helyettesíti a
-  dietetikust. Első indításkor és a Keret képernyőn látható.
+  dietetikust. Első indításkor egy mondat a Keret tetején, később a Keret alján.
+  Külön képernyő nincs.
 - **Adatvédelmi tájékoztató:** az étrendi adat csak a böngészőben van, a termék nem
-  látja; hogyan törölhető (böngészőadat törlése); mit mér az analitika (6.8).
+  látja; hogyan törölhető (Adataim törlése, 6.6); mit mér az analitika (6.8).
 - **Süti-hozzájárulás:** az analitika csak elfogadás után indul (6.8).
 
 ### 6.8 Használati mérés
@@ -419,7 +425,7 @@ ingyenes.
 | **feloldás** | a rögzítés visszavonása: az adag újra szabaddá válik a megoldónak |
 | **referenciatányér** | a megszokott mennyiségek, amikhez a megoldó a legközelebbi megoldást keresi (relatív eltérésben mérve) |
 | **alapérték** | a referencia, amikor még nincs korábbi használat |
-| **mentésfájl** | a böngészőben tárolt összes felhasználói adat (keret, saját alapanyagok, tányérok, „legutóbb használt") egy letölthető fájlban; ezzel vihető át másik eszközre |
+| **mentésfájl** | a biztonsági mentés fájlja: a böngészőben tárolt összes felhasználói adat (keret, saját alapanyagok, tányérok, „legutóbb használt") egy letölthető fájlban; ezzel vihető át másik eszközre |
 | **legközelebbi elérhető** | a kimenet, ha a sáv nem érhető el: a legkisebb teljes kilógású tányér; mindig a kilógás mértékével együtt |
 
 ---
@@ -479,6 +485,10 @@ ingyenes.
 | 2026-10-23 | **Nincs fiók és szinkron v1-ben**; a 2026-10-08-i fiókos és e-mailes belépéses döntés visszavonva | a felhasználó döntése; nincs szerver oldali felhasználói adat, levelezőszolgáltatás, és az étrendi adat nem kerül szerverre |
 | 2026-10-23 | **Helyi tárolás a böngészőben + mentésfájl** (kimentés és visszatöltés), e-mail nélkül | a felhasználó döntése; a tányér megmarad, és eszközváltáskor is átvihető |
 | 2026-10-23 | **A visszatöltés felülír**, egy rákérdezéssel | az összefésülés ütközéseket hozna; egy embernek egy aktuális adatkészlete van |
+| 2026-10-23 | **A figyelmeztetés első indításkor egy mondat a Keret tetején**, hozzájárulási képernyő nincs | a felhasználó döntése; fiók nélkül nincs mihez hozzájárulni, egy külön lap csak lassítana |
+| 2026-10-23 | **A felületen „Biztonsági mentés"**: `Mentés fájlba` · `Visszaállítás fájlból` | a felhasználó döntése; kimondja, hogy az adatvesztés ellen véd |
+| 2026-10-23 | **Mentési emlékeztető a Keret alján és a Tányérjaimban**, felugró nélkül | a felhasználó döntése; a tányérokat ott nézi, a konyhai Tányér tiszta marad |
+| 2026-10-23 | **„Adataim törlése" gomb** a Keret alján, megerősítéssel | a felhasználó döntése; közös gépen vagy eszköz átadása előtt egy gombbal törölhető |
 
 ## Javítások
 

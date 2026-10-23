@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.7
+# Ketara — Folyamatok és képernyők v0.8
 
-*Kísérőanyag a PRD v1.0-hoz. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-10-08*
+*Kísérőanyag a PRD v1.1-hez. Minden döntés onnan származik.*
+*Utolsó frissítés: 2026-10-23*
 
 ---
 
@@ -21,9 +21,9 @@
    A **Tányér a főképernyő**; a Tányérjaim nem előzmény, hanem **kiindulópont-tár**.
    Egy mentett tányér megnyitása nem olvasás, hanem újraszámolás.
 
-5. **Nyilvános weboldal, fiókkal** (PRD 6.6). Belépés e-mailes linkkel, egyszer
-   eszközönként; utána a konyhában a fiók észrevétlen: hálózat nélkül is működik, a
-   szinkron a háttérben fut. A fiókbeállítások a Keret alján vannak, nem külön képernyőn.
+5. **Nyilvános weboldal, fiók nélkül** (PRD 6.6). Nincs belépés: minden adat a
+   böngészőben van, és hálózat nélkül is működik. A biztonsági mentés (mentés fájlba,
+   visszaállítás fájlból) a Keret alján van, nem külön képernyőn.
 
 ---
 
@@ -100,13 +100,10 @@ régi tányérokon. Külön ellenőrzés nem kell.
 
 ```mermaid
 flowchart TD
-    A0[Első megnyitás] --> A1["Belépés: e-mail-cím<br/>alul süti-sáv"]
-    A1 --> A2["Nézd meg a leveled"]
-    A2 --> A3[Koppintás a levélben kapott linkre]
-    A3 --> A4{Új fiók?}
-    A4 -- "nem, új eszköz" --> J0["Tányér — a fiók adataival"]
-    A4 -- igen --> A5["Hozzájárulás: figyelmeztetés +<br/>adatkezelési hozzájárulás"]
-    A5 --> B[Keret beállítása]
+    A0[Első megnyitás] --> A1["Keret, fölötte a figyelmeztetés<br/>alul süti-sáv"]
+    A1 -- "van biztonsági mentésem" --> R["Visszaállítás fájlból"]
+    R --> J0["Tányér — a visszaállított adatokkal"]
+    A1 --> B[Keret beállítása]
     B --> C[Napi sávok: CH, fehérje, zsír, kcal]
     C --> D[Étkezések száma]
     D --> E[Zsír–fehérje arány]
@@ -123,16 +120,14 @@ flowchart TD
     I -- igen --> J[Tányér, üres]
 ```
 
-**Belépés.** Egy mező, egy gomb. Jelszó nincs; a link egyszer használható, és lejár. Ha
-lejárt vagy már felhasználták, a képernyő megmondja, és egy gombbal újat küld. Egy eszközön
-a belépés megmarad: a konyhában soha nem kell újra belépni.
+**Első indítás.** Nincs belépés és nincs hozzájárulás: az első képernyő a Keret. A
+tetején egy mondat a figyelmeztetéssel („A Ketara számol, nem tanácsot ad. Nem
+helyettesíti a dietetikust.") és az adatvédelmi tájékoztató linkjével. Alatta egy halk
+sor: „Van biztonsági mentésed? Visszaállítás fájlból" — eszközváltáskor ezzel a Keret
+kitöltése kimarad. Első indításkor a visszaállítás nem kérdez rá, mert nincs mit
+felülírnia.
 
-**Hozzájárulás.** Csak új fióknál, egyszer. Két dolog egy képernyőn: a figyelmeztetés
-(„A Ketara számol, nem tanácsot ad.") és a kifejezett hozzájárulás az étrendi adatok
-kezeléséhez (PRD 6.6), az adatvédelmi tájékoztató linkjével. Hozzájárulás nélkül nincs
-tovább: a fiók az adat tárolásáról szól.
-
-**Süti-sáv.** Az első megnyitáskor alul, a Belépés fölött. Két egyenrangú gomb:
+**Süti-sáv.** Az első megnyitáskor a Keret alján. Két egyenrangú gomb:
 `Elfogadom` és `Csak a szükségesek`. A választás a Keret alján bármikor módosítható. Az
 analitika csak elfogadás után indul (PRD 6.8).
 
@@ -150,13 +145,12 @@ számunk más, azonnal látja, és rögtön kiderül, hogy félreértettük a pa
 | 2 | **Alapanyag-választó** | Alsó lap: keresés, kategóriák, legutóbbiak. |
 | 3 | **Saját alapanyag** | Név, kategória, 100 g tápérték. |
 | 4 | **Tányérjaim** | Kiindulópontok: mentett alapanyag-kombinációk, megnyitáskor újraszámolva. |
-| 5 | **Keret** | A dietetikus számai, a belőlük számolt étkezési cél, alul a fiók. |
+| 5 | **Keret** | A dietetikus számai, a belőlük számolt étkezési cél, alul a biztonsági mentés. |
 
 Öt képernyő. Ha ennél több lesz, valamit rosszul csinálunk.
 
-A **Belépés** és a **Hozzájárulás** nem számít bele: eszközönként egyszer látszanak, a
-konyhai használat része nem. A fiókbeállítások a Keret alján vannak (6.4), mert az is
-ritkán nyitott képernyő.
+Belépés és hozzájárulás nincs. A biztonsági mentés a Keret alján van (6.4), mert az is
+ritkán nyitott képernyő; emlékeztetője a Tányérjaimban (6.3).
 
 ---
 
@@ -392,8 +386,16 @@ fér el. Nézd meg a csomagolást."* Nem „érvénytelen bevitel".
 │ tojás · brokkoli · olaj          │
 │                                  │
 │ [ + Új tányér                  ] │
+│ ──────────────────────────────── │
+│ 2 tányér még nincs a biztonsági  │
+│ mentésben.        Mentés fájlba  │
 └──────────────────────────────────┘
 ```
+
+**Mentési emlékeztető.** Csak akkor látszik, ha van tányér, amely a legutóbbi biztonsági
+mentés óta készült vagy frissült (vagy még egyáltalán nem volt mentés). Halk sor a lista
+alján, egy szöveges gombbal; nem ugrik fel, és a Tányéron soha nem jelenik meg. Mentés
+után eltűnik.
 
 **Üres állapot — az első nap:**
 *„Még nincs mentett tányérod. Számolj ki egyet, és mentsd el — legközelebb innen indulhatsz."*
@@ -427,24 +429,34 @@ látja, azt fogja hinni, hogy elromlott valami — ezért a fejlécben egy sor:
 │ A Ketara számol, nem tanácsot ad.│
 │ Nem helyettesíti a dietetikust.  │
 │ ──────────────────────────────── │
-│ Fiók                             │
-│ anna@pelda.hu                    │
-│ Minden eszközödön szinkronban.   │
+│ Biztonsági mentés                │
+│ Utolsó mentés: okt. 12.          │
+│ Azóta változott valami.          │
+│ [ Mentés fájlba                ] │
+│ Visszaállítás fájlból            │
+│ ──────────────────────────────── │
 │ Sütik: csak a szükségesek     >  │
 │ Adatvédelmi tájékoztató       >  │
-│ Kijelentkezés                    │
-│ Fiók törlése                     │
+│ Adataim törlése                  │
 └──────────────────────────────────┘
 ```
 
-**Fiók blokk.** A Keret alatt, a Mentés gomb után, hogy a beállítás útjában ne legyen. A
-szinkron állapota egy sor: „Minden eszközödön szinkronban." vagy, ha hálózat nélkül van
-el nem küldött változás: „Nincs kapcsolat. A változásaid megvannak, és elküldöm őket,
-amint lesz." A Tányéron a szinkron nem jelenik meg: a konyhában nem kell tudni róla.
+Első indításkor a figyelmeztetés a képernyő tetején áll (3. folyamat), és a Biztonsági
+mentés blokk nem látszik, csak a „Visszaállítás fájlból" sor a figyelmeztetés alatt.
 
-**Fiók törlése** az egyetlen hely, ahol megerősítő kérdés van visszavonás helyett, mert
-nem vonható vissza: alsó lap — „Minden adatod törlődik: a keret, a saját alapanyagaid és a
-tányérjaid. Ez nem vonható vissza." — `Végleg törlöm` / `Mégse`.
+**Biztonsági mentés blokk.** A Keret alatt, a Mentés gomb után, hogy a beállítás útjában
+ne legyen. Az állapotsor: „Utolsó mentés: {dátum}." vagy „Még nincs biztonsági mentésed."
+Ha azóta változott a keret, saját alapanyag vagy tányér, alatta: „Azóta változott valami."
+- `Mentés fájlba` letölti a mentésfájlt (PRD 6.6). A fájl a felhasználónál marad.
+- `Visszaállítás fájlból` fájlválasztót nyit. Beolvasás után alsó lap: „A visszaállítás
+  felülírja a mostani adataidat: a keretet, a saját alapanyagaidat és a tányérjaidat." —
+  `Visszaállítom` / `Mégse`. Hibás fájlnál nem tölt be semmit: „Ez a fájl nem Ketara
+  biztonsági mentés. A mostani adataid megmaradtak."
+
+**Adataim törlése** és a visszaállítás az a két hely, ahol megerősítő kérdés van
+visszavonás helyett, mert nem vonhatók vissza: alsó lap — „Minden adatod törlődik ebből
+a böngészőből: a keret, a saját alapanyagaid és a tányérjaid. Ha később kellhet, előbb
+mentsd fájlba." — `Végleg törlöm` / `Mégse`. Törlés után az első indítás jön.
 
 Az alsó blokk a lényeg. **Nem beviteli mező, hanem visszajelzés** — ő négy éve tudja
 fejből, mennyi jön ki egy étkezésre, és itt azonnal látja, hogy jól értettük-e a papírt.
@@ -465,50 +477,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 
 ---
 
-### 6.5 Belépés
-
-```
-┌──────────────────────────────────┐
-│ Ketara                           │
-│                                  │
-│ Megmondja, hány grammot vegyél   │
-│ abból, ami előtted van.          │
-│                                  │
-│ E-mail-cím                       │
-│ [ anna@pelda.hu                ] │
-│                                  │
-│ [ Belépési link küldése        ] │
-│                                  │
-│ Jelszó nincs: e-mailben küldök   │
-│ egy linket, azzal lépsz be.      │
-└──────────────────────────────────┘
-```
-
-**Elküldés után** ugyanez a képernyő: „Elküldtem a linket ide: anna@pelda.hu. Nyisd meg
-ezen a telefonon." + `Újraküldés` · `Másik e-mail-cím`.
-
-### 6.6 Hozzájárulás
-
-```
-┌──────────────────────────────────┐
-│ Mielőtt elkezded                 │
-│                                  │
-│ A Ketara számol, nem tanácsot ad.│
-│ Nem helyettesíti a dietetikust:  │
-│ a számokat ő adja, te írod be.   │
-│                                  │
-│ ☐ Hozzájárulok, hogy a Ketara    │
-│   tárolja az étrendi adataimat   │
-│   (keret, alapanyagok, tányérok).│
-│   Adatvédelmi tájékoztató >      │
-│                                  │
-│ [ Tovább                       ] │
-└──────────────────────────────────┘
-```
-
-A `Tovább` a pipa nélkül nem aktív.
-
-### 6.7 Süti-sáv
+### 6.5 Süti-sáv
 
 ```
 │ ──────────────────────────────── │
@@ -552,16 +521,16 @@ A `Tovább` a pipa nélkül nem aktív.
 | Keret, gyanúsan szűk | Ez a sáv nagyon szűk, kevés tányér fog beleférni. Biztosan így van a papíron? |
 | Keret, lehetetlen (alsó > felső) | Az alsó határ nagyobb a felsőnél. Nézd meg a papírt. |
 | Keret, lehetetlen (arány) | A zsírsáv teteje kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jönne ki. |
-| Belépés, ígéret | Megmondja, hány grammot vegyél abból, ami előtted van. |
-| Belépés, magyarázat | Jelszó nincs: e-mailben küldök egy linket, azzal lépsz be. |
-| Link elküldve | Elküldtem a linket ide: {e-mail}. Nyisd meg ezen a telefonon. |
-| Link lejárt / felhasznált | Ez a link már nem érvényes. Küldök egy újat. |
 | Figyelmeztetés | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust. |
-| Hozzájárulás | Hozzájárulok, hogy a Ketara tárolja az étrendi adataimat (keret, alapanyagok, tányérok). |
 | Süti-sáv | Sütiket használok, hogy lássam, mi működik. Étrendi adat nem kerül bele. |
-| Szinkron rendben | Minden eszközödön szinkronban. |
-| Szinkron, nincs kapcsolat | Nincs kapcsolat. A változásaid megvannak, és elküldöm őket, amint lesz. |
-| Fiók törlése | Minden adatod törlődik: a keret, a saját alapanyagaid és a tányérjaid. Ez nem vonható vissza. |
+| Első indítás, visszaállítás | Van biztonsági mentésed? Visszaállítás fájlból |
+| Biztonsági mentés, állapot | Utolsó mentés: {dátum}. / Még nincs biztonsági mentésed. |
+| Biztonsági mentés, változás | Azóta változott valami. |
+| Tányérjaim, emlékeztető | {n} tányér még nincs a biztonsági mentésben. |
+| Visszaállítás, kérdés | A visszaállítás felülírja a mostani adataidat: a keretet, a saját alapanyagaidat és a tányérjaidat. |
+| Visszaállítás, hibás fájl | Ez a fájl nem Ketara biztonsági mentés. A mostani adataid megmaradtak. |
+| Visszaállítás kész | Visszaállítva. |
+| Adataim törlése | Minden adatod törlődik ebből a böngészőből: a keret, a saját alapanyagaid és a tányérjaid. Ha később kellhet, előbb mentsd fájlba. |
 
 
 Minden szöveg tegező, kijelentő, és **megmondja a következő lépést.** Nincs „Hiba
