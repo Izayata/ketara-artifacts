@@ -1,8 +1,8 @@
-# Ketara — PRD v1.0
+# Ketara — PRD v1.1
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
-*Utolsó frissítés: 2026-10-08*
+*Utolsó frissítés: 2026-10-23*
 
 ---
 
@@ -30,7 +30,7 @@ Nem sportoló, nem fitneszes, nem a konditeremből érkezik.
 **Másodlagos:** v1-ben nincs. Szándékosan.
 
 **Elérés:** a Ketara **nyilvános weboldal**, böngészőből használható, **ingyenes** és
-**magyar nyelvű**. Bárki regisztrálhat, de a termék továbbra is a fenti elsődleges
+**magyar nyelvű**. Bárki megnyithatja, regisztráció nélkül, de a termék továbbra is a fenti elsődleges
 felhasználóra készül: egy ember, a saját dietetikusi papírjával.
 
 **Kifejezetten nem:** a makrót követő testépítő; az edző és a rábízott kliensek; aki
@@ -64,16 +64,11 @@ felhasználóra készül: egy ember, a saját dietetikusi papírjával.
    (relatív eltérésben mérve, 6.3), egész grammra kerekítve.
 8. **Két kimeneti állapot** — sávon belül, illetve legközelebbi elérhető + a kilógás
    mértéke + a helyreállítás útja.
-9. **Tányér mentése** saját néven, a grammokkal együtt.
-10. **Mentett tányér előhívása** és újraszámolása.
-11. **Tányér frissítése** — mentett tányérból indulva a horgony felülírható az új
-    arányokkal, egy gombbal.
-12. **Fiók és szinkron** — belépés e-mailben kapott linkkel, jelszó nélkül. A keret, a
-    saját alapanyagok, a mentett tányérok és a „legutóbb használt" mennyiségek a fiókhoz
-    tartoznak, és minden eszközön ugyanazok (6.6).
-13. **Jogi szövegek** — egészségügyi figyelmeztetés, adatvédelmi tájékoztató, süti-
+9. **Helyi adattárolás** — a keret és a saját alapanyagok a böngészőben, az eszközön
+   tárolódnak. Nincs fiók, nincs belépés, nincs szinkron (6.6).
+10. **Jogi szövegek** — egészségügyi figyelmeztetés, adatvédelmi tájékoztató, süti-
     hozzájárulás (6.7).
-14. **Használati mérés** — webanalitika, a süti-hozzájárulás után (6.8).
+11. **Használati mérés** — webanalitika, a süti-hozzájárulás után (6.8).
 
 ## 5. Out of scope — és miért
 
@@ -82,10 +77,11 @@ felhasználóra készül: egy ember, a saját dietetikusi papírjával.
 | Napi naplózás, étkezésnyilvántartás | Étkezésenként dolgozunk. A napkövetés külön termék, és ott a KalóriaBázis 150 000 tétellel és félmillió felhasználóval van jelen. |
 | Vonalkód, Open Food Facts integráció | A gondozott lista lefedi a főzős életet. Az OFF adatait önkéntesek viszik fel, pontosságra nincs garancia — dietetikusi sávnál ez érzékeny. |
 | Célkalkulátor (BMR/TDEE) | A számokat a dietetikus adja. Fél terméknyi munka megspórolva. |
-| Edző / kliens szerepek, közös vagy megosztott fiók | Másik termék. Minden fiók egy emberé. |
+| Felhasználói fiók, belépés, felhőszinkron, fióktörlés | **v1.1-ben kivéve** (a felhasználó döntése, 2026-10-23). Minden adat az eszközön marad; nincs mit belépéssel, szerveren és GDPR-hozzájárulással védeni. |
+| Tányér mentése, mentett tányér előhívása és frissítése | **v1.1-ben kivéve** (a felhasználó döntése, 2026-10-23). A megoldó minden étkezésnél újraszámol; a referencia a kategória-alapérték és az egyedi felülírás (6.3). |
+| Edző / kliens szerepek | Másik termék. |
 | Főtt–nyers súlyátváltás, receptek | **Véglegesen kimarad**, nem csak v1-ből: minden számolás nyers alapanyaggal történik. |
 | Mikrotápanyagok, rost, só, vitaminok | A papíron nincsenek. |
-| Jelszavas belépés, Google- / Apple-belépés | Az e-mailes link a legkevesebb tárolt titok és a legkevesebb függés. |
 | Fizetés, előfizetés | A termék ingyenes. |
 | Alkalmazásbolti (iOS / Android) kiadás | Böngészőből fut, nincs mit telepíteni. |
 | Más nyelvek | Indulásnál csak magyar; a szövegek később fordíthatók (10. Dísz). |
@@ -141,8 +137,7 @@ a sávokhoz képest.
 **A termék:** felkínálja ugyanannak a kategóriának a tagjait, majd helyben lecseréli és
 újraszámol.
 **Szabály:** a csere **leveszi a rögzítést** az adott sorról. 180 g brokkolit rögzíteni nem
-ugyanaz, mint 180 g zöldbabot. Az új alapanyag referenciája a saját legutóbbi használata,
-ennek hiányában az egyedi felülírása, végül a kategória alapértéke (6.3).
+ugyanaz, mint 180 g zöldbabot. Az új alapanyag referenciája az egyedi felülírása, ennek hiányában a kategória alapértéke (6.3).
 
 ### 6.3 A megoldó választási szabálya
 **A szabály:** a sávon belüli megoldások közül azt választja, amelyik a
@@ -161,20 +156,19 @@ program: gyors, pontos, és ugyanarra a bemenetre mindig ugyanazt adja.
 3. ezek közül a referenciához legközelebbi (relatív eltérés, mint fent).
 
 A referencia forrása, ebben a sorrendben:
-1. ha mentett tányérból indult: a **tányérban tárolt** mennyiség — a tányér egy megőrzött
-   arány, és ez az egyetlen dolog, amit hordoz;
-2. egyébként amennyit a felhasználó **legutóbb** használt ebből az alapanyagból. A
-   „legutóbb használt" **mentéskor** frissül (Tányér mentése, frissítése, Mentés így,
-   Mentés új néven); a sima újraszámolás nem írja felül, így a referencia nem sodródik;
-3. ha nincs ilyen, az alapanyag **egyedi felülírása**, végül a **kategória alapértéke**.
+1. az alapanyag **egyedi felülírása**, ha van;
+2. egyébként a **kategória alapértéke**.
+
+A referencia nem függ a korábbi használattól (v1.1-től nincs mentett tányér és „legutóbb
+használt" mennyiség), így nem sodródik: ugyanarra a bemenetre mindig ugyanaz a tányér jön.
 
 **Kategória-alapértékek** (kiinduló számok a keto sávhoz, a lista összeállításakor
 véglegesítendők): fehérjeforrás 100 g · gabonaköret 10 g nyersen · zöldség 100 g ·
 zsiradék 30 g · gyümölcs 50 g · tejtermék 50 g. Ahol a kategória alapértéke nyilvánvalóan
 rossz (saláta 100 g helyett 50 g), az alapanyag **egyedi felülírást** kap.
 
-Az alapérték csak horgony: az első használat után a felhasználó saját mennyisége veszi át
-a helyét. Ezért elég, ha irányban jó.
+Az alapérték a horgony: minden tányér ehhez igazodik, ezért a lista összeállításakor
+érdemes jól belőni, és ahol kell, egyedi felülírást adni.
 
 **Kerekítés:** a megoldó törtgrammal számol, a kiírás egész gramm. A **kiírt, kerekített
 tányér** a mérvadó: erre számolja a makrókat és a ✓/⚠ állapotot. Ha a kerekítés kiléptetne
@@ -188,7 +182,7 @@ Példa (illusztratív számok, nem a valós keret). Keret egy étkezésre:
 **CH 5–10 g · fehérje 20–25 g · zsír 45–70 g · zsír ≥ 2 × fehérje.**
 Tápértékek 100 g-ban, nyersen: tojás CH 0,7 · Fe 12,6 · Zs 10 · brokkoli CH 7 · Fe 2,8 ·
 Zs 0,4 · olaj Zs 100. Alapanyagok: tojás (fehérjeforrás), brokkoli (zöldség), olaj
-(zsiradék). Nincs előzmény, a referencia a kategória-alapérték: **100 g tojás · 100 g
+(zsiradék). Nincs egyedi felülírás, a referencia a kategória-alapérték: **100 g tojás · 100 g
 brokkoli · 30 g olaj**.
 
 **Sávon belül** (CH 8,0 · Fe 20,1 · Zs 45,1 · arány 2,2 : 1). Csak a tojás mozdul
@@ -196,7 +190,6 @@ brokkoli · 30 g olaj**.
 ```
 ✓  137 g tojás · 100 g brokkoli · 31 g olaj (nyersen)
    Minden érték a sávon belül.
-   [ Tányér mentése ]
 ```
 
 **Legközelebbi elérhető** — a felhasználó rögzítette a tojást 240 g-ra (négy tojás)
@@ -212,7 +205,6 @@ az arány kér (39 g):
    137 g tojás · 100 g brokkoli · 31 g olaj (nyersen) → minden érték a sávon belül.
 
    [ Tojás feloldása ]        [ + Alapanyag ]
-   [ Mentés így ]
 ```
 
 **Szabályok a ⚠ állapotra:**
@@ -230,45 +222,26 @@ az arány kér (39 g):
   oldja meg. A termék akkor jó, ha megmondja, melyik lépés vezet valahova.
 - A feloldás nem törli az alapanyagot: csak visszaadja a grammját a megoldónak.
 - Ha nincs rögzítés, a feloldó gomb nem létezik.
-- A **Mentés így** mindig ott van: a felhasználó dönti el, mit eszik meg. A termék egyszer,
-  világosan megmondja a kilógást, és nem kérdez rá kétszer.
+- A felhasználó dönti el, mit eszik meg. A termék egyszer, világosan megmondja a kilógást,
+  és nem kérdez rá kétszer.
 
-### 6.5 Mentés
-**Saját alapanyag:** név + kategória + 100 g tápérték, nyers súlyra. Bekerül a listába,
-kereshető.
+### 6.5 Saját alapanyag mentése
+Név + kategória + 100 g tápérték, nyers súlyra. Bekerül a listába, kereshető.
 
-**Tányér:** saját név + az alapanyagok a kiszámolt grammokkal. A tárolt grammok **nem kész
-válasz, hanem horgony**: a grammok minden étkezésnél újra kiszámolódnak, mert a valóság
-(mennyi hús van itthon, van-e brokkoli) minden alkalommal más. A tányér azt őrzi meg,
-milyen *arányban* szereti ezeket együtt.
-
-**Tányér frissítése:** ha mentett tányérból indult és **bármelyik kiírt (egész) gramm**
-eltér a tárolttól, a mentés helyén két lehetőség áll: *„{Név} frissítése"* és *„Mentés új
-néven"*. Tűréshatár nem kell: a megoldó determinisztikus, ugyanarra a bemenetre ugyanazt
-adja, így eltérés csak valódi okból lehet (javított keret, módosított tápérték, rögzítés,
-csere). A horgony így csak szándékosan mozdul el — nem sodródik csendben, és nem is ragad be
-véglegesen.
-
-### 6.6 Fiók és szinkron
-**A felhasználó:** megadja az e-mail-címét, és a kapott linkre koppint.
-**A termék:** belépteti; a fiók adatai minden eszközén megjelennek.
-
-**Szabályok:**
-- **Belépés nélkül nem használható.** Az első indítás a belépés, utána a Keret. Egy
-  eszközön a belépés megmarad, nem kell minden alkalommal újra.
-- A fiókhoz tartozik: a keret, a saját alapanyagok, a mentett tányérok és a „legutóbb
-  használt" mennyiségek. A gondozott alapanyaglista közös, nem a fiók része.
-- **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak, a változás a
-  következő kapcsolatnál szinkronizál. A konyhában ez nem luxus.
-- Ha ugyanazt a tételt két eszközön is módosították, a **később mentett változat** marad.
-- A felhasználó **törölheti a fiókját**; ekkor minden adata törlődik.
-- Az étrendi adat egészségügyi adatnak minősülhet (GDPR), ezért a regisztrációkor a
-  felhasználó **kifejezetten hozzájárul** a kezeléséhez.
+### 6.6 Adattárolás
+- **Nincs fiók és nincs belépés.** Az oldal megnyitás után azonnal használható; az első
+  indítás a Keret.
+- A keret és a saját alapanyagok **a böngészőben, az eszközön** tárolódnak. Szerverre
+  étrendi adat nem kerül. A gondozott alapanyaglista közös, az oldallal együtt töltődik.
+- **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak.
+- Másik eszközön vagy másik böngészőben az adatok nem jelennek meg, és a böngészőadatok
+  törlésével elvesznek. Ezt az adatvédelmi tájékoztató és a Keret képernyő kimondja.
 
 ### 6.7 Jogi szövegek
 - **Egészségügyi figyelmeztetés:** a Ketara számol, nem tanácsot ad; nem helyettesíti a
-  dietetikust. Regisztrációkor és a Keret képernyőn látható.
-- **Adatvédelmi tájékoztató:** mit tárolunk, hol, meddig, és hogyan törölhető.
+  dietetikust. Első indításkor és a Keret képernyőn látható.
+- **Adatvédelmi tájékoztató:** az étrendi adat csak az eszközön van; mit mér az analitika;
+  hogyan törölhető (böngészőadatok törlése).
 - **Süti-hozzájárulás:** az analitika csak elfogadás után indul (6.8).
 
 ### 6.8 Használati mérés
@@ -277,7 +250,7 @@ véglegesen.
 - Az analitikába **nem kerül** étrendi adat: sem a keret, sem a grammok, sem az
   alapanyagok tápértéke. Csak események és időtartamok.
 - A mért események a feltételezések tesztjei (9.): tányér összeállításának ideje (9.5),
-  „Saját alapanyag" felvitele (9.9), tányér mentése és mentett tányér újrahasználata (9.11).
+  „Saját alapanyag" felvitele (9.9).
 
 ## 7. Peremesetek
 
@@ -294,13 +267,10 @@ véglegesen.
 | Lehetetlen keret (alsó > felső, vagy a zsírsáv teteje < {min} × fehérjesáv alja) | Nem menti. Megnevezi a hibás sort. |
 | Gyanúsan alacsony vagy szűk keret (6.1 helykitöltő küszöbei) | A termék nem hajtja végre szó nélkül. Egyszer visszakérdez; igen után elfogadja. |
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
-| Első indítás | Belépés e-mailes linkkel, majd: nincs keret, nincs tányér, nincs előzmény. Az üres állapot egyetlen dolgot kínál: állítsd be a keretet. |
-| Nincs hálózat | Minden helyben működik; a változás a következő kapcsolatnál szinkronizál. |
-| Lejárt vagy már használt belépési link | Megmondja, és egy gombbal újat küld. |
-| Ugyanaz a tétel két eszközön módosítva | A később mentett változat marad. |
-| Új eszköz, első belépés | Letölti a fiók adatait; a Keret nem kérdeződik újra. |
+| Első indítás | Nincs keret, nincs tányér. Az üres állapot egyetlen dolgot kínál: állítsd be a keretet. |
+| Nincs hálózat | Minden helyben működik. |
+| Új eszköz vagy törölt böngészőadatok | Üres kezdés: a keretet újra be kell állítani, a saját alapanyagok nincsenek meg. A termék ezt előre jelzi (6.6). |
 | Süti-hozzájárulás elutasítva | Minden működik, csak a mérés marad el. |
-| A horgony elavult | A felhasználó frissítheti a tányért egy gombbal. A termék nem dönti el helyette, hogy melyik arány az érvényes. |
 | Csere rögzített soron | A rögzítés lekerül, a termék ezt kiírja: „A rögzítés lekerült, mert az alapanyag változott." |
 | Nyers–főtt félreértés | **Minden** kiírt mennyiség mellett ott áll: „90 g csirkemell (nyersen)". Alapanyagonkénti „főzve változik" jelölés nincs: minden számolás nyers súllyal történik. |
 
@@ -342,29 +312,31 @@ minimum szerkeszthető, alapértéke 2 : 1 · a Keret-ellenőrzés logikai szint
 küszöbök helykitöltők · rögzítés nélküli ⚠-nél a legtöbbet segítő kategóriát nevezi meg · minden mennyiség mellett „(nyersen)" · a ✓/⚠ a kiírt egész grammokra számol (±1 g igazítással), a makrók egy tizedessel · a mentett tányér akkor tér el, ha bármelyik kiírt gramm eltér · a
 40–60 alapanyag eldöntött; hogy elég-e, az első felhasználói teszt mutatja meg.
 
-2. **A jogi szövegek tartalma** (figyelmeztetés, adatvédelmi tájékoztató, egészségügyi
-   adatként való kezelés). *Hogyan derül ki:* adatvédelmi szakértő átnézi az indulás előtt.
+2. **A jogi szövegek tartalma** (figyelmeztetés, adatvédelmi tájékoztató, süti-szöveg).
+   *Hogyan derül ki:* adatvédelmi szakértő átnézi az indulás előtt.
 
 **Lezárva v1.0-ban:** a végfelhasználó elfogadta a prototípus működését · nyilvános
 weboldal, böngészőből · fiók és szinkron, belépés e-mailes linkkel · tápérték-forrás:
 USDA FoodData Central · csak magyar nyelv · teljes webanalitika süti-hozzájárulással ·
 ingyenes.
 
+**Lezárva v1.1-ben:** nincs fiók, belépés és szinkron; az adatok az eszközön maradnak ·
+nincs tányérmentés; a referencia az egyedi felülírás, majd a kategória-alapérték.
+
 ## 9. Feltételezés-nyilvántartás
 
 | # | Feltételezés | Miből ered | Bizalom | Legolcsóbb teszt |
 |---|---|---|---|---|
-| 9.1 | A dietetikusi jelölésmód általánosan felismerhető | a projektgazda állítja, egy forrásból — **v0.6-ban lejjebb vitte, hogy az étrend ketogén: a jelölés a ketón belül általános, nem minden dietetikus papírján**. **v1.0: a nyilvános weboldal miatt ez már nem csak elméleti kérdés** | **alacsony** | nézz meg egy nem ketós étrendet ugyanettől a dietetikustól; az indulás után: hány regisztráló hagyja félbe a Keret kitöltését |
+| 9.1 | A dietetikusi jelölésmód általánosan felismerhető | a projektgazda állítja, egy forrásból — **v0.6-ban lejjebb vitte, hogy az étrend ketogén: a jelölés a ketón belül általános, nem minden dietetikus papírján**. **v1.0: a nyilvános weboldal miatt ez már nem csak elméleti kérdés** | **alacsony** | nézz meg egy nem ketós étrendet ugyanettől a dietetikustól; az indulás után: hány látogató hagyja félbe a Keret kitöltését |
 | 9.2 | A felhasználónak vannak stabil, megszokott **arányai** (a grammok nem ismétlődnek, az arányok igen) | **a felhasználó megerősítette**: a készlet ismétlődik, a grammok nem | magas | — |
 | 9.3 | A papíros számolás fájdalmas | **megmérve: 10–15 perc étkezésenként** | **magas** | — |
 | 9.4 | Minden számolás nyers alapanyaggal | **a felhasználó mondta** | magas | — |
 | 9.5 | Fél perc alatt használhatónak kell lennie | tervezői következtetés, nem felhasználói adat | közepes | analitika: a tányér összeállításának ideje (6.8) |
-| 9.6 | Saját alapanyagot és saját tányért is menteni akar | **a felhasználó mondta** | magas | — |
+| 9.6 | Saját alapanyagot akar menteni (a saját tányér mentése v1.1-ben kivéve) | **a felhasználó mondta** | magas | — |
 | 9.7 | Rögzített adag köré akarja számoltatni a többit | **a felhasználó mondta** | magas | — |
 | 9.8 | A makrók **egyenletesen** oszlanak el az étkezések között | **a felhasználó megerősítette** (napi makró ÷ étkezésszám) | magas | — |
 | 9.9 | v1-ben 40–60 alapanyag elég (a méret eldöntött, az elégségesség nem) | becslés | közepes | analitika: hányszor nyúl a „Saját alapanyag" felé az első héten (6.8) |
 | 9.10 | A rögzített mennyiség ízlés szerinti választás („ennyi tojást akarok"), nem a hűtőben lévő darab súlya | **a felhasználó megerősítette** | magas | — |
-| 9.11 | A mentés nála **szándékos gesztus**, nem „hátha jó lesz" — ezért érdemes a tárolt arányt horgonynak tekinteni | a 2026-08-29-i A opció (a mentett tányér grammjai a referencia) választásából | közepes | analitika: hány tányért ment el az első héten, és hányat használ újra (6.8) |
 
 ## 10. Vágásvonal
 
@@ -376,12 +348,8 @@ ingyenes.
 - Megoldó a referenciatányér-szabállyal — ez a termék
 - A ⚠ állapot a kilógás megnevezésével és a helyreállítás előzetesével — a hibás eset gyakoribb lesz, mint a jó
 - Rögzítés — a felhasználó kérte, és ez illeszkedik ahhoz, ahogy valójában eszik
-- Tányér mentése — **a megoldó horgonya**. (Javítás v0.4-ben: korábban „gyorsítás és
-  horgony" szerepelt itt; mivel a grammok minden étkezésnél újraszámolódnak, a gyorsítás
-  mellékes, a horgony az egyetlen valódi indok.)
 - Alapanyag cseréje — „nincs brokkoli, van zöldbab" gyakori művelet, a felhasználó mondta
-- Fiók és szinkron — a mentett tányér a horgony; ha a telefonnal elveszik, az ígéret is
-- Jogi szövegek — nyilvános weboldalon étrendi adattal nem indulhat nélkülük
+- Jogi szövegek — nyilvános weboldalon, analitikával nem indulhat nélkülük
 
 **Dísz** — jó, de nem szükséges:
 - Tányérok rendezése mappákba, kedvencek
@@ -400,13 +368,12 @@ ingyenes.
 | **étkezési cél** | a napi sáv étkezésszámmal osztott része |
 | **alapanyag** | amiből számolunk; 100 g-ra vetített tápértékkel, nyers súlyra |
 | **adag** | egy alapanyag kiszámolt mennyisége grammban |
-| **tányér** | alapanyagok mentett kombinációja, saját névvel; a tárolt grammok **horgonyok, nem kész válaszok** — minden használatnál újraszámolódnak |
+| **tányér** | az éppen összeállított alapanyagok és a kiszámolt adagok; nem mentődik |
 | **csere** | egy alapanyag helyettesítése másikkal azonos kategórián belül; leveszi a rögzítést |
 | **rögzítés** | a felhasználó által fixált adag, amit a megoldó nem mozdíthat |
 | **feloldás** | a rögzítés visszavonása: az adag újra szabaddá válik a megoldónak |
-| **referenciatányér** | a megszokott mennyiségek, amikhez a megoldó a legközelebbi megoldást keresi (relatív eltérésben mérve) |
-| **alapérték** | a referencia, amikor még nincs korábbi használat |
-| **fiók** | egy ember adatai (keret, saját alapanyagok, tányérok), e-mailes linkkel elérve, minden eszközén ugyanazok |
+| **referenciatányér** | az alapértékekből álló tányér, amihez a megoldó a legközelebbi megoldást keresi (relatív eltérésben mérve) |
+| **alapérték** | a referencia: az alapanyag egyedi felülírása, ennek hiányában a kategória alapértéke |
 | **legközelebbi elérhető** | a kimenet, ha a sáv nem érhető el: a legkisebb teljes kilógású tányér; mindig a kilógás mértékével együtt |
 
 ---
@@ -463,8 +430,15 @@ ingyenes.
 | 2026-10-08 | **Csak magyar nyelv** induláskor | minden szöveg kész magyarul; később bővíthető |
 | 2026-10-08 | **Teljes webanalitika**, süti-hozzájárulással; étrendi adat nem kerül bele | a felhasználó döntése; a 9.5, 9.9, 9.11 feltételezések így mérhetők |
 | 2026-10-08 | **Ingyenes** | v1-ben nincs fizetési munka |
+| 2026-10-23 | **Nincs fiók, belépés és szinkron** — a 2026-10-08-i döntés visszavonva; az adatok az eszközön, a böngészőben maradnak | a felhasználó döntése; a GDPR-hozzájárulás és a fióktörlés is kiesik |
+| 2026-10-23 | **Nincs tányérmentés** (mentés, előhívás, frissítés, Mentés így) — a 2026-08-29-i A opció és a tányérfrissítés visszavonva | a felhasználó döntése |
+| 2026-10-23 | **A referencia: egyedi felülírás → kategória-alapérték**; a „legutóbb használt" kiesik | mentés nélkül nincs, ami frissítené; így a referencia nem sodródik |
 
 ## Javítások
+
+- **v1.1:** a fiók, a szinkron és a tányérmentés kivéve a scope-ból (lásd Döntésnapló,
+  2026-10-23). Érintett: 2., 4., 5., 6.2b, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 7., 8., 9.6, 9.11
+  (törölve), 10., 11. A régi 6.6 (Fiók és szinkron) helyén most Adattárolás áll.
 
 - **v1.0:** az 5. fejezet „Felhasználói fiók, felhőszinkron" kizárása a fiók és szinkron
   bevezetésével érvényét vesztette, törölve. Az „Edző / kliens szerepek, több
