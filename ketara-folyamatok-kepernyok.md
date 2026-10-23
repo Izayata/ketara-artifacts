@@ -387,15 +387,20 @@ fér el. Nézd meg a csomagolást."* Nem „érvénytelen bevitel".
 │                                  │
 │ [ + Új tányér                  ] │
 │ ──────────────────────────────── │
-│ 2 tányér még nincs a biztonsági  │
-│ mentésben.        Mentés fájlba  │
+│ Az utolsó biztonsági mentés óta  │
+│ változott valami. Mentés fájlba  │
 └──────────────────────────────────┘
 ```
 
-**Mentési emlékeztető.** Csak akkor látszik, ha van tányér, amely a legutóbbi biztonsági
-mentés óta készült vagy frissült (vagy még egyáltalán nem volt mentés). Halk sor a lista
-alján, egy szöveges gombbal; nem ugrik fel, és a Tányéron soha nem jelenik meg. Mentés
-után eltűnik.
+**Mentési emlékeztető.** Csak akkor látszik, ha a legutóbbi biztonsági mentés óta
+változott a felhasználói adat (tányér, saját alapanyag, keret), vagy még egyáltalán nem
+volt mentés. Halk sor a lista alján, egy szöveges gombbal; nem ugrik fel, és a Tányéron
+soha nem jelenik meg. Mentés után eltűnik.
+
+**Veszélyjelzés.** Ha a tárolás nem tartós (privát mód, elutasított kérés, iPhone
+böngészőből; PRD 6.6), ugyanitt és a Keret alján egy további halk sor: „Ez a böngésző
+törölheti az adataidat. Ments fájlba rendszeresen." iPhone-on alatta: „Tedd a
+kezdőképernyőre, onnan nyitva megmarad."
 
 **Üres állapot — az első nap:**
 *„Még nincs mentett tányérod. Számolj ki egyet, és mentsd el — legközelebb innen indulhatsz."*
@@ -447,16 +452,18 @@ mentés blokk nem látszik, csak a „Visszaállítás fájlból" sor a figyelme
 **Biztonsági mentés blokk.** A Keret alatt, a Mentés gomb után, hogy a beállítás útjában
 ne legyen. Az állapotsor: „Utolsó mentés: {dátum}." vagy „Még nincs biztonsági mentésed."
 Ha azóta változott a keret, saját alapanyag vagy tányér, alatta: „Azóta változott valami."
+Nem tartós tárolásnál alatta a veszélyjelzés (6.3).
 - `Mentés fájlba` letölti a mentésfájlt (PRD 6.6). A fájl a felhasználónál marad.
 - `Visszaállítás fájlból` fájlválasztót nyit. Beolvasás után alsó lap: „A visszaállítás
-  felülírja a mostani adataidat: a keretet, a saját alapanyagaidat és a tányérjaidat." —
+  felülírja a keretet, a saját alapanyagaidat, a tányérjaidat és a legutóbb használt mennyiségeket. A félbehagyott tányér kiürül." —
   `Visszaállítom` / `Mégse`. Hibás fájlnál nem tölt be semmit: „Ez a fájl nem Ketara
-  biztonsági mentés. A mostani adataid megmaradtak."
+  biztonsági mentés. A mostani adataid megmaradtak." Újabb verziójú fájlnál: „Ez a mentés
+  a Ketara újabb változatából való. Frissítsd az oldalt, és próbáld újra."
 
 **Adataim törlése** és a visszaállítás az a két hely, ahol megerősítő kérdés van
 visszavonás helyett, mert nem vonhatók vissza: alsó lap — „Minden adatod törlődik ebből
-a böngészőből: a keret, a saját alapanyagaid és a tányérjaid. Ha később kellhet, előbb
-mentsd fájlba." — `Végleg törlöm` / `Mégse`. Törlés után az első indítás jön.
+a böngészőből: a keret, a saját alapanyagaid, a tányérjaid, a legutóbb használt
+mennyiségek és a süti-választás. Ha később kellhet, előbb mentsd fájlba." — `Végleg törlöm` / `Mégse`. Törlés után az első indítás jön.
 
 Az alsó blokk a lényeg. **Nem beviteli mező, hanem visszajelzés** — ő négy éve tudja
 fejből, mennyi jön ki egy étkezésre, és itt azonnal látja, hogy jól értettük-e a papírt.
@@ -526,11 +533,16 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Első indítás, visszaállítás | Van biztonsági mentésed? Visszaállítás fájlból |
 | Biztonsági mentés, állapot | Utolsó mentés: {dátum}. / Még nincs biztonsági mentésed. |
 | Biztonsági mentés, változás | Azóta változott valami. |
-| Tányérjaim, emlékeztető | {n} tányér még nincs a biztonsági mentésben. |
-| Visszaállítás, kérdés | A visszaállítás felülírja a mostani adataidat: a keretet, a saját alapanyagaidat és a tányérjaidat. |
+| Tányérjaim, emlékeztető | Az utolsó biztonsági mentés óta változott valami. / Még nincs biztonsági mentésed. |
+| Veszélyjelzés | Ez a böngésző törölheti az adataidat. Ments fájlba rendszeresen. |
+| Veszélyjelzés, iPhone | Tedd a kezdőképernyőre, onnan nyitva megmarad. |
+| Két lap | A Ketara egy másik lapon már nyitva van. — `Használat itt` |
+| Visszaállítás, újabb fájl | Ez a mentés a Ketara újabb változatából való. Frissítsd az oldalt, és próbáld újra. |
+| Visszaállítás, hiányzó alapanyag | A(z) {tányér} tányérból kimaradt: {alapanyag}. Már nincs a listában. |
+| Visszaállítás, kérdés | A visszaállítás felülírja a keretet, a saját alapanyagaidat, a tányérjaidat és a legutóbb használt mennyiségeket. A félbehagyott tányér kiürül. |
 | Visszaállítás, hibás fájl | Ez a fájl nem Ketara biztonsági mentés. A mostani adataid megmaradtak. |
 | Visszaállítás kész | Visszaállítva. |
-| Adataim törlése | Minden adatod törlődik ebből a böngészőből: a keret, a saját alapanyagaid és a tányérjaid. Ha később kellhet, előbb mentsd fájlba. |
+| Adataim törlése | Minden adatod törlődik ebből a böngészőből: a keret, a saját alapanyagaid, a tányérjaid, a legutóbb használt mennyiségek és a süti-választás. Ha később kellhet, előbb mentsd fájlba. |
 
 
 Minden szöveg tegező, kijelentő, és **megmondja a következő lépést.** Nincs „Hiba

@@ -85,7 +85,7 @@ felhasználóra készül: egy ember, a saját dietetikusi papírjával.
 | Edző / kliens szerepek, megosztott adatok | Másik termék. Minden adat egy emberé, az ő böngészőjében. |
 | Főtt–nyers súlyátváltás, receptek | **Véglegesen kimarad**, nem csak v1-ből: minden számolás nyers alapanyaggal történik. |
 | Mikrotápanyagok, rost, só, vitaminok | A papíron nincsenek. |
-| Felhasználói fiók, belépés, felhőszinkron, e-mail | v1.1-ben kimarad: nincs szerver oldali felhasználói adat, nincs levelezőszolgáltatás, nincs kezelendő személyes adat. Eszközváltásra és biztonsági mentésre a mentésfájl szolgál (6.6). |
+| Felhasználói fiók, belépés, felhőszinkron, e-mail | v1.1-ben kimarad: szerveren nincs étrendi adat, és nincs levelezőszolgáltatás. Személyes adatot csak az analitika kezel, hozzájárulással (6.8). Eszközváltásra és biztonsági mentésre a mentésfájl szolgál (6.6). |
 | Fizetés, előfizetés | A termék ingyenes. |
 | Alkalmazásbolti (iOS / Android) kiadás | Böngészőből fut, nincs mit telepíteni. |
 | Más nyelvek | Indulásnál csak magyar; a szövegek később fordíthatók (10. Dísz). |
@@ -257,42 +257,85 @@ egy gombbal visszatölti.
 
 **Szabályok:**
 - **Nincs fiók, nincs belépés.** Az első indítás egyből a Keret.
-- A böngészőben tárolódik: a keret, a saját alapanyagok, a mentett tányérok és a
-  „legutóbb használt" mennyiségek. A gondozott alapanyaglista a termékkel érkezik, nem a
-  felhasználó adata.
-- **Az étrendi adat nem hagyja el az eszközt.** Szerverre nem kerül, így szinkron és
-  ütközés sincs.
-- **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak. A konyhában
-  ez nem luxus.
+- **Felhasználói adat** (ennyi, és nem több): a keret, a saját alapanyagok, a mentett
+  tányérok és a „legutóbb használt" mennyiségek. Ez kerül a mentésfájlba, ezt írja felül a
+  visszaállítás. A gondozott alapanyaglista a termékkel érkezik, nem a felhasználó adata.
+- **Eszközállapot** (nem kerül a mentésfájlba): a félbehagyott tányér, a süti-választás és
+  az utolsó mentés dátuma. A visszaállítás a félbehagyott tányért üríti, a többit
+  meghagyja; az Adataim törlése mindhármat törli.
+- **Az étrendi adat nem hagyja el az eszközt.** Szerverre nem kerül, így szinkron sincs.
+- **Egyszerre csak egy lap.** Ha a Ketara egy másik lapon vagy ablakban már nyitva van,
+  az új lap egy sort mutat („A Ketara egy másik lapon már nyitva van.") és egy `Használat
+  itt` gombot. Erre a régi lap megáll, és ugyanezt a sort mutatja. Így két lap nem írhatja
+  felül egymást.
+- **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak, az oldalt a
+  böngésző az első betöltéskor gyorsítótárazza (service worker). Az első megnyitáshoz és a
+  termék frissítéséhez hálózat kell. A konyhában ez nem luxus.
 - A termék **tartós tárolást kér** a böngészőtől, hogy az adat ne törlődjön magától.
-- A felületen a neve **Biztonsági mentés**, a Keret alján.
+- **Ha az adat veszélyben van**, halk jelzés: ha a tárolás nem tartós (privát mód, a
+  böngésző elutasította a kérést, vagy iPhone-on böngészőből nyitják, ahol a Safari 7 nap
+  használaton kívül törölheti), a Keret alján és a Tányérjaim alján egy sor jelzi: „Ez a
+  böngésző törölheti az adataidat. Ments fájlba rendszeresen." iPhone-on mellé a tanács:
+  „Tedd a kezdőképernyőre, onnan nyitva megmarad." Ha a tárolás tartós, nincs jelzés.
+  Felugró ablak nincs.
+- A felületen a neve **Biztonsági mentés**, a Keret alján. Első indításkor a blokk nem
+  látszik; ott csak a „Visszaállítás fájlból" sor áll a Keret tetején.
 - **Mentés fájlba:** letölt egy mentésfájlt, benne minden felhasználói adattal. A fájl a
   felhasználónál van; a termék nem küldi sehova.
 - **Visszaállítás fájlból:** beolvassa a mentésfájlt. A visszaállítás **felülírja** a
   böngészőben lévő adatot, ezért a termék előtte egyszer rákérdez (első indításkor nem,
   mert nincs mit felülírni).
-- **Emlékeztető:** a Keret alján egy sor mutatja, mikor volt az utolsó mentés, és jelzi,
-  ha azóta változott valami. Ha van tányér, amely a legutóbbi mentés óta készült vagy
-  frissült, a Tányérjaim alján is egy halk sor és egy `Mentés fájlba` gomb látszik. Felugró
+- **Emlékeztető:** a Keret alján egy sor mutatja, mikor volt az utolsó mentés (vagy hogy
+  még nem volt), és jelzi, ha azóta változott a felhasználói adat. Ha változott (új vagy
+  frissített tányér, saját alapanyag, keret), vagy még egyáltalán nem volt mentés, a
+  Tányérjaim alján is egy halk sor és egy `Mentés fájlba` gomb látszik. Felugró
   emlékeztető nincs, a Tányéron nem jelenik meg.
-- **Adataim törlése:** a Keret alján; egy megerősítés után minden felhasználói adatot
-  töröl ebből a böngészőből.
+- **Adataim törlése:** a Keret alján; egy megerősítés után minden felhasználói adatot és
+  eszközállapotot töröl ebből a böngészőből. Utána az első indítás jön.
+- **Egy böngésző, egy ember.** Ha egy böngészőt ketten használnak, egy adatkészleten
+  osztoznak; több profil v1-ben nincs (5.).
+
+**Mentésfájl:**
+- JSON, a fájlneve `ketara-mentes-ÉÉÉÉ-HH-NN.json`. Az első mező a `verzio` (sémaverzió,
+  egész szám), mellette a készítés ideje.
+- Tartalma pontosan a felhasználói adat (fent). A tányér a gondozott alapanyagokra
+  **stabil azonosítóval** hivatkozik, nem névvel vagy sorszámmal, így a lista frissítése
+  után is visszaállítható; a saját alapanyagok teljes egészükben benne vannak.
+- **Régebbi verziójú fájl:** a termék átalakítja és betölti. **Újabb verziójú fájl**
+  (régebbi oldalon): nem tölti be, megmondja, hogy frissíteni kell az oldalt.
+- Ha egy tányér olyan gondozott alapanyagra hivatkozik, amely azóta kikerült a listából, a
+  tányér betöltődik nélküle, és a Tányérjaimban egy sor jelzi, mi hiányzik.
+- A visszaállított keretet a termék a jelenlegi logikai ellenőrzéssel nézi át; logikai
+  hibánál a Keret nyílik meg a hibás sorral, gyanús értéknél nem kérdez újra (a felhasználó
+  egyszer már jóváhagyta).
+- Hibás vagy olvashatatlan fájlnál semmi nem változik.
 
 ### 6.7 Jogi szövegek
 - **Egészségügyi figyelmeztetés:** a Ketara számol, nem tanácsot ad; nem helyettesíti a
   dietetikust. Első indításkor egy mondat a Keret tetején, később a Keret alján.
   Külön képernyő nincs.
 - **Adatvédelmi tájékoztató:** az étrendi adat csak a böngészőben van, a termék nem
-  látja; hogyan törölhető (Adataim törlése, 6.6); mit mér az analitika (6.8).
+  látja; hogyan törölhető (Adataim törlése, 6.6). A mentésfájl titkosítatlan étrendi
+  adat: ha a felhasználó e-mailben vagy felhőtárhelyen tartja, az az ő döntése, és ezt a
+  tájékoztató kimondja. Az analitika (6.8) hozzájárulással személyes adatot kezel
+  (IP-cím, sütiazonosító); a tájékoztató ezt is leírja.
 - **Süti-hozzájárulás:** az analitika csak elfogadás után indul (6.8).
 
 ### 6.8 Használati mérés
-- Teljes webanalitika (pl. Google Analytics), **csak süti-hozzájárulás után**. Elutasítás
-  esetén a termék ugyanúgy működik.
+- Teljes webanalitika (Google Analytics), **csak süti-hozzájárulás után**. Elutasítás
+  esetén a termék ugyanúgy működik. A GA személyes adatot kezel (IP-cím,
+  sütiazonosító), és egy keto-eszköz használata közvetve egészségre utalhat; ezt az
+  adatvédelmi átnézés vizsgálja (8/2).
 - Az analitikába **nem kerül** étrendi adat: sem a keret, sem a grammok, sem az
   alapanyagok tápértéke. Csak események és időtartamok.
 - A mért események a feltételezések tesztjei (9.): tányér összeállításának ideje (9.5),
-  „Saját alapanyag" felvitele (9.9), tányér mentése és mentett tányér újrahasználata (9.11).
+  „Saját alapanyag" felvitele (9.9), tányér mentése és mentett tányér újrahasználata (9.11),
+  `Mentés fájlba`, `Visszaállítás`, `Adataim törlése` (9.12).
+- Fiók nélkül a felhasználót semmi nem azonosítja tartósan, ezért az „első hét" nem a
+  látogatóhoz, hanem az adathoz kötött: minden esemény két, helyben számolt, nem azonosító
+  jellemzőt visz magával: **napok az első indítás óta** (sávosan: 0, 1–7, 8–30, 30+) és
+  **visszaállításból indult-e**. Így az eszközváltás vagy a törlés nem torzít „új
+  látogatóként". Aki a sütit elutasította, nem mérhető; ez vállalt torzítás.
 
 ## 7. Peremesetek
 
@@ -313,6 +356,10 @@ egy gombbal visszatölti.
 | Nincs hálózat | Minden helyben működik; nincs mit szinkronizálni. |
 | A böngészőadat törlődött | Az adat elveszett; a termék első indításként viselkedik. Visszaállítás csak mentésfájlból lehet. |
 | Új eszköz vagy másik böngésző | Üres, mint az első indítás. Az adat a mentésfájllal vihető át. |
+| Privát mód, elutasított tartós tárolás, iPhone böngészőből | Minden működik; a Keret és a Tányérjaim alján egy halk sor jelzi, hogy a böngésző törölheti az adatot (6.6). |
+| Újabb verziójú mentésfájl régebbi oldalon | Nem tölt be semmit; megmondja, hogy frissíteni kell az oldalt. |
+| A mentésfájl tányérja azóta kivett alapanyagra hivatkozik | A tányér betöltődik nélküle; a Tányérjaimban egy sor jelzi, mi hiányzik. |
+| A Ketara két lapon nyitva | Csak az egyik használható; a másik a „Használat itt" gombot kínálja (6.6). |
 | Hibás vagy nem Ketara-mentésfájl | Nem tölt be semmit, a meglévő adat érintetlen marad. Megmondja, hogy a fájl nem olvasható. |
 | Süti-hozzájárulás elutasítva | Minden működik, csak a mérés marad el. |
 | A horgony elavult | A felhasználó frissítheti a tányért egy gombbal. A termék nem dönti el helyette, hogy melyik arány az érvényes. |
@@ -358,7 +405,8 @@ küszöbök helykitöltők · rögzítés nélküli ⚠-nél a legtöbbet segít
 40–60 alapanyag eldöntött; hogy elég-e, az első felhasználói teszt mutatja meg.
 
 2. **A jogi szövegek tartalma** (figyelmeztetés, adatvédelmi tájékoztató, süti-
-   hozzájárulás). *Hogyan derül ki:* adatvédelmi szakértő átnézi az indulás előtt.
+   hozzájárulás), és hogy a Google Analytics eseményei egy keto-eszközben egészségügyi
+   adatnak minősülnek-e, ha az étrendi adat maga csak helyben van. *Hogyan derül ki:* adatvédelmi szakértő átnézi az indulás előtt.
 
 **Lezárva v1.0-ban:** a végfelhasználó elfogadta a prototípus működését · nyilvános
 weboldal, böngészőből · ~~fiók és szinkron, belépés e-mailes linkkel~~ (v1.1-ben visszavonva) · tápérték-forrás:
@@ -372,7 +420,7 @@ ingyenes.
 
 | # | Feltételezés | Miből ered | Bizalom | Legolcsóbb teszt |
 |---|---|---|---|---|
-| 9.1 | A dietetikusi jelölésmód általánosan felismerhető | a projektgazda állítja, egy forrásból — **v0.6-ban lejjebb vitte, hogy az étrend ketogén: a jelölés a ketón belül általános, nem minden dietetikus papírján**. **v1.0: a nyilvános weboldal miatt ez már nem csak elméleti kérdés** | **alacsony** | nézz meg egy nem ketós étrendet ugyanettől a dietetikustól; az indulás után: hány új látogató hagyja félbe a Keret kitöltését |
+| 9.1 | A dietetikusi jelölésmód általánosan felismerhető | a projektgazda állítja, egy forrásból — **v0.6-ban lejjebb vitte, hogy az étrend ketogén: a jelölés a ketón belül általános, nem minden dietetikus papírján**. **v1.0: a nyilvános weboldal miatt ez már nem csak elméleti kérdés** | **alacsony** | nézz meg egy nem ketós étrendet ugyanettől a dietetikustól; az indulás után: hány első indítás (nem visszaállítás) hagyja félbe a Keret kitöltését |
 | 9.2 | A felhasználónak vannak stabil, megszokott **arányai** (a grammok nem ismétlődnek, az arányok igen) | **a felhasználó megerősítette**: a készlet ismétlődik, a grammok nem | magas | — |
 | 9.3 | A papíros számolás fájdalmas | **megmérve: 10–15 perc étkezésenként** | **magas** | — |
 | 9.4 | Minden számolás nyers alapanyaggal | **a felhasználó mondta** | magas | — |
@@ -383,6 +431,7 @@ ingyenes.
 | 9.9 | v1-ben 40–60 alapanyag elég (a méret eldöntött, az elégségesség nem) | becslés | közepes | analitika: hányszor nyúl a „Saját alapanyag" felé az első héten (6.8) |
 | 9.10 | A rögzített mennyiség ízlés szerinti választás („ennyi tojást akarok"), nem a hűtőben lévő darab súlya | **a felhasználó megerősítette** | magas | — |
 | 9.11 | A mentés nála **szándékos gesztus**, nem „hátha jó lesz" — ezért érdemes a tárolt arányt horgonynak tekinteni | a 2026-08-29-i A opció (a mentett tányér grammjai a referencia) választásából | közepes | analitika: hány tányért ment el az első héten, és hányat használ újra (6.8) |
+| 9.12 | A felhasználó **telefonon is rendszeresen ment fájlba**, és szükség esetén vissza tud állítani — fiók nélkül ez az egyetlen védelem az adatvesztés ellen | v1.1-es következtetés, a fiók kivételéből; senki nem tesztelte | **alacsony** | a végfelhasználó a saját telefonján ment és visszaállít; analitika: `Mentés fájlba` gyakorisága a napok sávjában (6.8) |
 
 ## 10. Vágásvonal
 
@@ -398,7 +447,9 @@ ingyenes.
   horgony" szerepelt itt; mivel a grammok minden étkezésnél újraszámolódnak, a gyorsítás
   mellékes, a horgony az egyetlen valódi indok.)
 - Alapanyag cseréje — „nincs brokkoli, van zöldbab" gyakori művelet, a felhasználó mondta
-- Helyi tárolás és mentésfájl — a mentett tányér a horgony; ha a böngészővel elveszik, az ígéret is
+- Helyi tárolás, biztonsági mentés és mentési emlékeztető — a mentett tányér a horgony; ha a
+  böngészővel elveszik, az ígéret is. Fiók nélkül az emlékeztető az egyetlen, ami a mentést
+  szokássá teszi
 - Jogi szövegek — nyilvános weboldalon étrendi adattal nem indulhat nélkülük
 
 **Dísz** — jó, de nem szükséges:
@@ -407,6 +458,7 @@ ingyenes.
 - Sötét mód, témák
 - Alapanyag-fotók
 - Megosztás
+- Adataim törlése gomb (a böngészőadat törlése is elvégzi)
 - Fiók és szinkron (v1.1-ben kivéve; a mentésfájl kiváltja)
 - Több nyelv
 
@@ -476,8 +528,8 @@ ingyenes.
 | 2026-09-27 | **A 40–60 alapanyag eldöntött**; az elégségességet az első teszt méri | a méret döntés, az elégségesség csak használatból derül ki |
 | 2026-10-08 | **A prototípus működését a végfelhasználó elfogadta** | a viselkedés (6. fejezet) a prototípus szerint végleges |
 | 2026-10-08 | **Nyilvános weboldal**, böngészőből | a felhasználó döntése; nincs alkalmazásbolt |
-| 2026-10-08 | **Fiók és szinkron** — a v0.9-es „nincs fiók" kizárás visszavonva | a felhasználó döntése; az adat nem veszhet el a telefonnal |
-| 2026-10-08 | **Belépés e-mailes linkkel**, jelszó nélkül | a legkevesebb építeni- és védenivaló, mindenkinek van e-mail-címe |
+| 2026-10-08 | ~~**Fiók és szinkron** — a v0.9-es „nincs fiók" kizárás visszavonva~~ (2026-10-23-án visszavonva) | a felhasználó döntése; az adat nem veszhet el a telefonnal |
+| 2026-10-08 | ~~**Belépés e-mailes linkkel**, jelszó nélkül~~ (2026-10-23-án visszavonva) | a legkevesebb építeni- és védenivaló, mindenkinek van e-mail-címe |
 | 2026-10-08 | **Tápértékek: USDA FoodData Central** | közkincs, szabadon közölhető, nyers értékek; a neveket fordítjuk |
 | 2026-10-08 | **Csak magyar nyelv** induláskor | minden szöveg kész magyarul; később bővíthető |
 | 2026-10-08 | **Teljes webanalitika**, süti-hozzájárulással; étrendi adat nem kerül bele | a felhasználó döntése; a 9.5, 9.9, 9.11 feltételezések így mérhetők |
@@ -488,14 +540,22 @@ ingyenes.
 | 2026-10-23 | **A figyelmeztetés első indításkor egy mondat a Keret tetején**, hozzájárulási képernyő nincs | a felhasználó döntése; fiók nélkül nincs mihez hozzájárulni, egy külön lap csak lassítana |
 | 2026-10-23 | **A felületen „Biztonsági mentés"**: `Mentés fájlba` · `Visszaállítás fájlból` | a felhasználó döntése; kimondja, hogy az adatvesztés ellen véd |
 | 2026-10-23 | **Mentési emlékeztető a Keret alján és a Tányérjaimban**, felugró nélkül | a felhasználó döntése; a tányérokat ott nézi, a konyhai Tányér tiszta marad |
+| 2026-10-23 | **Halk jelzés, ha a böngésző törölheti az adatot** (privát mód, nem tartós tárolás, iPhone böngésző); iPhone-on a kezdőképernyő tanácsa | a felhasználó döntése; csak annak szól, akinek az adata veszélyben van |
+| 2026-10-23 | **Mentésfájl: JSON, sémaverzió, stabil alapanyag-azonosítók**; régebbit átalakít, újabbat elutasít | a gondozott lista frissül; a régi mentés nem veszhet el miatta |
+| 2026-10-23 | **Marad a Google Analytics** süti-hozzájárulással; a PRD kimondja, hogy személyes adatot kezel | a felhasználó döntése; ingyenes, és az egészségügyi adat kérdését az adatvédelmi átnézés zárja le (8/2) |
+| 2026-10-23 | **Egyszerre csak egy lap** használható, „Használat itt" gombbal | a felhasználó döntése; két lap nem írhatja felül egymást |
 | 2026-10-23 | **„Adataim törlése" gomb** a Keret alján, megerősítéssel | a felhasználó döntése; közös gépen vagy eszköz átadása előtt egy gombbal törölhető |
 
 ## Javítások
 
-- **v1.1:** a fiók és szinkron kivéve (4/12, 6.6, 7, 10, 11); helyette helyi tárolás és
+- **v1.1:** a fiók és szinkron kivéve (2, 4/12, 5, 6.6, 6.7, 7, 8, 9.1, 10, 11); helyette helyi tárolás és
   mentésfájl. A 6.7 regisztrációs és adatkezelési szövege, a 2. fejezet „Bárki
   regisztrálhat" mondata és a 9.1 tesztje ehhez igazítva. Az „export" a Díszből a
   teherhordók közé került, mentésfájlként.
+  A hideg átnézés (reviews/ketara-prd-v1.1-cold-review.md) után: a mentésfájl formátuma,
+  a felhasználói adat és az eszközállapot határa, a veszélyjelzés, az egy lap szabálya, a
+  9.12 feltételezés, a mérés helyi jellemzői, és az 5. fejezet személyes adatról szóló
+  állítása (a GA miatt) javítva.
 
 - **v1.0:** az 5. fejezet „Felhasználói fiók, felhőszinkron" kizárása a fiók és szinkron
   bevezetésével érvényét vesztette, törölve. Az „Edző / kliens szerepek, több

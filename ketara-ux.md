@@ -225,9 +225,11 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - Hosszú nyomás vagy „…" menü: `Átnevezés` · `Törlés` (visszavonással).
 - Üres állapot: a Folyamatok 6.3 szövege.
 - `+ Új tányér`: üres Tányér (ugyanaz a figyelmeztetés, ha van nem mentett munka).
-- **Mentési emlékeztető** a lista alján, ha van tányér, amely a legutóbbi biztonsági
-  mentés óta készült vagy frissült: halk sor + `Mentés fájlba` szöveges gomb
+- **Mentési emlékeztető** a lista alján, ha a legutóbbi biztonsági mentés óta változott
+  a felhasználói adat, vagy még nem volt mentés: halk sor + `Mentés fájlba` szöveges gomb
   (Folyamatok 6.3). Nem ugrik fel, nem színes, és a Tányéron soha nem jelenik meg.
+- **Veszélyjelzés** ugyanitt és a Keret alján, csak nem tartós tárolásnál (privát mód,
+  iPhone böngészőből): egy halk sor, iPhone-on a kezdőképernyő tanácsával.
 
 ---
 
@@ -275,7 +277,15 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - **Visszaállítás** és **Adataim törlése** a két megerősítő kérdés a termékben, mert nem
   vonhatók vissza: alsó lap a következményekkel, `Visszaállítom` / `Végleg törlöm`
   (borostyán keretes, nem kitöltött) és `Mégse` (elsődleges). Törlés után az első indítás
-  jön. Hibás fájlnál nincs kérdés, csak egy sor: a mostani adat megmaradt.
+  jön. Hibás vagy újabb verziójú fájlnál nincs kérdés, csak egy sor: a mostani adat
+  megmaradt.
+
+### 8.4 Két nyitott lap
+
+- Egyszerre csak egy lap használható (PRD 6.6). A második lap a teljes képernyő helyett
+  egy sort mutat: „A Ketara egy másik lapon már nyitva van." és egy elsődleges `Használat
+  itt` gombot. Megnyomásra a régi lap ugyanezt az állapotot veszi fel. Nincs adatvesztés:
+  az átvevő lap a tárolt adatot olvassa be.
 
 ---
 
@@ -307,6 +317,8 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 | Hol látszik a figyelmeztetés első indításkor? (2026-10-23) | Egy mondat a Keret tetején, külön képernyő nélkül (8.1) |
 | Hogy hívjuk a mentés gombjait? (2026-10-23) | „Biztonsági mentés": `Mentés fájlba` · `Visszaállítás fájlból` (8.3) |
 | Hol emlékeztet a mentésre? (2026-10-23) | A Keret alján és egy halk sorban a Tányérjaimban; felugró nincs (7., 8.3) |
+| Mi legyen, ha a böngésző törölheti az adatot? (2026-10-23) | Halk veszélyjelzés a Keret alján és a Tányérjaimban, iPhone-on a kezdőképernyő tanácsa (7., 8.3) |
+| Mi legyen két nyitott lapnál? (2026-10-23) | Egyszerre csak egy lap, „Használat itt" gombbal (8.4) |
 | Legyen-e adattörlés gomb? (2026-10-23) | Igen: „Adataim törlése" a Keret alján, megerősítéssel (8.3) |
 | Hogy néz ki számítógépen? (2026-10-08) | Ugyanaz az oszlop, középre igazítva (2. fejezet) |
 
