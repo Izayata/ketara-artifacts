@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.7
+# Ketara — Folyamatok és képernyők v0.8
 
-*Kísérőanyag a PRD v1.0-hoz. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-10-08*
+*Kísérőanyag a PRD v1.1-hez. Minden döntés onnan származik.*
+*Utolsó frissítés: 2026-10-24*
 
 ---
 
@@ -21,7 +21,7 @@
    A **Tányér a főképernyő**; a Tányérjaim nem előzmény, hanem **kiindulópont-tár**.
    Egy mentett tányér megnyitása nem olvasás, hanem újraszámolás.
 
-5. **Nyilvános weboldal, fiókkal** (PRD 6.6). Belépés e-mailes linkkel, egyszer
+5. **Nyilvános weboldal, fiókkal** (PRD 6.6). Belépés e-mailes linkkel vagy kóddal, egyszer
    eszközönként; utána a konyhában a fiók észrevétlen: hálózat nélkül is működik, a
    szinkron a háttérben fut. A fiókbeállítások a Keret alján vannak, nem külön képernyőn.
 
@@ -49,20 +49,23 @@ flowchart TD
     M --> N{Segít a feloldás?}
     N -- igen --> H
     N -- nem --> O["Kimondja: ebből nem jön ki"]
-    L -- nem --> O2["Megnevezi a segítő kategóriát:<br/>Kevés a zsír — Zsiradék"]
+    L -- "nem, kevés" --> O2["Megnevezi a segítő kategóriát:<br/>Kevés a zsír — Zsiradék"]
     O2 --> P2[Választó a kategórián nyílik] --> H
+    L -- "nem, sok" --> O3["Megnevezi a legtöbbet adó alapanyagot:<br/>Sok a CH — cseréld a brokkolit"]
+    O3 --> P3[Csere-választó azon a soron] --> H
     O --> P[Alapanyag hozzáadása vagy cseréje]
     P --> H
-    K --> Q["Mentés így — a felhasználó elfogadja"]
-    J --> R{Menti?}
-    R -- igen --> S[Név megadása] --> T[Kész]
-    R -- nem --> T
-    Q --> T
+    J --> R{Mit választ?}
+    K --> R
+    R -- "Tányér mentése" --> S[Név megadása] --> T
+    R -- "Kész" --> T["Kész: a grammok lesznek<br/>a legutóbb használt mennyiségek"]
 ```
 
-**A `Mentés így` ág nem opcionális.** Ő dönti el, mit eszik meg, nem a szoftver. Ha
-elfogadja a 6,6 g túllépést, az app nem áll az útjába — csak egyszer, világosan megmondja,
-mi a helyzet.
+**A `Kész` ✓ és ⚠ esetén is ott van, és nem opcionális.** Ő dönti el, mit eszik meg, nem a
+szoftver. Ha elfogadja a 6,6 g túllépést, az app nem áll az útjába — csak egyszer,
+világosan megmondja, mi a helyzet. A `Kész` név nélküli: tányért nem ment, csak megjegyzi a
+grammokat, hogy legközelebb azokból induljon (PRD 6.5). A korábbi `Mentés így` gomb ebbe
+olvadt.
 
 ---
 
@@ -80,15 +83,16 @@ flowchart TD
     G --> H
     H -- "rögzít: ennyi csirkét akarok" --> D
     H -- "cserél: brokkoli helyett zöldbab" --> D
-    H -- nem --> I{Eltér bármelyik gramm a tárolttól?}
+    H -- nem --> I{"Eltér az összetétel vagy<br/>bármelyik gramm a tárolttól?"}
     I -- igen --> J["Frissítés vagy mentés új néven"]
-    I -- nem --> K[Kész]
+    I -- nem --> K["Kész"]
     J --> K
 ```
 
 **A megoldó itt is lefut.** A mentett tányér nem kész válasz — a grammok soha nem
 ismétlődnek pontosan, mert a valóság minden nap más. A tárolt mennyiségek csak azt mondják
-meg a megoldónak, milyen arányt szeret.
+meg a megoldónak, milyen összetételt szeret. A tányér rögzítés nélkül nyílik: a tegnapi
+rögzítés tegnapi döntés volt.
 
 Ez egyben megoldja a korábbi „elavult mentett tányér" veszélyt is: mivel minden megnyitás
 újraszámol, egy javított keret (elgépelés) vagy módosított tápérték automatikusan átüt a
@@ -102,11 +106,13 @@ régi tányérokon. Külön ellenőrzés nem kell.
 flowchart TD
     A0[Első megnyitás] --> A1["Belépés: e-mail-cím<br/>alul süti-sáv"]
     A1 --> A2["Nézd meg a leveled"]
-    A2 --> A3[Koppintás a levélben kapott linkre]
-    A3 --> A4{Új fiók?}
-    A4 -- "nem, új eszköz" --> J0["Tányér — a fiók adataival"]
-    A4 -- igen --> A5["Hozzájárulás: figyelmeztetés +<br/>adatkezelési hozzájárulás"]
-    A5 --> B[Keret beállítása]
+    A2 --> A3["Koppintás a linkre,<br/>vagy a kód beírása"]
+    A3 --> A4{"Van hozzájárulás<br/>az aktuális szövegre?"}
+    A4 -- nem --> A5["Hozzájárulás: figyelmeztetés +<br/>adatkezelési hozzájárulás + 16 év"]
+    A5 --> A6
+    A4 -- igen --> A6{Van már keret?}
+    A6 -- "igen, új eszköz" --> J0["Tányér — a fiók adataival"]
+    A6 -- nem --> B[Keret beállítása]
     B --> C[Napi sávok: CH, fehérje, zsír, kcal]
     C --> D[Étkezések száma]
     D --> E[Zsír–fehérje arány]
@@ -123,14 +129,20 @@ flowchart TD
     I -- igen --> J[Tányér, üres]
 ```
 
-**Belépés.** Egy mező, egy gomb. Jelszó nincs; a link egyszer használható, és lejár. Ha
-lejárt vagy már felhasználták, a képernyő megmondja, és egy gombbal újat küld. Egy eszközön
-a belépés megmarad: a konyhában soha nem kell újra belépni.
+**Belépés.** Egy mező, egy gomb. Jelszó nincs. Az e-mailben egy link és egy 6 jegyű kód
+jön; mindkettő egyszer használható, és lejár. A link azt a böngészőt lépteti be, amelyben
+megnyílik. Ha máshol nyílt meg (laptop, a levelezőalkalmazás saját böngészője), a kódot a
+várakozó képernyőn lehet beírni. Ha lejárt vagy már felhasználták, a képernyő megmondja, és
+egy gombbal újat küld. Egy eszközön a belépés 1 évig megmarad, és minden használattal
+megújul: a konyhában gyakorlatilag soha nem kell újra belépni.
 
-**Hozzájárulás.** Csak új fióknál, egyszer. Két dolog egy képernyőn: a figyelmeztetés
-(„A Ketara számol, nem tanácsot ad.") és a kifejezett hozzájárulás az étrendi adatok
-kezeléséhez (PRD 6.6), az adatvédelmi tájékoztató linkjével. Hozzájárulás nélkül nincs
-tovább: a fiók az adat tárolásáról szól.
+**Hozzájárulás.** Akkor jelenik meg, ha a fiókhoz nincs rögzített hozzájárulás az aktuális
+szövegverzióhoz — nem az számít, hogy új-e a fiók. Ha valaki a hozzájárulás előtt bezárja
+az oldalt, a következő belépéskor újra ez jön. Ha a jogi szöveg változik, újra megjelenik.
+Három dolog egy képernyőn: a figyelmeztetés („A Ketara számol, nem tanácsot ad."), a
+kifejezett hozzájárulás az étrendi adatok kezeléséhez (PRD 6.6), az adatvédelmi
+tájékoztató linkjével, és a nyilatkozat, hogy elmúlt 16 éves. Hozzájárulás nélkül nincs
+tovább, és addig étrendi adat sehova nem kerül.
 
 **Süti-sáv.** Az első megnyitáskor alul, a Belépés fölött. Két egyenrangú gomb:
 `Elfogadom` és `Csak a szükségesek`. A választás a Keret alján bármikor módosítható. Az
@@ -205,15 +217,16 @@ elromlott valami, hanem még nincs kész.
 ┌─ Tányér ─────────────────────────┐
 │ CH 5–10 · Fe 20–25 · Zs 45–70   │
 │ ──────────────────────────────── │
-│ Tojás         137 g nyersen   📌 │
-│ Brokkoli      100 g nyersen   📌 │
-│ Olaj           31 g nyersen   📌 │
+│ Tojás       137 g (nyersen)   📌 │
+│ Brokkoli    100 g (nyersen)   📌 │
+│ Olaj         31 g (nyersen)   📌 │
 │                                  │
 │ [ + Alapanyag ]                  │
 │ ──────────────────────────────── │
 │ ✓ Minden érték a sávon belül.    │
 │                                  │
 │ [ Tányér mentése               ] │
+│ [ Kész                         ] │
 └──────────────────────────────────┘
 ```
 
@@ -228,11 +241,17 @@ tároltaktól:
 │                                  │
 │ [ Csütörtöki csirkés frissítése ]│
 │ [ Mentés új néven              ] │
+│ [ Kész                         ] │
 ```
 
-A két gomb akkor jelenik meg, ha **bármelyik kiírt gramm** eltér a tárolttól. A horgony így
-csak akkor mozdul, ha ő mozdítja. Nem sodródik el csendben, és nem is ragad be véglegesen
-egy elavult arányba.
+A két mentőgomb akkor jelenik meg, ha **a sorok halmaza** (csere, hozzáadás, törlés) **vagy
+bármelyik kiírt gramm** eltér a tárolttól; a frissítés az összetételt is felülírja. Ha nem
+tér el, nincs mentőgomb, csak a `Kész`. A horgony így csak akkor mozdul, ha ő mozdítja. Nem
+sodródik el csendben, és nem is ragad be véglegesen egy elavult összetételbe.
+
+**`Kész`** mindig ott van: „ezt eszem". Név nélküli, tányért nem ment; a kiírt grammok
+lesznek az alapanyagok „legutóbb használt" mennyiségei (a 0 g-os sor kivételével). Utána rövid
+visszajelzés: *„Megjegyeztem. Legközelebb ebből indulok."*
 
 A 📌 minden soron ott van, halványan — ez a rögzítés gombja. Nem külön menüben,
 nem hosszú nyomásra: **látható és egy koppintás.** Ez a funkció, amit ő maga kért.
@@ -251,15 +270,19 @@ A csere ugyanannak a kategóriának a tagjait kínálja, és **leveszi a rögzí
 └──────────────────────────────────┘
 ```
 
+A **`Másik kategóriából…`** nem csere, hanem törlés + hozzáadás egy mozdulatban: a sor (a
+rögzítésével együtt) kikerül, és a választó minden kategóriával megnyílik. Az új alapanyag a
+saját referenciájáról indul, nem a régi grammjáról.
+
 ### 5.4 Legközelebbi elérhető (⚠) — rögzítés az ok
 
 ```
 ┌─ Tányér ─────────────────────────┐
 │ CH 5–10 · Fe 20–25 · Zs 45–70   │
 │ ──────────────────────────────── │
-│ Tojás         240 g nyersen   📍 │
-│ Brokkoli       48 g nyersen   📌 │
-│ Olaj           39 g nyersen   📌 │
+│ Tojás       240 g (nyersen)   📍 │
+│ Brokkoli     48 g (nyersen)   📌 │
+│ Olaj         39 g (nyersen)   📌 │
 │                                  │
 │ [ + Alapanyag ]                  │
 │ ──────────────────────────────── │
@@ -276,7 +299,8 @@ A csere ugyanannak a kategóriának a tagjait kínálja, és **leveszi a rögzí
 │ érték a sávon belül.             │
 │                                  │
 │ [ Tojás feloldása ]  [+ Alapanyag]│
-│ [ Mentés így                    ] │
+│ [ Tányér mentése               ] │
+│ [ Kész                         ] │
 └──────────────────────────────────┘
 ```
 
@@ -286,7 +310,7 @@ Három dolog, ami itt szándékos:
 - **Az előzetes megmondja, hová vezet a feloldás** — itt a sávba; ha az sem elég, azt
   mondja ki. Enélkül a felhasználó vaktában
   nyomkod, és pontosan azt csinálja, amit ma is: próbálgat 10 percig.
-- **A `Mentés így` ott van.** Nem rejtjük el, nem kérdezünk rá kétszer.
+- **A `Kész` ott van.** Nem rejtjük el, nem kérdezünk rá kétszer.
 - **A brokkoli 48 g-ra csökken.** A megoldó ⚠ esetén előbb a kilógást csökkenti: a
   brokkoli is hoz fehérjét, ezért addig megy le, amíg a CH-sáv alja engedi. Az olaj annyi,
   amennyit az arány kér.
@@ -294,9 +318,9 @@ Három dolog, ami itt szándékos:
 ### 5.5 Minden alapanyag rögzítve
 
 ```
-│ Tojás         160 g nyersen   📍 │
-│ Brokkoli      150 g nyersen   📍 │
-│ Olaj           20 g nyersen   📍 │
+│ Tojás       160 g (nyersen)   📍 │
+│ Brokkoli    150 g (nyersen)   📍 │
+│ Olaj         20 g (nyersen)   📍 │
 │ ──────────────────────────────── │
 │ Nincs mit kiszámolni — minden    │
 │ adag rögzítve.                   │
@@ -319,8 +343,8 @@ termék válaszol rá.
 **Melyik feloldást ajánlja:** a megoldó egyenként kipróbálja mindhárom feloldást. Egyik sem
 hoz sávba (a tojás vagy a brokkoli feloldása a CH-t nem viszi le eléggé, vagy a zsír marad
 alatta), az olajé csökkenti a legjobban a kilógást (csak a CH marad 1,6 g-mal fölötte).
-Ezért kerül mellé a „Rögzítések feloldása" is — az csak akkor jelenik meg, ha egyetlen
-feloldás sem elég. Ha valamelyik egyedül sávba hozna, csak az az egy gomb állna ott.
+Ezért kerül mellé a „Rögzítések feloldása" is — ez minden rögzítést felold, az eredményét
+ugyanígy előre mutatva, és csak akkor jelenik meg, ha egyetlen feloldás sem elég. Ha valamelyik egyedül sávba hozna, csak az az egy gomb állna ott.
 
 ---
 
@@ -378,6 +402,11 @@ születik.
 **Ellenőrzés:** CH + fehérje + zsír ≤ 100 g. Ha nem, a szöveg: *„100 grammban ennyi nem
 fér el. Nézd meg a csomagolást."* Nem „érvénytelen bevitel".
 
+**Szerkesztés és törlés.** A saját alapanyag a választóban a „…" menüből szerkeszthető
+(ugyanez a lap, kitöltve) és törölhető. Ha mentett tányér használja, törlés előtt alsó lap:
+*„Az Anyu túrója ezekben a tányérokban szerepel: Reggeli túrós. Törléskor kikerül
+belőlük."* — `Törlöm` / `Mégse`. Az így üressé váló tányér is törlődik.
+
 ### 6.3 Tányérjaim
 
 ```
@@ -404,7 +433,10 @@ gyűjt, utána fizet.
 **Megnyitáskor:** a tányér nem kész számokkal nyílik meg, hanem betölti az alapanyagokat,
 és **újraszámol**. A mentett grammok a horgony, nem a válasz. Ha a felhasználó ezt nem
 látja, azt fogja hinni, hogy elromlott valami — ezért a fejlécben egy sor:
-*„{Tányér neve} — a mai célra újraszámolva."*
+*„{Tányér neve} — a mai célra újraszámolva."* A tányér rögzítés nélkül nyílik.
+
+**Átnevezés és törlés** a sor „…" menüjéből. A tányérnév egyedi: foglalt névnél a
+névmező alatt *„Már van ilyen nevű tányér."*, és a mentés addig nem aktív.
 
 ### 6.4 Keret
 
@@ -432,8 +464,12 @@ látja, azt fogja hinni, hogy elromlott valami — ezért a fejlécben egy sor:
 │ Minden eszközödön szinkronban.   │
 │ Sütik: csak a szükségesek     >  │
 │ Adatvédelmi tájékoztató       >  │
+│ Adataim letöltése                │
 │ Kijelentkezés                    │
+│ Kijelentkezés minden eszközről   │
 │ Fiók törlése                     │
+│ A hozzájárulás visszavonása a    │
+│ fiók törlésével történik.        │
 └──────────────────────────────────┘
 ```
 
@@ -442,9 +478,12 @@ szinkron állapota egy sor: „Minden eszközödön szinkronban." vagy, ha hál�
 el nem küldött változás: „Nincs kapcsolat. A változásaid megvannak, és elküldöm őket,
 amint lesz." A Tányéron a szinkron nem jelenik meg: a konyhában nem kell tudni róla.
 
-**Fiók törlése** az egyetlen hely, ahol megerősítő kérdés van visszavonás helyett, mert
-nem vonható vissza: alsó lap — „Minden adatod törlődik: a keret, a saját alapanyagaid és a
-tányérjaid. Ez nem vonható vissza." — `Végleg törlöm` / `Mégse`.
+**Adataim letöltése:** a fiók teljes tartalma egy JSON fájlban (PRD 6.6).
+
+**Fiók törlése** a fiókhoz kötött egyetlen megerősítő kérdés visszavonás helyett, mert nem
+vonható vissza: alsó lap — a 7. fejezet „Fiók törlése" szövege — `Végleg törlöm` / `Mégse`.
+Utána minden eszköz kijelentkezik; egy offline eszköz a következő kapcsolódáskor törli a
+helyi adatot, és nem tölt fel semmit. A hozzájárulás visszavonása ugyanez az út.
 
 Az alsó blokk a lényeg. **Nem beviteli mező, hanem visszajelzés** — ő négy éve tudja
 fejből, mennyi jön ki egy étkezésre, és itt azonnal látja, hogy jól értettük-e a papírt.
@@ -459,8 +498,9 @@ kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jön
 **Gyanús érték:** a termék nem javítja csendben, és nem is tiltja meg. Visszakérdez
 egyszer — alacsony értéknél: *„Ez alacsonyabb, mint amit dietetikusok általában adnak.
 Biztosan így van a papíron?"*; szűk sávnál: *„Ez a sáv nagyon szűk, kevés tányér fog
-beleférni. Biztosan így van a papíron?"* — és ha igen, elfogadja. A küszöbök (napi 1200 kcal,
-napi 50 g fehérje, a sáv alsó határának 10%-a) helykitöltők, a dietetikus erősíti meg őket.
+beleférni. Biztosan így van a papíron?"* — és ha igen, elfogadja. A küszöbök (a kcal-sáv
+felső határa 1200 — csak ha van kcal-sáv —, a fehérjesáv felső határa 50 g, a sávszélesség a
+felső határ 10%-a) helykitöltők, a dietetikus erősíti meg őket.
 Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elgépelést.
 
 ---
@@ -480,12 +520,13 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 │ [ Belépési link küldése        ] │
 │                                  │
 │ Jelszó nincs: e-mailben küldök   │
-│ egy linket, azzal lépsz be.      │
+│ egy linket és egy kódot.         │
 └──────────────────────────────────┘
 ```
 
-**Elküldés után** ugyanez a képernyő: „Elküldtem a linket ide: anna@pelda.hu. Nyisd meg
-ezen a telefonon." + `Újraküldés` · `Másik e-mail-cím`.
+**Elküldés után** ugyanez a képernyő: „Elküldtem a linket és a kódot ide: anna@pelda.hu."
++ egy 6 jegyű kódmező („Ha a link máshol nyílt meg, írd be ide a kódot.") + `Újraküldés` ·
+`Másik e-mail-cím`.
 
 ### 6.6 Hozzájárulás
 
@@ -498,15 +539,19 @@ ezen a telefonon." + `Újraküldés` · `Másik e-mail-cím`.
 │ a számokat ő adja, te írod be.   │
 │                                  │
 │ ☐ Hozzájárulok, hogy a Ketara    │
-│   tárolja az étrendi adataimat   │
-│   (keret, alapanyagok, tányérok).│
+│   tárolja az e-mail-címemet és az│
+│   étrendi adataimat (keret, saját│
+│   alapanyagok, tányérok, legutóbb│
+│   használt mennyiségek).         │
 │   Adatvédelmi tájékoztató >      │
+│ ☐ Elmúltam 16 éves.              │
 │                                  │
 │ [ Tovább                       ] │
 └──────────────────────────────────┘
 ```
 
-A `Tovább` a pipa nélkül nem aktív.
+A `Tovább` mindkét pipa nélkül nem aktív. A hozzájárulás szövegverzióval és időponttal
+mentődik.
 
 ### 6.7 Süti-sáv
 
@@ -536,6 +581,7 @@ A `Tovább` a pipa nélkül nem aktív.
 | ⚠ feloldás-előzetes, részleges | Ha feloldod a {alapanyagot}: {adagok} → {makró} {n,n} g-mal a sáv {fölött / alatt}. |
 | ⚠ arány | Zsír–fehérje arány: {x,x} : 1, a minimum {min} : 1. |
 | ⚠ 0 g | A {alapanyag} 0 g-ra szorult — nélküle jönne ki. Cseréld vagy vedd ki. |
+| ⚠ kerekítés az ok | Egész grammokra kerekítve nem fér bele a sávba. |
 | ⚠ nincs rögzítés, kevés | Kevés a {makró} — adj hozzá a {kategória} közül. |
 | ⚠ nincs rögzítés, sok | Sok a {makró} — cseréld a {alapanyagot} egy másik {kategória}-félére. |
 | ⚠ zsákutca | Ebből a {n} alapanyagból nem jön ki. |
@@ -547,21 +593,32 @@ A `Tovább` a pipa nélkül nem aktív.
 | Mentett tányér megnyitva | {Tányér neve} — a mai célra újraszámolva. |
 | Frissítés gomb | {Tányér neve} frissítése |
 | Frissítés után | Frissítve. Legközelebb innen indul. |
+| Kész gomb | Kész |
+| Kész után | Megjegyeztem. Legközelebb ebből indulok. |
+| Foglalt tányérnév | Már van ilyen nevű tányér. |
+| Saját alapanyag törlése, tányérban használt | Az {alapanyag} ezekben a tányérokban szerepel: {tányérok}. Törléskor kikerül belőlük. |
 | Csere rögzített soron | A rögzítés lekerült, mert az alapanyag változott. |
 | Keret, gyanúsan alacsony | Ez alacsonyabb, mint amit dietetikusok általában adnak. Biztosan így van a papíron? |
 | Keret, gyanúsan szűk | Ez a sáv nagyon szűk, kevés tányér fog beleférni. Biztosan így van a papíron? |
 | Keret, lehetetlen (alsó > felső) | Az alsó határ nagyobb a felsőnél. Nézd meg a papírt. |
 | Keret, lehetetlen (arány) | A zsírsáv teteje kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jönne ki. |
 | Belépés, ígéret | Megmondja, hány grammot vegyél abból, ami előtted van. |
-| Belépés, magyarázat | Jelszó nincs: e-mailben küldök egy linket, azzal lépsz be. |
-| Link elküldve | Elküldtem a linket ide: {e-mail}. Nyisd meg ezen a telefonon. |
-| Link lejárt / felhasznált | Ez a link már nem érvényes. Küldök egy újat. |
+| Belépés, magyarázat | Jelszó nincs: e-mailben küldök egy linket és egy kódot. |
+| Link elküldve | Elküldtem a linket és a kódot ide: {e-mail}. |
+| Kódmező | Ha a link máshol nyílt meg, írd be ide a kódot. |
+| Link vagy kód lejárt / felhasznált | Ez a link vagy kód már nem érvényes. Küldök egy újat. |
+| Hibás kód | Ez a kód nem jó. Nézd meg újra a leveled. |
 | Figyelmeztetés | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust. |
-| Hozzájárulás | Hozzájárulok, hogy a Ketara tárolja az étrendi adataimat (keret, alapanyagok, tányérok). |
+| Hozzájárulás | Hozzájárulok, hogy a Ketara tárolja az e-mail-címemet és az étrendi adataimat (keret, saját alapanyagok, tányérok, legutóbb használt mennyiségek). |
+| Korhatár | Elmúltam 16 éves. |
 | Süti-sáv | Sütiket használok, hogy lássam, mi működik. Étrendi adat nem kerül bele. |
 | Szinkron rendben | Minden eszközödön szinkronban. |
 | Szinkron, nincs kapcsolat | Nincs kapcsolat. A változásaid megvannak, és elküldöm őket, amint lesz. |
-| Fiók törlése | Minden adatod törlődik: a keret, a saját alapanyagaid és a tányérjaid. Ez nem vonható vissza. |
+| Fiók törlése | Minden adatod törlődik: az e-mail-címed, a keret, a saját alapanyagaid, a tányérjaid és a legutóbb használt mennyiségeid, minden eszközödön. Ez nem vonható vissza. |
+| Hozzájárulás visszavonása | A hozzájárulás visszavonása a fiók törlésével történik. |
+| Kijelentkezés mindenhol | Kijelentkezés minden eszközről |
+| Adatletöltés | Adataim letöltése |
+| Inaktív fiók, értesítő e-mail | Két éve nem léptél be a Ketarába. Ha 30 napon belül nem lépsz be, a fiókod és minden adatod törlődik. |
 
 
 Minden szöveg tegező, kijelentő, és **megmondja a következő lépést.** Nincs „Hiba
@@ -574,4 +631,4 @@ történt", nincs „Érvénytelen".
 - **Napközbeni eltérés** — ha egy étkezésnél kilépett a sávból, a következőnél ezt nem
   tudja beszámítani. Tudatos: a napkövetés out of scope.
 - **Az adatvédelmi tájékoztató és a figyelmeztetés végleges szövege** — a fenti mondatok
-  helykitöltők, amíg szakértő át nem nézi őket (PRD 8.2).
+  helykitöltők, amíg szakértő át nem nézi őket (PRD 8.1/2).

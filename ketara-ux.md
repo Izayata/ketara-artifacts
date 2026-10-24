@@ -1,11 +1,13 @@
-# Ketara — UX-terv v0.3
+# Ketara — UX-terv v0.4
 
-*Kísérőanyag a PRD v1.0-hoz és a Folyamatok és képernyők v0.7-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.1-hez és a Folyamatok és képernyők v0.8-hoz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-10-08*
+*Utolsó frissítés: 2026-10-24*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
-fiókját és nyilvános weboldalát követi (10. fejezet).
+fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
+változásokat követi: `Kész` gomb a `Mentés így` helyett, egységes „(nyersen)", belépési
+kód, hozzájárulás-kapu.
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -90,18 +92,18 @@ ha a sorokkal együtt nem fér ki, a panel belső része görög, a gombsor alul
 ```
 ┌──────────────────────────────────────────────┐
 │ Tojás                        137 g      ◯    │
-│ fehérjeforrás                nyersen          │
+│ fehérjeforrás                (nyersen)        │
 └──────────────────────────────────────────────┘
   név (koppintás → műveletek)   gramm (koppintás → beírás)   rögzítés
 ```
 
 - **Gramm:** nagy, táblázatos számjegyekkel (a számok nem ugrálnak szélességben), mellette
-  kisebben „nyersen". A „nyersen" minden soron ott van (PRD 7).
+  kisebben „(nyersen)". A „(nyersen)" minden soron ott van, a PRD 7 egyetlen formájában.
 - **Rögzítés jelzése — a 📌 / 📍 páros helyett.** A két gombostű-ikon kis méretben alig
   különböztethető meg, és színtévesztő szemmel sem biztos. Helyette:
   - nem rögzített: üres kör-ikon, halványan;
-  - rögzített: kitöltött lakat, a gramm **félkövér** és akcentusszínű, a „nyersen" helyén
-    „rögzítve · nyersen".
+  - rögzített: kitöltött lakat, a gramm **félkövér** és akcentusszínű, a „(nyersen)" helyén
+    „rögzítve · (nyersen)".
   Így a különbség alakban, színben és szövegben is megvan.
 - **Az ikon egy koppintás:** a jelenlegi grammot rögzíti, újabb koppintás feloldja.
 - **A gramm beírása rögzít.** A számra koppintva numerikus billentyűzet nyílik a soron
@@ -148,9 +150,10 @@ sávon belül) v1-ben nincs: több helyet venne el, mint amennyit hoz.
 ```
 
 - Zöld pipa, de a panel háttere semleges. A ✓ a nyugalmi állapot, nem ünneplés.
-- Mentett tányérból indulva, ha bármelyik gramm eltér: `{Név} frissítése` (elsődleges) és
-  `Mentés új néven` (másodlagos). Ha nem tér el: nincs mentés-gomb, csak „✓ Minden érték
-  a sávon belül."
+- Gombok: `Tányér mentése` (másodlagos) és `Kész` (elsődleges: ez a leggyakoribb vég).
+- Mentett tányérból indulva, ha az összetétel vagy bármelyik gramm eltér: `{Név} frissítése`
+  és `Mentés új néven` a `Tányér mentése` helyén. Ha nem tér el: nincs mentés-gomb, csak a
+  `Kész`.
 
 ### 4.6 Eredménypanel — ⚠
 
@@ -161,11 +164,12 @@ Olvasási sorrend, ahogy a Folyamatok 5.4 rögzíti, vizuális hierarchiával:
 3. **Előzetes** — keretezett doboz, hogy látszódjon: ez egy *lehetséges* tányér, nem a mostani:
    „Ha feloldod a tojást: 137 g tojás · 100 g brokkoli · 31 g olaj (nyersen) → minden érték
    a sávon belül."
-4. **Gombok:** `Tojás feloldása` (elsődleges) · `+ Alapanyag` · `Mentés így` (szöveges gomb,
-   nem rejtve, de nem is versenyez a feloldással).
+4. **Gombok:** `Tojás feloldása` (elsődleges) · `+ Alapanyag` · `Tányér mentése` · `Kész`
+   (az utóbbi kettő szöveges gomb, nem rejtve, de nem is versenyez a feloldással).
 
 - Az elsődleges gomb mindig az, ami a legközelebb visz a ✓-hoz: rögzítésnél a feloldás,
-  rögzítés nélkül a `+ {Kategória}` (a választó azon a kategórián nyílik), zsákutcánál
+  rögzítés nélkül, ha egy makró kevés, a `+ {Kategória}` (a választó azon a kategórián
+  nyílik), ha sok, a `{Alapanyag} cseréje` (a csere-választó azon a soron), zsákutcánál
   a `+ Alapanyag`.
 - A borostyán szín csak a címsoron és a sávon kívüli makrón jelenik meg, nem a teljes
   panelen.
@@ -181,8 +185,11 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
   neve („Tojás, brokkoli, olaj"), kijelölve, így egy koppintással átírható vagy elfogadható.
 - Mentés után rövid visszajelzés alul („Mentve: Tojásos vacsora"), és a tányér mentett
   tányérként folytatódik (fejlécben a neve).
-- `Mentés így` ⚠ állapotban ugyanez a lap, egy sorral a mező fölött: „Fehérje 6,6 g-mal a
+- `Tányér mentése` ⚠ állapotban ugyanez a lap, egy sorral a mező fölött: „Fehérje 6,6 g-mal a
   sáv fölött." Nem kérdez rá újra (PRD 6.4), csak emlékeztet.
+- Foglalt névnél a mező alatt: „Már van ilyen nevű tányér.", a mentés addig nem aktív.
+- `Kész` nem nyit lapot: rövid visszajelzés alul („Megjegyeztem. Legközelebb ebből
+  indulok."), és a tányér marad, ahol volt.
 
 ---
 
@@ -234,10 +241,13 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 
 - **Belépés:** a termék ígérete egy mondatban, egy e-mail-mező (e-mail-billentyűzettel,
   automatikus kitöltéssel), egy gomb. Jelszó nincs (Folyamatok 6.5).
-- Elküldés után ugyanaz a képernyő mutatja, hova ment a link, `Újraküldés` és
-  `Másik e-mail-cím` gombbal. Lejárt vagy felhasznált linknél egy sor és egy gomb: új link.
-- **Hozzájárulás** csak új fióknál: figyelmeztetés + egy jelölőnégyzet, az adatvédelmi
-  tájékoztató linkjével; a `Tovább` pipa nélkül nem aktív (Folyamatok 6.6).
+- Elküldés után ugyanaz a képernyő mutatja, hova ment a link és a kód, egy 6 jegyű kódmezővel
+  (numerikus billentyűzet, a levélből automatikus kitöltéssel, ahol a rendszer engedi),
+  `Újraküldés` és `Másik e-mail-cím` gombbal. Lejárt vagy felhasznált linknél egy sor és egy
+  gomb: új link.
+- **Hozzájárulás** akkor, ha nincs rögzített hozzájárulás az aktuális szövegre:
+  figyelmeztetés + két jelölőnégyzet (hozzájárulás, 16 év), az adatvédelmi tájékoztató
+  linkjével; a `Tovább` mindkét pipa nélkül nem aktív (Folyamatok 6.6).
 - **Süti-sáv** az első megnyitáskor a képernyő alján. Két egyenrangú gomb, azonos
   méretben és súlyban: `Elfogadom` · `Csak a szükségesek`. Egyik sem hangsúlyosabb, és a
   sáv bezárás nélkül nem tűnik el. Amíg nincs választás, a Belépés használható mellette.
@@ -285,7 +295,7 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - **Számformátum:** tizedesvessző („6,6 g"), gondolatjel a sávban („5–10"), szóköz a
   kettőspont körül az aránynál („2,2 : 1").
 - **Akadálymentesség:** a rendszer betűméretét követi; az állapot soha nem csak színnel
-  jelenik meg (ikon + szöveg is); képernyőolvasónak a sor így hangzik: „Tojás, 137 gramm
+  jelenik meg (ikon + szöveg is); képernyőolvasónak a sor így hangzik: „Tojás, 137 gramm,
   nyersen, rögzítve".
 
 ---
