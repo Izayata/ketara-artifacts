@@ -105,7 +105,9 @@ zsír–fehérje arányt.
 **A termék:** eltárolja, és kiszámolja az **étkezési célt**. Nem kérdezi újra.
 
 **Szabályok:**
-- Étkezési cél = napi sáv ÷ étkezések száma, mindkét határra.
+- Étkezési cél = napi sáv ÷ étkezések száma, mindkét határra. A kijelzés egy
+  tizedesjegyű (70 ÷ 3 → „23,3"; egész számnál tizedes nélkül, „20"); a megoldó a pontos
+  értékkel számol.
 - Minden makróhoz alsó és felső határ tartozik — a szénhidráthoz is: a papíron a CH
   is tartományként szerepel, így az alullövés is ⚠.
 - A kcal-sáv **opcionális**: a felhasználó tudja, szerepel-e a papíron. Ha megadja, **puha
@@ -143,12 +145,15 @@ mozgó mennyiség kell. A rögzített alapanyagok mégis beleszámítanak a hár
 felhasználó döntése, 2026-09-27): ha a rögzítések miatt kevés mennyiség mozdulhat, és
 így nincs sávon belüli tányér, azt a ⚠ kezeli.
 Ha minden alapanyag rögzített, a termék nem old meg, csak kiértékel: megmondja, hol tart
-a sávokhoz képest.
+a sávokhoz képest. A kiértékelés is ✓ vagy ⚠ címsort kap, és ugyanúgy ott van alatta a
+Kész és a mentés helye (6.5).
+**Felső korlát:** egy tányéron legfeljebb **8 alapanyag** lehet. A választó a nyolcadik
+után nem enged többet: *„Egy tányéron legfeljebb 8 alapanyag lehet."*
 
 ### 6.2b Alapanyag cseréje
 **A felhasználó:** egy soron a cserét választja.
-**A termék:** felkínálja ugyanannak a kategóriának a tagjait, majd helyben lecseréli és
-újraszámol.
+**A termék:** felkínálja ugyanannak a kategóriának a tagjait (a tányéron már szereplő
+alapanyagok nélkül), majd helyben lecseréli és újraszámol.
 **Szabály:** a csere **leveszi a rögzítést** az adott sorról. 180 g brokkolit rögzíteni nem
 ugyanaz, mint 180 g zöldbabot. Az új alapanyag referenciája a saját legutóbbi használata,
 ennek hiányában az egyedi felülírása, végül a kategória alapértéke (6.3).
@@ -167,9 +172,16 @@ változás 30 g olajon ugyanannyit számít, mint 20 g változás 200 g tojáson
 csak egy-két alapanyag mozdul, a többi a megszokott mennyiségén marad. Ez lineáris
 program: gyors, pontos, és ugyanarra a bemenetre mindig ugyanazt adja.
 
+**Döntetlen:** ha több megoldás egyformán közel van, az a győztes, amelyikben a **korábban
+felvett** sorok maradnak közelebb a referenciához (a tányér sorrendje szerint, az első sor
+előre). Így az eredmény nem a számolás belső sorrendjén múlik, és a mentett tányér nem tér
+el ok nélkül.
+
 **Megengedett mennyiségek.** Sávon belüli megoldásnak csak az számít, ahol minden nem
 rögzített alapanyag **legalább 1 g**. 0 g csak a ⚠ ágban jelenhet meg, ha másképp nem
-közelíthető a sáv.
+közelíthető a sáv. A ⚠ ágban is minden nem rögzített alapanyag **vagy 0 g, vagy legalább
+1 g**. Ehhez a megoldó a 0 g-ra tett sorok halmazait a legkevesebbtől kezdve sorra veszi,
+halmazonként egy **kis lineáris programmal** (legfeljebb 8 sornál ez is észrevétlen).
 
 **Ha nincs sávon belüli megoldás** (⚠), a megoldó ebben a sorrendben dönt:
 1. a zsír–fehérje arány minimuma — kemény feltétel, amíg teljesíthető; ha nem
@@ -186,7 +198,8 @@ A referencia forrása, ebben a sorrendben:
 1. ha mentett tányérból indult: a **tányérban tárolt** mennyiség — a tányér egy megőrzött
    **összetétel** (mely alapanyagok, hány grammal), és ez az egyetlen dolog, amit hordoz.
    A referencia a tárolt **abszolút** gramm: ha a felhasználó egy alapanyagot a tárolttól
-   eltérő grammra rögzít, a többi alapanyag referenciája nem skálázódik vele;
+   eltérő grammra rögzít, a többi alapanyag referenciája nem skálázódik vele. Tárolt gramm
+   soha nem 0, mert 0 g-os sor nem kerül tányérba (6.5);
 2. egyébként amennyit a felhasználó **legutóbb** használt ebből az alapanyagból. A
    „legutóbb használt" a **Kész**, a Tányér mentése, a {Név} frissítése és a Mentés új
    néven gombra frissül; a sima újraszámolás nem írja felül, így a referencia nem sodródik.
@@ -212,7 +225,8 @@ egy sávból vagy az arányból, a megoldó a szomszédos egész grammok (±1 g)
 a legjobbat választja, ugyanazzal a sorrenddel, mint fent. Ha ezek között nincs sávon
 belüli, ±2 g-ig keres; ha így sincs, az eredmény ⚠ a fenti sorrend szerint, és a szöveg a
 kerekítést nevezi meg okként. A makróértékek és a kilógás **egy
-tizedesjeggyel** jelennek meg („6,6 g"), az arány is („2,2 : 1").
+tizedesjeggyel** jelennek meg („6,6 g"), az arány is („2,2 : 1"). Kilógás soha nem
+látszik „0,0 g"-nak: a legkisebb kiírt kilógás 0,1 g.
 
 ### 6.4 A két kimenet
 
@@ -236,11 +250,11 @@ CH 5,0 · Fe 31,6 · Zs 63,2 · arány 2,0 : 1. A megoldó először a kilógás
 brokkolit addig viszi le, amíg a CH-sáv alja engedi (48 g), az olajat annyira emeli, amennyit
 az arány kér (39 g):
 ```
-⚠  240 g tojás 📍 · 48 g brokkoli · 39 g olaj (nyersen)
+⚠  240 g tojás 🔒 · 48 g brokkoli · 39 g olaj (nyersen)
    Fehérje: 6,6 g-mal a sáv fölött.
-   A rögzített tojás önmagában 30,2 g fehérjét hoz; a sáv teteje 25 g.
+   Rögzítve: Tojás 240 g (nyersen). Ez önmagában 30,2 g fehérjét hoz; a sáv teteje 25 g.
 
-   Ha feloldod a tojást:
+   Ha feloldod: Tojás
    137 g tojás · 100 g brokkoli · 31 g olaj (nyersen) → minden érték a sávon belül.
 
    [ Tojás feloldása ]        [ + Alapanyag ]
@@ -250,25 +264,33 @@ az arány kér (39 g):
 **Szabályok a ⚠ állapotra:**
 - Mindig megnevezi, **melyik makró, mennyivel, melyik irányba** csúszik ki. Ha az arány
   sérül, azt is: „Zsír–fehérje arány: 1,5 : 1, a minimum {min} : 1."
+- **A ⚠ sorainak rögzített sorrendje**, mindegyik legfeljebb egyszer: arány → a kilógó
+  makrók, a grammban nagyobb eltérés elöl → 0 g-ra szorult sor → kerekítés → kcal. Az első
+  sor a címsor. Utána jön az ok (pl. a rögzítés), az előzetes, végül a gombok.
 - Ha a kilógás oka egy rögzítés, ezt kimondja. A felhasználó különben a rossz elemet
   próbálja javítani.
 - A feloldó gomb **megnevezi az alapanyagot** („Tojás feloldása"), nem generikus.
 - **Több rögzítésnél** a megoldó egyenként kipróbálja minden rögzítés feloldását (rögzítésenként
   egy kis futás). Azt az egyet ajánlja fel, amelyiknek a feloldása sávba hoz; ha több is,
-  amelyik a referenciához közelebbi tányért ad; ha egyik sem, amelyik a legtöbbet csökkent a
-  kilógáson. A „Rögzítések feloldása" gomb csak akkor jelenik meg mellette, ha **egyetlen
+  amelyik a referenciához közelebbi tányért ad; ha egyik sem, amelyiknek az eredménye a 6.3
+  ⚠-sorrendje szerint a legjobb (előbb az arány, aztán a kilógás grammban). A „Rögzítések feloldása" gomb csak akkor jelenik meg mellette, ha **egyetlen
   feloldás sem** hoz sávba. Ez **minden** rögzítést felold, és az eredményét ugyanígy előre
   mutatja.
 - A feloldás **eredményét előre mutatja**, kattintás előtt — akkor is, ha a feloldás sem
   oldja meg. A termék akkor jó, ha megmondja, melyik lépés vezet valahova.
 - A feloldás nem törli az alapanyagot: csak visszaadja a grammját a megoldónak.
-- Ha nincs rögzítés, a feloldó gomb nem létezik. Helyette a helyreállítás iránya számít:
-  - ha egy makró **kevés**: a termék azt a kategóriát nevezi meg, amelynek egy tagja
+- Ha nincs rögzítés, a feloldó gomb nem létezik. Helyette a helyreállítás iránya számít,
+  ebben a sorrendben:
+  - ha az **arány** sérül: zsiradék hozzáadását javasolja (a választó a Zsiradékon nyílik);
+  - különben a **grammban legnagyobb eltérés** dönti el az irányt, akkor is, ha egy másik
+    makró az ellenkező irányba csúszik ki;
+  - ha az a makró **kevés**: a termék azt a kategóriát nevezi meg, amelynek **mintaalapanyaga**
     hozzáadva (próbafuttatásban) a legjobban csökkenti a kilógást, és a hozzáadás gomb azon
-    a kategórián nyitja meg a választót;
-  - ha egy makró **sok**: azt a nem rögzített alapanyagot nevezi meg, amely a legtöbbet
-    adja a kilógó makróból, és kategórián belüli cserét javasol, a csere-választót azon a
-    soron nyitva.
+    a kategórián nyitja meg a választót. Kategóriánként egy mintaalapanyag van, a gondozó
+    jelöli ki; így hat próbafutás elég, a teljes listát nem kell végigpróbálni;
+  - ha az a makró **sok**: azt a nem rögzített alapanyagot nevezi meg, amely a legtöbbet
+    adja belőle, és kategórián belüli cserét javasol, a csere-választót azon a soron nyitva;
+  - ha egyik kategória mintaalapanyaga sem csökkenti a kilógást: a zsákutca szövege (7.).
 - A **Kész** mindig ott van, ✓ és ⚠ esetén is: a felhasználó dönti el, mit eszik meg. A
   termék egyszer, világosan megmondja a kilógást, és nem kérdez rá kétszer. (A korábbi
   „Mentés így" gomb a Kész-be olvadt.)
@@ -278,14 +300,16 @@ az arány kér (39 g):
 **Saját alapanyag:** név + kategória + 100 g tápérték, nyers súlyra. Bekerül a listába,
 kereshető. Szerkeszthető (név, kategória, tápérték) és törölhető. Ha a törölt alapanyag
 mentett tányérokban szerepel, a megerősítő kérdés felsorolja őket; törléskor a sor kikerül
-belőlük, és az így üressé váló tányér is törlődik.
+belőlük. Az így üressé váló tányér törlődik; a 3-nál kevesebb sorral maradó tányér megmarad,
+és hiányos állapotban nyílik (a hiányzó alapanyagokat kéri).
 
 **Kész:** név nélküli mozdulat, ✓ és ⚠ esetén is: a felhasználó ezt eszi meg. A kiírt
 grammok lesznek az alapanyagok „legutóbb használt" mennyiségei (a 0 g-os sor kivételével).
 Tányért nem hoz létre és nem módosít.
 
 **Tányér:** egyedi név + az alapanyagok a kiszámolt grammokkal. Foglalt névnél a termék
-szól („Már van ilyen nevű tányér."). A tárolt grammok **nem kész válasz, hanem horgony**: a
+szól („Már van ilyen nevű tányér."). **0 g-os sor nem kerül a tányérba**; a mentés lapja ezt
+kiírja: *„Kimarad a tányérból, mert 0 g: {Alapanyag}."* A tárolt grammok **nem kész válasz, hanem horgony**: a
 grammok minden étkezésnél újra kiszámolódnak, mert a valóság (mennyi hús van itthon, van-e
 brokkoli) minden alkalommal más. A tányér azt őrzi meg, milyen **összetételben** szereti
 ezeket együtt. A rögzítéseket **nem** tárolja: a rögzítés aznapi, ízlés szerinti választás
@@ -309,24 +333,37 @@ kapott kódot.
 **A termék:** belépteti; a fiók adatai minden eszközén megjelennek.
 
 **Szabályok:**
-- **Belépés nélkül nem használható.** Az első indítás a belépés, utána a Keret.
+- **Belépés nélkül nem használható.** Az első indítás sorrendje: belépés → hozzájárulás →
+  Keret → üres Tányér (a `+ Alapanyag` és a `Tányérjaim` gombbal).
 - A belépési e-mail egy **linket** és egy **6 jegyű kódot** tartalmaz. A link azt a
   böngészőt lépteti be, amelyben megnyitják. Ha máshol nyílt meg (másik eszköz, a
   levelezőalkalmazás beépített böngészője), a kódot a kérő eszköz várakozó képernyőjén
-  lehet beírni.
+  lehet beírni. A link és a kód **egy belépési token**: bármelyik felhasználása mindkettőt
+  érvényteleníti. **15 percig** érvényes; **5 hibás kód** után érvénytelen, új kell.
 - Egy eszközön a belépés **1 évig** megmarad, és minden használattal megújul.
 - **A fiók tartalma** (kanonikus lista; minden szöveg — hozzájárulás, adatvédelmi
   tájékoztató, fióktörlés, szószedet — ezt használja): az e-mail-cím, a keret, a saját
   alapanyagok, a mentett tányérok, a „legutóbb használt" mennyiségek és a hozzájárulás
   (szövegverzió, időpont). A gondozott alapanyaglista közös, nem a fiók része.
+- **Csak az eszközön:** az **aktuális tányér** (a sorai, grammjai és rögzítései). Nem
+  szinkronizál: ha a felhasználó főzés közben bezárja az appot, újranyitáskor ugyanaz a
+  tányér várja, a rögzítésekkel együtt. A **Kész** vagy egy új tányér törli (a Kész után a
+  tányér a képernyőn marad, hogy mérni lehessen róla, de a következő megnyitás már üres
+  tányérral indul). A letöltésben szerepel, és a fiókkal együtt törlődik.
 - **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak, a változás a
   következő kapcsolatnál szinkronizál. A konyhában ez nem luxus.
 - **Szinkron-tétel** a keret, egy saját alapanyag, egy tányér, illetve egy alapanyag
   „legutóbb használt" értéke. Ha ugyanazt a tételt két eszközön is módosították, a változás
   **eszközoldali időpontja** szerint a későbbi marad (egyezésnél az, amelyik előbb ért a
   szerverre). A **törlés mindig győz**: a törölt tételt egy másik eszközön végzett módosítás
-  sem hozza vissza.
-- **Kijelentkezés minden eszközről** a Fiók blokkban.
+  sem hozza vissza. Ha egy tányér sora törölt alapanyagra mutat, összefésüléskor a sor
+  kimarad (mint a 6.5 törlésénél).
+- **Visszavonható törlés** (tányér, sor): a törlés a visszavonási ablak (~5 mp) alatt csak
+  az eszközön van meg, és csak az ablak bezárulása után szinkronizál.
+- **Kijelentkezés:** előbb szinkronizál. Ha nincs kapcsolat, és van el nem küldött
+  változás, egyszer figyelmeztet: *„{N} változás még nincs elküldve. Ha most kilépsz,
+  elvesznek."* — `Kilépek` / `Mégse`. A **Kijelentkezés minden eszközről** (a Fiók
+  blokkban) ugyanígy viselkedik az aktuális eszközön.
 - **Adataim letöltése**: a fiók teljes tartalma egy JSON fájlban (GDPR: hozzáférés és
   adathordozhatóság).
 - A felhasználó **törölheti a fiókját**; ekkor minden adata törlődik a szerverről, és
@@ -335,18 +372,25 @@ kapott kódot.
 - Az étrendi adat egészségügyi adatnak minősülhet (GDPR), ezért a felhasználó
   **kifejezetten hozzájárul** a kezeléséhez, és nyilatkozik, hogy **elmúlt 16 éves**. A
   hozzájárulás-képernyő akkor jelenik meg, ha a fiókhoz **nincs rögzített hozzájárulás az
-  aktuális szövegverzióhoz** — nem csak új fióknál. Ha a jogi szöveg változik, újra
-  megjelenik. Hozzájárulás előtt étrendi adat sem a szerverre, sem az eszközre nem kerül.
+  aktuális szövegverzióhoz** — nem csak új fióknál. A hozzájárulás **fiókonként és
+  szövegverziónként** egyszer kell, nem eszközönként. Ha a jogi szöveg változik, újra
+  megjelenik. Új fióknál hozzájárulás előtt étrendi adat nem keletkezik. Meglévő fióknál
+  (új szövegverzió) az adat hozzájárulásig **zárolva**: megmarad, de nem látszik és nem
+  szinkronizál. A hozzájárulás-képernyőn ott a **Kijelentkezés** és a **Fiók törlése** is,
+  hogy aki nem fogadja el, ne ragadjon be.
 - **A hozzájárulás visszavonása a fiók törlése.** A Fiók blokk ezt egy mondatban kimondja;
   külön visszavonási út nincs.
-- **Megőrzés:** 24 hónap belépés nélkül → e-mailes értesítés → ha 30 napon belül nem lép
-  be, a fiók törlődik, ugyanúgy, mint kézi törlésnél.
+- **Megőrzés:** 24 hónap **használat nélkül** (használat: az app megnyitása belépve vagy
+  egy szinkron; a belépés 1 évig megmarad, ezért a belépés nem jó mérce) → e-mailes
+  értesítés (*„Két éve nem használtad a Ketarát."*) → ha 30 napon belül nem használja, a
+  fiók törlődik, ugyanúgy, mint kézi törlésnél.
 
 ### 6.7 Jogi szövegek
 - **Egészségügyi figyelmeztetés:** a Ketara számol, nem tanácsot ad; nem helyettesíti a
-  dietetikust. Regisztrációkor és a Keret képernyőn látható.
+  dietetikust. A Hozzájárulás képernyőn (hosszú változat) és a Keret képernyőn (rövid
+  változat) látható.
 - **Adatvédelmi tájékoztató:** mit tárolunk (a 6.6 listája), hol, meddig (24 hónap
-  inaktivitás + 30 nap), hogyan tölthető le és törölhető, és hogy az anonim analitika
+  használat nélkül + 30 nap), hogyan tölthető le és törölhető, és hogy az anonim analitika
   (6.8) a fióktörlés hatályán kívül esik.
 - **Süti-hozzájárulás:** az analitika csak elfogadás után indul (6.8).
 
@@ -369,31 +413,37 @@ kapott kódot.
 | 3-nál kevesebb alapanyag | Nem számol. Megmondja, hány alapanyag hiányzik még (egy vagy kettő), nem hibaüzenettel. |
 | Nincs sávon belüli megoldás | Legközelebbi elérhető + melyik makró mennyivel, melyik irányba csúszik ki + a helyreállítás útja. |
 | Nincs sávon belüli megoldás, nincs rögzítés, egy makró kevés | A legtöbbet segítő **kategóriát** nevezi meg („Kevés a zsír — adj hozzá a Zsiradék közül."), és a hozzáadás gomb azon a kategórián nyitja meg a választót (6.4). |
-| Nincs sávon belüli megoldás, nincs rögzítés, egy makró sok | A kilógó makróból legtöbbet adó alapanyagot nevezi meg, és kategórián belüli cserét javasol („Sok a szénhidrát — cseréld a brokkolit egy másik zöldségre."). |
+| Nincs sávon belüli megoldás, nincs rögzítés, egy makró sok | A kilógó makróból legtöbbet adó alapanyagot nevezi meg, és kategórián belüli cserét javasol („Sok a szénhidrát — Brokkoli cseréje segít."). |
+| Nincs sávon belüli megoldás, nincs rögzítés, az arány sérül, vagy egy makró kevés és egy másik sok | Előbb az arány (zsiradék hozzáadása), különben a grammban nagyobb eltérés dönti el az irányt (6.4). |
 | A zsír kevesebb, mint a fehérje {min}-szerese | ⚠: megnevezi az arányt és a minimumot („Zsír–fehérje arány: 1,5 : 1, a minimum {min} : 1"). |
 | A rögzített mennyiség önmagában kilépteti a sávból | Külön üzenet: a rögzítés a hibás elem. Felajánlja a feloldást, az eredmény előzetesével. |
 | A feloldás sem elég | Kimondja, hogy ebből a készletből nem jön ki. Nem küldi a felhasználót vakon próbálgatni. |
-| A megoldás negatív mennyiséget adna | Nem mutatunk mínuszt. Sávon belüli megoldásban minden nem rögzített alapanyag legalább 1 g. 0 g csak akkor jelenik meg, ha másképp nem közelíthető a sáv; az ⚠ akkor is, ha minden makró a sávon belül van (6.3). |
+| A megoldás negatív mennyiséget adna | Nem mutatunk mínuszt. Sávon belüli megoldásban minden nem rögzített alapanyag legalább 1 g. 0 g csak akkor jelenik meg, ha másképp nem közelíthető a sáv; az ⚠ akkor is, ha minden makró a sávon belül van (6.3): „0 g-ra szorult: {Alapanyag}. Ebben a tányérban nem fér el — cseréld vagy vedd ki." |
 | A kerekítés kiléptet, ±2 g sem segít | ⚠, a szöveg a kerekítést nevezi meg okként (6.3). |
-| Minden alapanyag rögzítve | Nem old meg, kiértékel: hol tart a sávokhoz képest. |
+| Minden alapanyag rögzítve | Nem old meg, kiértékel: hol tart a sávokhoz képest, ✓/⚠ címsorral, a Kész és a mentés helye alatta. |
+| A 9. alapanyag | Nem kerül fel: „Egy tányéron legfeljebb 8 alapanyag lehet." |
 | Saját alapanyag értelmetlen tápértékkel | Ellenőrzés: 100 g-ban a CH+fehérje+zsír nem haladhatja meg a 100 g-ot. |
 | Lehetetlen keret (alsó > felső, vagy a zsírsáv teteje < {min} × fehérjesáv alja) | Nem menti. Megnevezi a hibás sort. |
 | Gyanúsan alacsony vagy szűk keret (6.1 helykitöltő küszöbei) | A termék nem hajtja végre szó nélkül. Egyszer visszakérdez; igen után elfogadja. |
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
-| Első indítás | Belépés e-mailes linkkel, majd: nincs keret, nincs tányér, nincs előzmény. Az üres állapot egyetlen dolgot kínál: állítsd be a keretet. |
+| Első indítás | Belépés e-mailes linkkel vagy kóddal → hozzájárulás → Keret → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
 | Nincs hálózat | Minden helyben működik; a változás a következő kapcsolatnál szinkronizál. |
 | Lejárt vagy már használt belépési link | Megmondja, és egy gombbal újat küld. |
 | A belépési link másik eszközön vagy beépített böngészőben nyílt meg | A link azt a böngészőt lépteti be; a kérő eszközön az e-mailben kapott 6 jegyű kód beírható. |
-| Belépett, de a hozzájárulás előtt bezárta az oldalt | A következő belépéskor újra a hozzájárulás jön; addig nincs tárolt étrendi adat. |
+| Belépett, de a hozzájárulás előtt bezárta az oldalt | A következő megnyitáskor újra a hozzájárulás jön; addig nincs tárolt étrendi adat. |
+| Új jogi szövegverzió, meglévő fiók | A hozzájárulás-képernyő jön; az adat addig zárolva (megvan, de nem látszik, nem szinkronizál). A képernyőn Kijelentkezés és Fiók törlése is van. |
+| Kijelentkezés el nem küldött változással, hálózat nélkül | Egyszer figyelmeztet: „{N} változás még nincs elküldve. Ha most kilépsz, elvesznek." — Kilépek / Mégse. |
+| Tányérsor törölt alapanyagra mutat (másik eszközön törölték) | Összefésüléskor a sor kimarad (6.6). |
 | Ugyanaz a tétel két eszközön módosítva | A változás eszközoldali időpontja szerint a későbbi marad; törlés és módosítás ütközésekor a törlés (6.6). |
 | Fióktörlés, miközben egy másik eszköz offline | Kapcsolódáskor az eszköz nem tölt fel semmit, törli a helyi adatot, és a belépésre áll vissza. |
-| Saját alapanyag törlése, amit mentett tányér használ | A megerősítés felsorolja a tányérokat; törléskor a sor kikerül belőlük, az üressé váló tányér törlődik. |
+| Saját alapanyag törlése, amit mentett tányér használ | A megerősítés felsorolja a tányérokat; törléskor a sor kikerül belőlük. Az üressé váló tányér törlődik; a 3-nál kevesebb sorú megmarad, és hiányos állapotban nyílik. |
+| ⚠ tányér mentése 0 g-os sorral | A 0 g-os sor nem kerül a tányérba; a mentés lapja kiírja (6.5). |
 | Foglalt tányérnév | „Már van ilyen nevű tányér." Nem menti, amíg más nevet nem kap. |
 | Új eszköz, első belépés | Letölti a fiók adatait; a Keret nem kérdeződik újra. |
 | Süti-hozzájárulás elutasítva | Minden működik, csak a mérés marad el. |
 | A horgony elavult | A felhasználó frissítheti a tányért egy gombbal. A termék nem dönti el helyette, hogy melyik összetétel az érvényes. |
 | Csere rögzített soron | A rögzítés lekerül, a termék ezt kiírja: „A rögzítés lekerült, mert az alapanyag változott." |
-| Nyers–főtt félreértés | **Minden** kiírt mennyiség mellett ott áll a „(nyersen)", egyetlen formában: sorban „Csirkemell 90 g (nyersen)", mondatban „90 g csirkemell (nyersen)". Alapanyagonkénti „főzve változik" jelölés nincs: minden számolás nyers súllyal történik. A nyers súly héj, csont és tisztítási hulladék nélkül értendő. |
+| Nyers–főtt félreértés | **Minden** kiírt mennyiség mellett ott áll a „(nyersen)", egyetlen formában: sorban „Csirkemell 90 g (nyersen)", mondatban és felsorolásban „90 g csirkemell (nyersen)", egy felsorolás végén egyszer. Az ok-mondatokban is („Rögzítve: Tojás 240 g (nyersen)."). Alapanyagonkénti „főzve változik" jelölés nincs: minden számolás nyers súllyal történik. A nyers súly héj, csont és tisztítási hulladék nélkül értendő. |
 
 ## 8. Nyitott kérdések
 
@@ -455,6 +505,16 @@ dönt · rögzítés nélküli „sok" esetén csere · ±2 g-os kerekítési ke
 vagy kóddal, 1 éves munkamenet · szinkron-tétel, eszközoldali idő, a törlés győz ·
 fióktörlés minden eszközön · hozzájárulás-kapu verzióval; visszavonás = fióktörlés; 16
 éves korhatár · adatletöltés teherhordó · 24 hónapos megőrzés · anonim analitika.
+Az auditból (2026-10-24): megőrzés használat, nem belépés szerint · 0 g-os sor nem kerül
+tányérba · zárolt adat és kilépési út a hozzájárulás-képernyőn · a ⚠ ágban is 0 g vagy
+≥ 1 g, 0 g-os halmazonként kis LP · döntetlennél a korábbi sorok · rögzítés nélküli ⚠:
+előbb arány, aztán a legnagyobb eltérés, kategóriánként egy mintaalapanyag · a ⚠ sorainak
+rögzített sorrendje · a kiértékelésnek is van címsora és Kész gombja · a 3-nál kevesebb
+sorú tányér megmarad · törölt alapanyagra mutató sor összefésüléskor kimarad · az aktuális
+tányér csak az eszközön · kijelentkezés előtt szinkron, offline figyelmeztetés ·
+visszavonható törlés csak az ablak után szinkronizál · egy tizedes a célban · belépési
+token 15 perc, 5 próba · legfeljebb 8 alapanyag tányéronként · a prototípus v1.1-re
+frissítve.
 
 ## 9. Feltételezés-nyilvántartás
 
@@ -519,7 +579,8 @@ fióktörlés minden eszközön · hozzájárulás-kapu verzióval; visszavonás
 | **referenciatányér** | a megszokott mennyiségek, amikhez a megoldó a legközelebbi megoldást keresi (relatív eltérésben mérve) |
 | **alapérték** | a referencia, amikor még nincs korábbi használat: az egyedi (gondozói) felülírás vagy a kategória alapértéke |
 | **fiók** | egy ember adatai (a 6.6 kanonikus listája), e-mailes linkkel vagy kóddal elérve, minden eszközén ugyanazok |
-| **legközelebbi elérhető** | a kimenet, ha a sáv nem érhető el: a legkisebb teljes kilógású tányér; mindig a kilógás mértékével együtt |
+| **legközelebbi elérhető** | a kimenet, ha a sáv nem érhető el: a 6.3 ⚠-sorrendje szerinti legjobb tányér (előbb az arány, aztán a legkisebb teljes kilógás); mindig a kilógás mértékével együtt |
+| **aktuális tányér** | az épp szerkesztett tányér a rögzítéseivel; csak az eszközön él, a Kész vagy egy új tányér törli |
 
 ---
 
@@ -567,7 +628,7 @@ fióktörlés minden eszközön · hozzájárulás-kapu verzióval; visszavonás
 | 2026-09-27 | **Minden mennyiség mellett „(nyersen)"** | nem kell alapanyagonkénti jelölés, és minden számolás úgyis nyers |
 | 2026-09-27 | **A ✓/⚠ a kiírt grammokra számol**, a makrók egy tizedessel | amit lát, az egyezik az állapottal; nincs „0 g-mal fölötte" |
 | 2026-09-27 | **A 40–60 alapanyag eldöntött**; az elégségességet az első teszt méri | a méret döntés, az elégségesség csak használatból derül ki |
-| 2026-10-08 | **A prototípus működését a végfelhasználó elfogadta** | a 6.1–6.5 viselkedése a prototípus szerint végleges (a 6.6–6.8 aznap került be, a prototípus nem tartalmazza) |
+| 2026-10-08 | **A prototípus működését a végfelhasználó elfogadta** | a 6.1–6.5 viselkedése a prototípus szerint végleges (a 6.6–6.8 aznap került be, a prototípus nem tartalmazza). A v1.1 a 6.3–6.5-öt módosította; a prototípus 2026-10-24-én követte (lásd ott) |
 | 2026-10-08 | **Nyilvános weboldal**, böngészőből | a felhasználó döntése; nincs alkalmazásbolt |
 | 2026-10-08 | **Fiók és szinkron** — a v0.9-es „nincs fiók" kizárás visszavonva | a felhasználó döntése; az adat nem veszhet el a telefonnal |
 | 2026-10-08 | **Belépés e-mailes linkkel**, jelszó nélkül | a legkevesebb építeni- és védenivaló, mindenkinek van e-mail-címe |
@@ -586,10 +647,34 @@ fióktörlés minden eszközön · hozzájárulás-kapu verzióval; visszavonás
 | 2026-10-24 | **„Másik kategóriából…" marad**, törlés + hozzáadásként | valós igény, a csere szabályai nem változnak |
 | 2026-10-24 | **Belépés linkkel vagy 6 jegyű kóddal** | telefonon a link gyakran rossz böngészőben nyílik |
 | 2026-10-24 | **Anonim analitika**, felhasználói azonosító nélkül | a tesztekhez számok kellenek, nem személyek |
-| 2026-10-24 | **Megőrzés: 24 hónap inaktivitás → értesítés → 30 nap → törlés** | védhető határ, és nem lepi meg, aki hosszabb szünetet tart |
+| 2026-10-24 | **Megőrzés: 24 hónap használat nélkül → értesítés → 30 nap → törlés** | védhető határ, és nem lepi meg, aki hosszabb szünetet tart; a használat (megnyitás, szinkron) számít, mert a belépés egy évig megmarad |
 | 2026-10-24 | **Egy „(nyersen)" formátum mindenhol**, a sorokban is | egységes; a prototípus sorait igazítani kell |
+| 2026-10-24 | **0 g-os sor nem kerül a tányérba** | a tárolt gramm a referencia; 0 nem lehet az |
+| 2026-10-24 | **Hozzájárulás-képernyő kilépési úttal**; új szövegverziónál a meglévő adat zárolva | aki nem fogadja el, ne ragadjon be, és az adata se tűnjön el szó nélkül |
+| 2026-10-24 | **A ⚠ ágban is 0 g vagy ≥ 1 g**; a 0 g-os halmazok sorra véve, halmazonként kis LP | a „legkevesebb 0 g" lépés így pontosan kiszámolható |
+| 2026-10-24 | **Döntetlennél a korábban felvett sorok maradnak a referenciánál** | determinisztikus, és a felhasználó sorrendjét követi |
+| 2026-10-24 | **Rögzítés nélküli ⚠: arány → legnagyobb eltérés; kategóriánként egy mintaalapanyag** | minden esetre van szabály, és hat próbafutás elég |
+| 2026-10-24 | **A ⚠ sorai rögzített sorrendben**, egyszer-egyszer | a legfontosabb van elöl, és két képernyő nem mondhat mást |
+| 2026-10-24 | **Az aktuális tányér csak az eszközön**; a rögzítések újranyitáskor megmaradnak | főzés közben bezárt app ne veszítse el a munkát; másik eszközre nem kell |
+| 2026-10-24 | **Kijelentkezés előtt szinkron**; offline, el nem küldött változásnál figyelmeztetés | a kilépés ne veszítsen el adatot szó nélkül |
+| 2026-10-24 | **Belépési token: link és kód együtt, 15 perc, 5 hibás kód** | egyszerű és biztonságos |
+| 2026-10-24 | **Legfeljebb 8 alapanyag egy tányéron** | a 0 g-os halmazok sorra vétele így kicsi marad; a valós tányérok ennél kisebbek |
+| 2026-10-24 | **A prototípus v1.1-re frissítve**: Kész, ≥ 1 g, 0 g-os lépés, ±2 g, kcal a ⚠-n kívül, „sok" csere, döntetlen, (nyersen), ◯/🔒, legfeljebb 8 | a 10-08-i elfogadás óta változott viselkedés így kipróbálható |
 
 ## Javítások
+
+- **v1.1 (audit):** a PR független auditja (`reviews/ketara-pr4-audit.md`, 40 pont) alapján.
+  A megőrzés a belépést mérte, pedig a belépés egy évig megmarad. A ⚠ tányér 0 g-os sora
+  0-s referenciát adott volna. A hozzájárulás-kapu mögött ragadt, aki nem fogadta el az új
+  szöveget. A „legkevesebb 0 g" lépés nem volt egyetlen LP-vel számolható, a döntetlen nem
+  volt definiálva, a rögzítés nélküli ⚠ vegyes esetekre nem adott szabályt, és a ⚠ sorainak
+  nem volt sorrendje. A kiértékelésből hiányzott a címsor és a Kész. A 3-nál kevesebb sorúvá
+  váló tányér sorsa, a törölt alapanyagra mutató sor szinkronja, az aktuális tányér
+  tárolása, az offline kijelentkezés és a visszavonható törlés szinkronja definiálatlan
+  volt. A szószedet a legközelebbi elérhetőt az arány nélkül írta le; a 6.7
+  „regisztrációt" említett, amilyen képernyő nincs; az első indítás sora elavult volt; a
+  sablonok névelője hibás alakot adott („a olajat"). A prototípus a v1.1 előtti
+  viselkedést mutatta.
 
 - **v1.1:** független átnézés (`reviews/ketara-prd-v1.0-cold-review.md`, 27 pont) alapján.
   A 6.3 egyszerre mondta, hogy a „legutóbb használt" csak mentéskor frissül, és hogy az első
