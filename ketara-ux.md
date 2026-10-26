@@ -1,11 +1,14 @@
-# Ketara — UX-terv v0.3
+# Ketara — UX-terv v0.4
 
-*Kísérőanyag a PRD v1.0-hoz és a Folyamatok és képernyők v0.7-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.1-hez és a Folyamatok és képernyők v0.8-hoz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-10-08*
+*Utolsó frissítés: 2026-10-24*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
-fiókját és nyilvános weboldalát követi (10. fejezet).
+fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
+változásokat követi: `Kész` gomb a `Mentés így` helyett, egységes „(nyersen)", belépési
+kód, hozzájárulás-kapu; és a PR auditját (2026-10-24): navigáció, ⚠ panel, megerősítési
+szabály, fiók blokk, `Hozzáadás (3)`.
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -21,10 +24,11 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
    és mindig a következő lépéssel végződik.
 4. **Semmi nem mozdul magától, amit nem ő mozdított — de minden mozdulat látszik.** Ha a
    megoldó átír egy grammot, a változás egy pillanatra kiemelődik, hogy lássa, mi mozdult.
-5. **Nincs várakozás.** A megoldó egy lineáris program 3–8 változóval: a számolás
-   észrevétlen. Nincs pörgő ikon, nincs „Számolás…" gomb.
+5. **Nincs várakozás.** A megoldó kis lineáris programokkal dolgozik (egy tányéron
+   legfeljebb 8 alapanyag): a számolás észrevétlen. Nincs pörgő ikon, nincs „Számolás…" gomb.
 6. **Öt képernyő.** Minden új igény előbb egy meglévő képernyő állapotaként próbálkozik.
-   (A Belépés és a Hozzájárulás eszközönként egyszer látszik, nem számít bele.)
+   (A Belépés eszközönként, a Hozzájárulás fiókonként és szövegverziónként egyszer
+   látszik; nem számítanak bele.)
 
 ---
 
@@ -46,7 +50,9 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
   működik, a szinkron a háttérben megy. A Tányéron nincs szinkron- vagy offline-jelzés; a
   szinkron állapota csak a Keret alján, a Fiók blokkban látszik (8. fejezet).
 - **Az utolsó tányér megmarad.** Ha a felhasználó bezárja az appot főzés közben, és
-  újranyitja, ugyanaz a tányér várja, ugyanazokkal a rögzítésekkel.
+  újranyitja, ugyanaz a tányér várja, ugyanazokkal a rögzítésekkel. Ez az **aktuális
+  tányér** csak az eszközön van, nem szinkronizál; a `Kész` vagy egy új tányér törli (PRD
+  6.6). A mentett tányér ettől függetlenül rögzítés nélkül nyílik.
 
 ---
 
@@ -55,7 +61,7 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 ```
             ┌──────────── Tányér (kezdőképernyő) ────────────┐
             │                                                │
-   fejléc: cél-sáv ⚙ ──► Keret             fejléc: ☰ ──► Tányérjaim
+   fejléc bal: Tányérjaim ──► Tányérjaim     fejléc jobb: cél-sáv ⚙ ──► Keret
             │                                                │
    + Alapanyag ──► Alapanyag-választó (alsó lap) ──► Saját alapanyag
    sor koppintás ──► Sor-műveletek (alsó lap) ──► Csere (alsó lap)
@@ -89,19 +95,21 @@ ha a sorokkal együtt nem fér ki, a panel belső része görög, a gombsor alul
 
 ```
 ┌──────────────────────────────────────────────┐
-│ Tojás                        137 g      ◯    │
-│ fehérjeforrás                nyersen          │
+│ Tojás              137 g (nyersen)      ◯    │
+│ fehérjeforrás                                 │
 └──────────────────────────────────────────────┘
   név (koppintás → műveletek)   gramm (koppintás → beírás)   rögzítés
 ```
 
 - **Gramm:** nagy, táblázatos számjegyekkel (a számok nem ugrálnak szélességben), mellette
-  kisebben „nyersen". A „nyersen" minden soron ott van (PRD 7).
-- **Rögzítés jelzése — a 📌 / 📍 páros helyett.** A két gombostű-ikon kis méretben alig
+  ugyanabban a sorban kisebben „(nyersen)": „137 g (nyersen)", a PRD 7 egyetlen formájában.
+  A második sorban csak a kategória áll. A „(nyersen)" minden mennyiség mellett ott van: a
+  sorokban, az előzetesben, az ok-mondatokban és a listákban is.
+- **Rögzítés jelzése — a 📌 / 📍 páros helyett** (a Folyamatok vázlatai is ezt mutatják). A két gombostű-ikon kis méretben alig
   különböztethető meg, és színtévesztő szemmel sem biztos. Helyette:
   - nem rögzített: üres kör-ikon, halványan;
-  - rögzített: kitöltött lakat, a gramm **félkövér** és akcentusszínű, a „nyersen" helyén
-    „rögzítve · nyersen".
+  - rögzített: lakat (🔒), a gramm **félkövér** és akcentusszínű, a második sorban a
+    kategória mellett „rögzítve".
   Így a különbség alakban, színben és szövegben is megvan.
 - **Az ikon egy koppintás:** a jelenlegi grammot rögzíti, újabb koppintás feloldja.
 - **A gramm beírása rögzít.** A számra koppintva numerikus billentyűzet nyílik a soron
@@ -116,11 +124,11 @@ ha a sorokkal együtt nem fér ki, a panel belső része görög, a gombsor alul
 ### 4.3 Sor-műveletek
 
 - A **névre** koppintva alsó lap: `Rögzítés` / `Feloldás` · `Csere` · `Törlés`.
-- **Törlés és csere után visszavonás:** 5 másodperces sáv alul — „Brokkoli törölve.
+- **Törlés és csere után visszavonás:** 5 másodperces sáv alul — „Törölve: Brokkoli.
   Visszavonás". Ez fontosabb, mint egy megerősítő kérdés: a konyhában gyakori a
   félrekoppintás, és a visszavonás nem lassítja a szándékos mozdulatot.
-- A **Csere** lap a kategória tagjait mutatja két-három oszlopos gombokként, a jelenlegi
-  alapanyag nélkül; alul „Másik kategóriából…". Rögzített sor cseréjekor a visszavonás-sáv
+- A **Csere** lap a kategória tagjait mutatja két-három oszlopos gombokként, a tányéron már
+  lévő alapanyagok nélkül; alul „Másik kategóriából…". Rögzített sor cseréjekor a visszavonás-sáv
   helyett: „A rögzítés lekerült, mert az alapanyag változott." + Visszavonás.
 - Húzással törlés nincs: a sor koppintási célpontjai már így is sűrűk.
 
@@ -144,36 +152,46 @@ sávon belül) v1-ben nincs: több helyet venne el, mint amennyit hoz.
 ```
 ✓ Minden érték a sávon belül.
   Kalória: 40 kcal-lal a sáv fölött.        ← csak ha van kcal-sáv és kilóg
-[ Tányér mentése ]
+[ Tányér mentése ]                [ Kész ]
 ```
 
 - Zöld pipa, de a panel háttere semleges. A ✓ a nyugalmi állapot, nem ünneplés.
-- Mentett tányérból indulva, ha bármelyik gramm eltér: `{Név} frissítése` (elsődleges) és
-  `Mentés új néven` (másodlagos). Ha nem tér el: nincs mentés-gomb, csak „✓ Minden érték
-  a sávon belül."
+- Gombok: `Tányér mentése` (másodlagos) és `Kész` (elsődleges: ez a leggyakoribb vég).
+- Mentett tányérból indulva, ha az összetétel vagy bármelyik gramm eltér: `{Név} frissítése`
+  és `Mentés új néven` a `Tányér mentése` helyén. Ha nem tér el: nincs mentés-gomb, csak a
+  `Kész`.
 
 ### 4.6 Eredménypanel — ⚠
 
 Olvasási sorrend, ahogy a Folyamatok 5.4 rögzíti, vizuális hierarchiával:
 
-1. **Címsor** (félkövér): „⚠ Fehérje: 6,6 g-mal a sáv fölött."
-2. **Ok** (normál): „A rögzített 240 g tojás önmagában 30,2 g fehérjét hoz. A sáv teteje 25 g."
+1. **Címsor** (félkövér): „⚠ Fehérje: 6,6 g-mal a sáv fölött." Ha több ⚠ sor van, rögzített
+   sorrendben jönnek, mindegyik egyszer (PRD 6.4): arány → a kilógó makrók (grammban nagyobb
+   elöl) → 0 g → kerekítés → kcal. Az első a címsor, a többi normál súlyú alatta.
+2. **Ok** (normál): „Rögzítve: Tojás 240 g (nyersen). Ez önmagában 30,2 g fehérjét hoz. A sáv
+   teteje 25 g."
 3. **Előzetes** — keretezett doboz, hogy látszódjon: ez egy *lehetséges* tányér, nem a mostani:
-   „Ha feloldod a tojást: 137 g tojás · 100 g brokkoli · 31 g olaj (nyersen) → minden érték
+   „Ha feloldod: Tojás — 137 g tojás · 100 g brokkoli · 31 g olaj (nyersen) → minden érték
    a sávon belül."
-4. **Gombok:** `Tojás feloldása` (elsődleges) · `+ Alapanyag` · `Mentés így` (szöveges gomb,
-   nem rejtve, de nem is versenyez a feloldással).
+4. **Gombok:** `Tojás feloldása` (elsődleges) · `+ Alapanyag` · a mentés helye · `Kész`
+   (az utóbbiak szöveges gombok, nem rejtve, de nem is versenyeznek a feloldással). A mentés
+   helye ugyanúgy viselkedik, mint ✓ esetén (4.5): új tányérnál `Tányér mentése`;
+   megváltozott mentett tányérnál `{Név} frissítése` és `Mentés új néven`; változatlannál
+   nincs mentőgomb. A `Kész` mindig ott van.
 
 - Az elsődleges gomb mindig az, ami a legközelebb visz a ✓-hoz: rögzítésnél a feloldás,
-  rögzítés nélkül a `+ {Kategória}` (a választó azon a kategórián nyílik), zsákutcánál
+  rögzítés nélkül, ha egy makró kevés, a `+ {Kategória}` (a választó azon a kategórián
+  nyílik), ha sok, a `{Alapanyag} cseréje` (a csere-választó azon a soron), zsákutcánál
   a `+ Alapanyag`.
 - A borostyán szín csak a címsoron és a sávon kívüli makrón jelenik meg, nem a teljes
   panelen.
 
 ### 4.7 Minden rögzítve
 
-A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bomlik (érték +
-állapot), mert ez a képernyő fő tartalma; alatta az előzetes és a feloldó gomb(ok).
+A Folyamatok 5.5 szerint kiértékelés, ✓ vagy ⚠ címsorral. ⚠ esetén a sorok a 4.6
+sorrendjében jönnek, alatta „Nincs mit kiszámolni — minden adag rögzítve.", a makrósor
+(4.4), az előzetes(ek) („Ha feloldod: …", „Ha feloldod mindet: …"), a feloldó gomb(ok),
+végül a mentés helye és a `Kész`, mint 4.5-ben.
 
 ### 4.8 Mentés
 
@@ -181,8 +199,13 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
   neve („Tojás, brokkoli, olaj"), kijelölve, így egy koppintással átírható vagy elfogadható.
 - Mentés után rövid visszajelzés alul („Mentve: Tojásos vacsora"), és a tányér mentett
   tányérként folytatódik (fejlécben a neve).
-- `Mentés így` ⚠ állapotban ugyanez a lap, egy sorral a mező fölött: „Fehérje 6,6 g-mal a
-  sáv fölött." Nem kérdez rá újra (PRD 6.4), csak emlékeztet.
+- `Tányér mentése` ⚠ állapotban ugyanez a lap, egy sorral a mező fölött: „Fehérje: 6,6 g-mal a
+  sáv fölött." Nem kérdez rá újra (PRD 6.4), csak emlékeztet. Ha van 0 g-os sor, az nem
+  kerül a tányérba, és a lap kiírja: „Kimarad a tányérból, mert 0 g: Olaj."
+- Foglalt névnél a mező alatt: „Már van ilyen nevű tányér.", a mentés addig nem aktív.
+- `Kész` nem nyit lapot: rövid visszajelzés alul („Megjegyeztem. Legközelebb ebből
+  indulok."), és a tányér marad, ahol volt, hogy mérni lehessen róla. A következő
+  megnyitáskor viszont már üres tányér vár (PRD 6.6).
 
 ---
 
@@ -190,11 +213,13 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 
 - **Több alapanyag egy menetben.** Egy tányérhoz legalább három kell; ha minden választás
   bezárná a lapot, háromszor kellene megnyitni. Ezért a lap nyitva marad, a választott
-  tételek pipát kapnak, alul `Kész (3)`. A tányér közben a lap mögött már számol.
+  tételek pipát kapnak, alul `Hozzáadás (3)` (nem „Kész": az a Tányér gombja). A tányér
+  közben a lap mögött már számol. Ha a tányéron 8 alapanyag van, a többi tétel halvány, és
+  egy sor mondja: „Egy tányéron legfeljebb 8 alapanyag lehet."
 - **A kereső nem kap automatikusan fókuszt.** A billentyűzet eltakarná a Legutóbb használt
   sort és a kategóriákat, pedig a 40–60 tételes listában a felhasználó többnyire nem keres,
   hanem választ. Egy koppintás a keresőre elég.
-- Legutóbb használt: legfeljebb 8 chip, a mentések alapján (PRD 6.3).
+- Legutóbb használt: legfeljebb 8 chip, a `Kész` és a mentések alapján (PRD 6.3).
 - Kategória koppintásra helyben kinyílik (nem új lap), így a vissza-lépés nem kell.
 - A tányéron már lévő alapanyag halványan, pipával látszik; koppintásra nem kerül fel
   kétszer.
@@ -209,6 +234,7 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 
 - Numerikus mezők tizedesvesszővel („0,7"), a telefon numerikus billentyűzetével.
 - A kategória **választógombsor** (6 elem), nem legördülő: egy koppintás, és mind látszik.
+  (A Folyamatok 6.2 vázlata is így mutatja.)
 - Az ellenőrzés (CH + Fe + Zs ≤ 100) a mező alatt jelenik meg, amint teljesül vagy sérül,
   nem csak mentéskor.
 - Mentés után az alapanyag rögtön a tányérra kerül, ha a választóból jött.
@@ -222,7 +248,9 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - Koppintás → a Tányér megnyílik azzal, újraszámolva. Ha a jelenlegi tányéron van nem
   mentett munka, egy sor: „A mostani tányér nincs elmentve. Lecseréled?" (Lecserélem /
   Mégse).
-- Hosszú nyomás vagy „…" menü: `Átnevezés` · `Törlés` (visszavonással).
+- Hosszú nyomás vagy „…" menü: `Átnevezés` · `Törlés` (visszavonással: „Törölve: {Név}.
+  Visszavonás"). A törlés a visszavonási ablak alatt csak az eszközön van meg, és csak az
+  ablak bezárulása után szinkronizál (PRD 6.6).
 - Üres állapot: a Folyamatok 6.3 szövege.
 - `+ Új tányér`: üres Tányér (ugyanaz a figyelmeztetés, ha van nem mentett munka).
 
@@ -234,15 +262,21 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 
 - **Belépés:** a termék ígérete egy mondatban, egy e-mail-mező (e-mail-billentyűzettel,
   automatikus kitöltéssel), egy gomb. Jelszó nincs (Folyamatok 6.5).
-- Elküldés után ugyanaz a képernyő mutatja, hova ment a link, `Újraküldés` és
-  `Másik e-mail-cím` gombbal. Lejárt vagy felhasznált linknél egy sor és egy gomb: új link.
-- **Hozzájárulás** csak új fióknál: figyelmeztetés + egy jelölőnégyzet, az adatvédelmi
-  tájékoztató linkjével; a `Tovább` pipa nélkül nem aktív (Folyamatok 6.6).
+- Elküldés után ugyanaz a képernyő mutatja, hova ment a link és a kód, egy 6 jegyű kódmezővel
+  (numerikus billentyűzet, a levélből automatikus kitöltéssel, ahol a rendszer engedi),
+  `Újraküldés` és `Másik e-mail-cím` gombbal. Lejárt vagy felhasznált linknél egy sor és egy
+  gomb: új link.
+- **Hozzájárulás** akkor, ha a fióknak nincs rögzített hozzájárulása az aktuális
+  szövegverzióra (fiókonként és szövegverziónként egyszer, nem eszközönként):
+  figyelmeztetés + két jelölőnégyzet (hozzájárulás, 16 év), az adatvédelmi tájékoztató
+  linkjével; a `Tovább` mindkét pipa nélkül nem aktív. Alatta, elválasztva, szöveges
+  gombként `Kijelentkezés` és `Fiók törlése`, hogy aki nem fogadja el, ne ragadjon be
+  (Folyamatok 6.6). Meglévő fióknál az adat addig zárolva: megvan, de nem látszik.
 - **Süti-sáv** az első megnyitáskor a képernyő alján. Két egyenrangú gomb, azonos
   méretben és súlyban: `Elfogadom` · `Csak a szükségesek`. Egyik sem hangsúlyosabb, és a
   sáv bezárás nélkül nem tűnik el. Amíg nincs választás, a Belépés használható mellette.
-- Új eszközön, meglévő fióknál a link után rögtön a Tányér jön, a fiók adataival; a
-  Keret nem kérdeződik újra.
+- Új eszközön, meglévő fióknál a link után (ha van érvényes hozzájárulás) rögtön a Tányér
+  jön, a fiók adataival; a Keret nem kérdeződik újra.
 
 ### 8.2 Keret
 
@@ -250,7 +284,8 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
   „Írd be a dietetikusod számait. Csak egyszer kell."
 - Mezők párban (alsó–felső), numerikus billentyűzettel; a „Tovább" gomb a következő mezőre
   ugrik, így végig lehet menni rajta a papír sorrendjében.
-- **Az „Egy étkezésre ez jön ki" blokk élőben frissül** gépelés közben. Ez a képernyő
+- **Az „Egy étkezésre ez jön ki" blokk élőben frissül** gépelés közben, egy tizedessel
+  („23,3"; egész számnál tizedes nélkül). Ez a képernyő
   lényege (Folyamatok 3, H lépés): ő fejből tudja, mennyi jön ki, és itt azonnal látja.
 - Első indításnál a gomb felirata: `Ez stimmel, kezdjük`; később: `Mentés`.
 - Logikai hiba: a hibás sor alatt, borostyán színnel, mentés tiltva. Gyanús érték: mentéskor
@@ -261,15 +296,22 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 
 ### 8.3 Fiók (a Keret alján)
 
-- A figyelmeztetés alatt, elválasztó után: e-mail-cím · szinkron állapota · Sütik
-  (a jelenlegi választás, koppintásra a süti-sáv két gombja alsó lapon) · Adatvédelmi
-  tájékoztató · Kijelentkezés · Fiók törlése.
+- A figyelmeztetés alatt, elválasztó után, a Folyamatok 6.4 sorrendjében: e-mail-cím ·
+  szinkron állapota · Sütik (a jelenlegi választás, koppintásra a süti-sáv két gombja alsó
+  lapon) · Adatvédelmi tájékoztató · Adataim letöltése · Kijelentkezés · Kijelentkezés
+  minden eszközről · Fiók törlése · alatta egy sor: „A hozzájárulás visszavonása a fiók
+  törlésével történik."
 - Az első indításkor a Fiók blokk nem látszik: ott a Keret egyetlen dolga a beállítás.
-- **Kijelentkezés** visszavonás nélkül, de megerősítés nélkül is: az adat a fiókban
-  megmarad, újra be lehet lépni.
-- **Fiók törlése** az egyetlen megerősítő kérdés a termékben, mert nem vonható vissza:
-  alsó lap a következményekkel, `Végleg törlöm` (borostyán keretes, nem kitöltött) és
-  `Mégse` (elsődleges). Törlés után a Belépés képernyő jön.
+- **Kijelentkezés** (és Kijelentkezés minden eszközről): előbb szinkronizál, utána
+  megerősítés nélkül kilép; az adat a fiókban megmarad, újra be lehet lépni. Ha nincs
+  kapcsolat, és van el nem küldött változás, egyszer figyelmeztet: „{N} változás még nincs
+  elküldve. Ha most kilépsz, elvesznek." — `Kilépek` / `Mégse`.
+- **Fiók törlése:** alsó lap a következményekkel, `Végleg törlöm` (borostyán keretes, nem
+  kitöltött) és `Mégse` (elsődleges). Törlés után a Belépés képernyő jön.
+- **Mikor kérdez rá a termék?** Csak ott, ahol valami nem vonható vissza vagy elveszne:
+  fiók törlése, tányérban használt saját alapanyag törlése, gyanús Keret-érték, a nem
+  mentett tányér lecserélése („Lecseréled?"), kijelentkezés el nem küldött változással.
+  Minden más (sor vagy tányér törlése, csere) visszavonással működik.
 
 ---
 
@@ -285,12 +327,12 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 - **Számformátum:** tizedesvessző („6,6 g"), gondolatjel a sávban („5–10"), szóköz a
   kettőspont körül az aránynál („2,2 : 1").
 - **Akadálymentesség:** a rendszer betűméretét követi; az állapot soha nem csak színnel
-  jelenik meg (ikon + szöveg is); képernyőolvasónak a sor így hangzik: „Tojás, 137 gramm
+  jelenik meg (ikon + szöveg is); képernyőolvasónak a sor így hangzik: „Tojás, 137 gramm,
   nyersen, rögzítve".
 
 ---
 
-## 10. Döntések (2026-09-27)
+## 10. Döntések (2026-09-27 óta)
 
 | Kérdés | Döntés |
 |---|---|
@@ -299,17 +341,24 @@ A Folyamatok 5.5 szerint kiértékelés. A makrósor itt négy külön sorra bom
 | Kell-e kattintható prototípus a teszthez? | Igen: `ux/prototipus/ketara-prototipus.html` |
 | Hol vannak a fiókbeállítások? (2026-10-08) | A Keret alján, nem külön képernyőn (8.3) |
 | Hogy néz ki számítógépen? (2026-10-08) | Ugyanaz az oszlop, középre igazítva (2. fejezet) |
+| Kövesse-e a prototípus a v1.1-et? (2026-10-24) | Igen, a PR #4-ben frissítve (11. fejezet) |
 
 ## 11. A prototípusról
 
 - Egyetlen HTML-fájl, telefonon a böngészőben megnyitva teljes képernyős; asztali gépen
   telefonkeretben jelenik meg.
-- **Valódi megoldót futtat** (a PRD 6.3 szabályai: relatív eltérés, ⚠ sorrend, ±1 g
-  kerekítés, feloldás-előzetes), így a tesztelő saját kombinációkat is kipróbálhat.
+- **Valódi megoldót futtat** (a PRD v1.1 6.3 szabályai: relatív eltérés, döntetlennél a
+  korábbi sorok, sávon belül minden szabad sor ≥ 1 g, ⚠ sorrend arány → kilógás → legkevesebb
+  0 g → referencia, ±1 g majd ±2 g kerekítés, a kcal a ⚠ ágban nem dönt, feloldás-előzetes),
+  így a tesztelő saját kombinációkat is kipróbálhat.
+- 2026-10-24-én a v1.1-re frissítve: `Kész` a `Mentés így` helyett, „sok" esetén csere,
+  „(nyersen)" a sorokban, ◯/🔒 ikonok, `Hozzáadás (3)`, legfeljebb 8 alapanyag, egy tizedes
+  a célban, a kiértékelés címsorral és gombokkal, „Ha feloldod mindet" előzetes, új
+  ⚠-szövegek.
 - Tartalmaz egy kb. 30 tételes minta-alapanyaglistát (illusztratív tápértékek, nem a
   végleges 40–60 tételes lista) és két mentett mintatányért.
 - Az állapotot a böngésző helyben megőrzi; „Prototípus alaphelyzetbe" gomb a
   Tányérjaim alján állítja vissza.
 - Nem része: haptika, rendszerértesítések, valódi adattárolás, és a v0.3 fiókrésze
   (Belépés, Hozzájárulás, süti-sáv, Fiók blokk). A végfelhasználó a prototípus
-  viselkedését 2026-10-08-án elfogadta; a fiók képernyői a prototípusban nem szerepelnek.
+  viselkedését 2026-10-08-án elfogadta; a v1.1 változásait (fent) azóta nem látta.

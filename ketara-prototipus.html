@@ -48,7 +48,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .row .nm{padding:10px 4px 10px 14px;text-align:left;min-height:66px;display:flex;flex-direction:column;justify-content:center}
 .row .nm span{font-size:17px;font-weight:600}
 .row .nm small{color:var(--muted);font-size:13px}
-.row .gr{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;min-height:66px;padding:0 6px;border-radius:12px}
+.row .gr{display:flex;flex-direction:row;align-items:baseline;justify-content:flex-end;gap:4px;min-height:66px;padding:0 6px;border-radius:12px;align-self:stretch;align-content:center;flex-wrap:wrap}
 .row .gr b{font-family:var(--mono);font-size:24px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.1}
 .row .gr small{font-size:12px;color:var(--muted)}
 .row.pinned .gr b{font-weight:700;color:var(--accent)}
@@ -162,7 +162,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
   <div class="phone" id="app" aria-live="polite"></div>
   <aside class="caption">
     <h1>Ketara prototípus</h1>
-    <p>Kattintható prototípus a felhasználói teszthez. Valódi megoldó fut benne, a PRD v0.9 szabályai szerint.</p>
+    <p>Kattintható prototípus a felhasználói teszthez. Valódi megoldó fut benne, a PRD v1.1 szabályai szerint.</p>
     <ul>
       <li>Koppints a grammra, és írj be egy számot: ez rögzíti.</li>
       <li>A kör ikon a jelenlegi grammot rögzíti.</li>
@@ -173,8 +173,9 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 </div>
 
 <script>
-/* Ketara megoldó — PRD v0.9, 6.3 és 6.4 szerint.
-   Lineáris program (kétfázisú szimplex, Bland-szabály), utána egész grammra kerekítés ±1 g igazítással. */
+/* Ketara megoldó — PRD v1.1, 6.3 és 6.4 szerint.
+   Lineáris program (kétfázisú szimplex, Bland-szabály); sávon belül minden szabad sor ≥ 1 g,
+   ⚠ esetén a 0 g-os halmazok sorra véve; utána egész grammra kerekítés ±1, majd ±2 g igazítással. */
 var KetaraSolver = (function () {
   var EPS = 1e-9;
 
@@ -275,12 +276,20 @@ var KetaraSolver = (function () {
     return ev;
   }
 
-  function keyOf(ev) { return [ev.inBand ? 0 : 1, r6(ev.ratioViol), r6(ev.overshoot), r6(ev.kcalOver + ev.kcalUnder), r6(ev.dist)]; }
+  // ⚠ sorrend (PRD 6.3): sáv → arány → kilógás → 0 g-os sorok száma → (csak sávon belül: kcal) → referencia → sorrend szerinti döntetlen
+  function keyOf(ev, zeros, devs) {
+    var k = [ev.inBand && !zeros ? 0 : 1, r6(ev.ratioViol), r6(ev.overshoot), zeros || 0, ev.inBand ? r6(ev.kcalOver + ev.kcalUnder) : 0, r6(ev.dist)];
+    return devs ? k.concat(devs.map(r6)) : k;
+  }
   function r6(x) { return Math.round(x * 1e6) / 1e6; }
   function less(a, b) { for (var i = 0; i < a.length; i++) { if (a[i] < b[i]) return true; if (a[i] > b[i]) return false; } return false; }
+  function devsOf(items, grams) { return items.filter(function (i) { return i.pin == null; }).map(function (it) { return Math.abs(grams[it.id] - it.ref) / it.ref; }); }
 
   // mode: 'kcal' (sávok + kcal kemény), 'strict' (sávok kemény), 'warn' (lexikografikus: arány → kilógás → referencia)
-  function lpStage(items, K, mode) {
+  // zero: a 0 g-ra tett szabad sorok id-i; a többi szabad sor legalább 1 g (PRD 6.3, Megengedett mennyiségek)
+  // tie: döntetlennél a korábbi sorok maradnak közelebb a referenciához (sorrendi másodlagos célok)
+  function lpStage(items, K, mode, zero, tie) {
+    zero = zero || [];
     var free = items.filter(function (i) { return i.pin == null; });
     var k = free.length, P = { ch: 0, fe: 0, zs: 0 };
     items.forEach(function (it) { if (it.pin != null) MAC.forEach(function (m) { P[m] += it[m] * it.pin / 100; }); });
@@ -293,6 +302,9 @@ var KetaraSolver = (function () {
     free.forEach(function (it, i) {
       var a = vec(); a[k + i] = 1; a[i] = -1; rows.push({ a: a, op: '>=', b: -it.ref });
       var b = vec(); b[k + i] = 1; b[i] = 1; rows.push({ a: b, op: '>=', b: it.ref });
+      var f = vec(); f[i] = 1;
+      if (zero.indexOf(it.id) >= 0) rows.push({ a: f, op: '=', b: 0 });
+      else rows.push({ a: f, op: '>=', b: 1 });
     });
     MAC.forEach(function (m, mi) {
       var hi = vec(), lo = vec();
@@ -311,58 +323,91 @@ var KetaraSolver = (function () {
       rows.push({ a: kc, op: '<=', b: K.kcal[1] - Pk });
       rows.push({ a: kl, op: '>=', b: K.kcal[0] - Pk });
     }
+    function fix(c, x) { var v = 0; for (var j = 0; j < nv; j++) v += c[j] * x[j]; rows.push({ a: c.slice(), op: '<=', b: v + 1e-7 + 1e-7 * Math.abs(v) }); }
     var cDist = vec(); free.forEach(function (it, i) { cDist[k + i] = 1 / it.ref; });
-    var x;
-    if (!warn) {
-      x = simplex(nv, cDist, rows);
-    } else {
+    var x, info = {};
+    if (warn) {
       var cS = vec(); cS[sIdx] = 1;
       x = simplex(nv, cS, rows); if (!x) return null;
-      var sStar = x[sIdx];
-      var rs = vec(); rs[sIdx] = 1; rows.push({ a: rs, op: '<=', b: sStar + 1e-7 + 1e-7 * sStar });
+      info.ratio = x[sIdx]; fix(cS, x);
       var cO = vec(); for (var q = 0; q < 6; q++) cO[2 * k + q] = 1;
       x = simplex(nv, cO, rows); if (!x) return null;
-      var oStar = 0; for (q = 0; q < 6; q++) oStar += x[2 * k + q];
-      rows.push({ a: cO.slice(), op: '<=', b: oStar + 1e-7 + 1e-7 * oStar });
-      x = simplex(nv, cDist, rows);
+      info.over = 0; for (q = 0; q < 6; q++) info.over += x[2 * k + q];
+      fix(cO, x);
     }
+    x = simplex(nv, cDist, rows);
     if (!x) return null;
+    info.dist = 0; free.forEach(function (it, i) { info.dist += x[k + i] / it.ref; });
+    if (tie) {
+      fix(cDist, x);
+      for (var t = 0; t < k; t++) {
+        var cT = vec(); cT[k + t] = 1;
+        var y = simplex(nv, cT, rows); if (!y) break;
+        x = y; fix(cT, x);
+      }
+    }
     var g = {};
-    free.forEach(function (it, i) { g[it.id] = x[i]; });
+    free.forEach(function (it, i) { g[it.id] = zero.indexOf(it.id) >= 0 ? 0 : x[i]; });
+    g.__info = info;
     return g;
   }
 
+  // ⚠ ág: a 0 g-os sorok halmazai a legkevesebbtől, halmazonként egy kis LP (PRD 6.3)
+  function warnStage(items, K) {
+    var free = items.filter(function (i) { return i.pin == null; }), n = free.length, best = null, bestZ = null, bestKey = null;
+    var masks = [];
+    for (var m = 0; m < (1 << n); m++) masks.push(m);
+    masks.sort(function (a, b) { return popc(a) - popc(b) || a - b; });
+    masks.forEach(function (m) {
+      var Z = free.filter(function (it, i) { return m & (1 << i); }).map(function (it) { return it.id; });
+      var g = lpStage(items, K, 'warn', Z, false); if (!g) return;
+      var key = [r6(g.__info.ratio), r6(g.__info.over), Z.length, r6(g.__info.dist)];
+      if (!best || less(key, bestKey)) { best = g; bestZ = Z; bestKey = key; }
+    });
+    if (!best) return null;
+    var g2 = lpStage(items, K, 'warn', bestZ, true) || best;
+    g2.__zero = bestZ;
+    return g2;
+  }
+  function popc(m) { var c = 0; while (m) { c += m & 1; m >>= 1; } return c; }
+
+  // kerekítés: ±1 g, ha így nincs sávon belüli, ±2 g (PRD 6.3); a 0 g-os sor 0 marad, a többi legalább 1 g
   function roundBest(items, K, frac) {
-    var free = items.filter(function (i) { return i.pin == null; });
+    var zero = frac.__zero || [];
+    var free = items.filter(function (i) { return i.pin == null && zero.indexOf(i.id) < 0; });
     var base = {};
-    items.forEach(function (it) { base[it.id] = it.pin != null ? it.pin : Math.max(0, Math.round(frac[it.id])); });
-    var best = base, bestEv = evaluate(items, base, K), bestKey = keyOf(bestEv);
-    var n = free.length;
-    if (n > 7) return { grams: best, ev: bestEv };
-    var total = Math.pow(3, n);
-    for (var c = 0; c < total; c++) {
-      var g = Object.assign({}, base), cc = c, ok = true;
-      for (var i = 0; i < n; i++) {
-        var off = (cc % 3) - 1; cc = Math.floor(cc / 3);
-        var v = base[free[i].id] + off; if (v < 0) { ok = false; break; }
-        g[free[i].id] = v;
+    items.forEach(function (it) { base[it.id] = it.pin != null ? it.pin : zero.indexOf(it.id) >= 0 ? 0 : Math.max(1, Math.round(frac[it.id])); });
+    function score(g) { var ev = evaluate(items, g, K); return { ev: ev, key: keyOf(ev, zero.length, devsOf(items, g)) }; }
+    var b0 = score(base), best = base, bestEv = b0.ev, bestKey = b0.key, n = free.length;
+    [1, 2].forEach(function (span) {
+      if (span === 2 && bestEv.inBand) return;
+      var w = 2 * span + 1, total = Math.pow(w, n);
+      for (var c = 0; c < total; c++) {
+        var g = Object.assign({}, base), cc = c, ok = true;
+        for (var i = 0; i < n; i++) {
+          var off = (cc % w) - span; cc = Math.floor(cc / w);
+          var v = base[free[i].id] + off; if (v < 1) { ok = false; break; }
+          g[free[i].id] = v;
+        }
+        if (!ok) continue;
+        var s = score(g);
+        if (less(s.key, bestKey)) { best = g; bestEv = s.ev; bestKey = s.key; }
       }
-      if (!ok) continue;
-      var ev = evaluate(items, g, K), key = keyOf(ev);
-      if (less(key, bestKey)) { best = g; bestEv = ev; bestKey = key; }
-    }
+    });
     return { grams: best, ev: bestEv };
   }
 
   function solveCore(items, K) {
-    var frac = null, kcalMissed = false;
-    if (K.kcal) frac = lpStage(items, K, 'kcal');
-    if (!frac) { frac = lpStage(items, K, 'strict'); if (frac && K.kcal) kcalMissed = true; }
-    if (!frac) frac = lpStage(items, K, 'warn');
+    var frac = null, kcalMissed = false, lpInBand = true;
+    if (K.kcal) frac = lpStage(items, K, 'kcal', [], true);
+    if (!frac) { frac = lpStage(items, K, 'strict', [], true); if (frac && K.kcal) kcalMissed = true; }
+    if (!frac) { lpInBand = false; frac = warnStage(items, K); }
     if (!frac) { frac = {}; items.forEach(function (it) { if (it.pin == null) frac[it.id] = it.ref; }); }
     var r = roundBest(items, K, frac);
     r.zero = items.filter(function (it) { return it.pin == null && r.grams[it.id] === 0; }).map(function (it) { return it.id; });
     r.ok = r.ev.inBand && r.zero.length === 0;
+    r.rounding = lpInBand && !r.ok;
+    r.key = keyOf(r.ev, r.zero.length);
     return r;
   }
 
@@ -380,21 +425,21 @@ var KetaraSolver = (function () {
       core = { grams: g, ev: evaluate(items, g, K), zero: [] };
       core.ok = core.ev.inBand;
     } else core = solveCore(items, K);
-    var res = { status: allPinned ? 'allpinned' : (core.ok ? 'ok' : 'warn'), grams: core.grams, ev: core.ev, zero: core.zero };
-    res.kcalNote = core.ev.inBand && K.kcal && (core.ev.kcalOver > 0 || core.ev.kcalUnder > 0);
+    var res = { status: allPinned ? 'allpinned' : (core.ok ? 'ok' : 'warn'), grams: core.grams, ev: core.ev, zero: core.zero, rounding: !!core.rounding };
+    res.kcalNote = !!(K.kcal && (core.ev.kcalOver > 0 || core.ev.kcalUnder > 0));
     if (core.ok || !pinned.length) return res;
-    // egyenkénti feloldás
+    // egyenkénti feloldás: ami sávba hoz; ha több is, a referenciához közelebbi; ha egyik sem, a 6.3 ⚠-sorrendje szerinti legjobb
     var best = null;
     pinned.forEach(function (p) {
       var its = unpin(items, [p.id]), r = solveCore(its, K);
-      var cand = { id: p.id, grams: r.grams, ev: r.ev, ok: r.ok, key: keyOf(r.ev) };
-      if (!best || (cand.ok && !best.ok) || (cand.ok === best.ok && less(cand.key, best.key))) best = cand;
+      var cand = { id: p.id, grams: r.grams, ev: r.ev, ok: r.ok, key: r.key };
+      if (!best || less(cand.key, best.key)) best = cand;
     });
     res.release = best;
     if (!best.ok) {
       if (pinned.length > 1) {
         var all = solveCore(unpin(items, pinned.map(function (p) { return p.id; })), K);
-        res.releaseAll = { ok: all.ok, grams: all.grams, ev: all.ev };
+        res.releaseAll = { ok: all.ok, grams: all.grams, ev: all.ev, zero: all.zero };
         res.deadEnd = !all.ok;
       } else res.deadEnd = true;
     }
@@ -469,9 +514,12 @@ var BASE_FOODS = RAW.map(function(r){ return { id:r[0], name:r[1], cat:r[2], ch:
 var MAC = { ch:{ n:'Szénhidrát', l:'szénhidrát', acc:'szénhidrátot', s:'CH' }, fe:{ n:'Fehérje', l:'fehérje', acc:'fehérjét', s:'Fe' }, zs:{ n:'Zsír', l:'zsír', acc:'zsírt', s:'Zs' } };
 var MK = ['ch','fe','zs'];
 var LOW_CAT = { ch:'zol', fe:'feh', zs:'zsi' };
+// kategóriánként egy mintaalapanyag a rögzítés nélküli „kevés" próbafutásához (a gondozó jelöli ki, PRD 6.4)
+var SAMPLE = { feh:'csirkemell', gab:'rizs', zol:'brokkoli', zsi:'olaj', gyu:'malna', tej:'tejszin' };
+var MAX_ITEMS = 8;
 
 /* ---------- állapot ---------- */
-var KEY = 'ketara-proto-v1';
+var KEY = 'ketara-proto-v11';
 var S, ui = { screen:'plate', sheet:null, editing:null, toast:null, keretDraft:null, keretConfirm:null, plMenu:null, plConfirm:null, customDraft:null };
 
 function sampleState(){
@@ -497,7 +545,7 @@ function firstRunState(){
   return { firstRun:true, keret:null, custom:[], saved:[], lastUsed:{}, plate:{ items:[], origin:null, dirty:false } };
 }
 function load(){
-  try { var s = localStorage.getItem(KEY); if (s) { S = JSON.parse(s); return; } } catch(e){}
+  try { var s = localStorage.getItem(KEY); if (s) { S = JSON.parse(s); if (S.plate && S.plate.done) S.plate = { items:[], origin:null, dirty:false }; return; } } catch(e){}
   S = sampleState();
 }
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
@@ -533,6 +581,7 @@ function computeFor(items, originId){
 
 /* ---------- formázás ---------- */
 function f1(x){ return (Math.round(x*10)/10).toFixed(1).replace('.',','); }
+function fAmt(x){ return f1(Math.max(0.1, x)); } // a kilógás soha nem „0,0 g"
 function fn(x){ var r = Math.round(x*10)/10; return (r%1===0 ? String(r) : r.toFixed(1)).replace('.',','); }
 function art(w){ return /^[aáeéiíoóöőuúüű]/i.test(w) ? 'az' : 'a'; }
 function Art(w){ var a = art(w); return a.charAt(0).toUpperCase()+a.slice(1); }
@@ -540,6 +589,7 @@ function low(f){ return f.custom ? f.name : f.name.charAt(0).toLowerCase()+f.nam
 function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
 function gramsList(items, grams){ return items.map(function(it){ return grams[it.fid]+' g '+low(food(it.fid)); }).join(' · ')+' (nyersen)'; }
+function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
 function num(v){ if (v==null) return null; v = String(v).trim().replace(',','.'); if (v==='') return null; var x = Number(v); return isFinite(x) ? x : NaN; }
 
 /* ---------- ikonok ---------- */
@@ -572,12 +622,13 @@ function toast(text, undoSnap){
   var id = ui.toast.id;
   setTimeout(function(){ if (ui.toast && ui.toast.id===id){ ui.toast=null; render(); } }, undoSnap ? 5000 : 2600);
 }
-function modified(){ S.plate.dirty = true; }
+function modified(){ S.plate.dirty = true; S.plate.done = false; }
 function differsFromSaved(r){
   var sp = S.plate.origin ? savedById(S.plate.origin) : null; if (!sp) return true;
-  if (sp.items.length !== S.plate.items.length) return true;
+  var cur = S.plate.items.filter(function(it){ return r.grams[it.fid] > 0; });
+  if (sp.items.length !== cur.length) return true;
   var m = {}; sp.items.forEach(function(it){ m[it.fid]=it.g; });
-  return S.plate.items.some(function(it){ return !(it.fid in m) || m[it.fid] !== r.grams[it.fid]; });
+  return cur.some(function(it){ return !(it.fid in m) || m[it.fid] !== r.grams[it.fid]; });
 }
 
 /* ---------- render ---------- */
@@ -612,17 +663,18 @@ function renderPlate(){
     var f = food(it.fid), pinned = it.pin!=null, v = r.status==='few' ? null : g[it.fid];
     var zero = r.zero && r.zero.indexOf(it.fid)>=0;
     h += '<div class="row'+(pinned?' pinned':'')+(zero?' zero':'')+'" data-fid="'+it.fid+'">';
-    h += '<button class="nm" data-a="row" data-i="'+i+'"><span>'+esc(f.name)+'</span><small>'+CAT[f.cat].name.toLowerCase()+'</small></button>';
+    h += '<button class="nm" data-a="row" data-i="'+i+'"><span>'+esc(f.name)+'</span><small>'+CAT[f.cat].name.toLowerCase()+(pinned?' · rögzítve':'')+'</small></button>';
     if (ui.editing===i){
       h += '<div class="gr"><input id="gram-edit" inputmode="numeric" pattern="[0-9]*" aria-label="'+esc(f.name)+' grammja" value="'+(v!=null?v:'')+'"><small>g, rögzítéshez</small></div>';
     } else {
-      h += '<button class="gr" data-a="edit" data-i="'+i+'" aria-label="'+esc(f.name)+', '+(v==null?'még nincs':v+' gramm')+' nyersen'+(pinned?', rögzítve':'')+'. Koppints a gramm beírásához."><b>'+(v==null?'— g':v+' g')+'</b><small>'+(pinned?'rögzítve · nyersen':'nyersen')+'</small></button>';
+      h += '<button class="gr" data-a="edit" data-i="'+i+'" aria-label="'+esc(f.name)+', '+(v==null?'még nincs':v+' gramm')+' nyersen'+(pinned?', rögzítve':'')+'. Koppints a gramm beírásához."><b>'+(v==null?'— g':v+' g')+'</b><small>(nyersen)</small></button>';
     }
     h += '<button class="pin" data-a="pin" data-i="'+i+'" aria-label="'+(pinned?'Feloldás':'Rögzítés')+'">'+(pinned?I.lock:I.ring)+'</button>';
     h += '</div>';
   });
   h += '</div>';
-  h += '<button class="add" data-a="picker">'+I.plus+'Alapanyag</button>';
+  if (items.length < MAX_ITEMS) h += '<button class="add" data-a="picker">'+I.plus+'Alapanyag</button>';
+  else h += '<p class="sub" style="margin:14px 4px">Egy tányéron legfeljebb 8 alapanyag lehet.</p>';
   h += '</div>';
   h += renderPanel(r, K);
   h += '</div>';
@@ -644,23 +696,41 @@ function macroLine(r, K){
 function violLines(ev){
   var out = [];
   MK.forEach(function(k){
-    if (ev.over[k]>0) out.push({ k:k, amt:ev.over[k], dir:'fölött', t:MAC[k].n+': '+f1(ev.over[k])+' g-mal a sáv fölött.' });
-    if (ev.under[k]>0) out.push({ k:k, amt:ev.under[k], dir:'alatt', t:MAC[k].n+': '+f1(ev.under[k])+' g-mal a sáv alatt.' });
+    if (ev.over[k]>0) out.push({ k:k, amt:ev.over[k], dir:'fölött', t:MAC[k].n+': '+fAmt(ev.over[k])+' g-mal a sáv fölött.' });
+    if (ev.under[k]>0) out.push({ k:k, amt:ev.under[k], dir:'alatt', t:MAC[k].n+': '+fAmt(ev.under[k])+' g-mal a sáv alatt.' });
   });
   out.sort(function(a,b){ return b.amt-a.amt; });
   return out;
 }
 function ratioLine(ev, K){ return 'Zsír–fehérje arány: '+f1(ev.ratio)+' : 1, a minimum '+fn(K.min)+' : 1.'; }
-function outcome(ev, K){
-  if (ev.inBand) return 'minden érték a sávon belül.';
-  var v = violLines(ev);
-  if (v.length) return v[0].t.charAt(0).toLowerCase()+v[0].t.slice(1);
-  return ratioLine(ev, K).charAt(0).toLowerCase()+ratioLine(ev,K).slice(1);
+function kcalLine(ev){ return 'Kalória: '+Math.round(ev.kcalOver||ev.kcalUnder)+' kcal-lal a sáv '+(ev.kcalOver?'fölött':'alatt')+'.'; }
+function zeroLine(fid){ return '0 g-ra szorult: '+food(fid).name+'. Ebben a tányérban nem fér el — cseréld vagy vedd ki.'; }
+// a ⚠ sorai rögzített sorrendben, mindegyik egyszer: arány → makrók (grammban nagyobb elöl) → 0 g → kerekítés → kcal (PRD 6.4)
+function warnLines(r, K){
+  var ev = r.ev, out = [];
+  if (ev.ratioViol>0) out.push(ratioLine(ev, K));
+  violLines(ev).forEach(function(x){ out.push(x.t); });
+  (r.zero||[]).forEach(function(fid){ out.push(zeroLine(fid)); });
+  if (r.rounding && !(r.zero && r.zero.length)) out.push('Egész grammokra kerekítve nem fér bele a sávba.');
+  if (K.kcal && (ev.kcalOver>0 || ev.kcalUnder>0)) out.push(kcalLine(ev));
+  return out;
+}
+function outcome(res, K){
+  if (res.ev.inBand && !(res.zero && res.zero.length)) return 'minden érték a sávon belül.';
+  return warnLines(res, K)[0];
 }
 function releasePreview(rel, K){
   var f = food(rel.id);
-  var lead = f.acc ? 'Ha feloldod '+art(f.acc)+' '+f.acc+':' : f.name+' feloldásával:';
-  return '<div class="preview"><b>Előzetes</b>'+esc(lead)+' '+esc(gramsList(S.plate.items, rel.grams))+' → '+esc(outcome(rel.ev, K))+'</div>';
+  return '<div class="preview"><b>Előzetes</b>Ha feloldod: '+esc(f.name)+'<br>'+esc(gramsList(S.plate.items, rel.grams))+' → '+esc(outcome(rel, K))+'</div>';
+}
+function releaseAllPreview(all, K){
+  return '<div class="preview"><b>Előzetes</b>Ha feloldod mindet:<br>'+esc(gramsList(S.plate.items, all.grams))+' → '+esc(outcome(all, K))+'</div>';
+}
+function saveActions(r){
+  var sp = S.plate.origin ? savedById(S.plate.origin) : null, a = '';
+  if (!sp) a += '<button class="btn secondary" data-a="save-open">Tányér mentése</button>';
+  else if (differsFromSaved(r)) a += '<button class="btn secondary" data-a="update">'+esc(sp.name)+' frissítése</button><button class="btn secondary" data-a="save-open" data-new="1">Mentés új néven</button>';
+  return a;
 }
 
 function renderPanel(r, K){
@@ -672,12 +742,10 @@ function renderPanel(r, K){
     body = '<p class="head"><span>'+(r.need===1?'Még egy alapanyag kell a számoláshoz.':'Még két alapanyag kell a számoláshoz.')+'</span></p>';
     acts = '<button class="btn primary" data-a="picker">'+I.plus+'Alapanyag</button>';
   } else if (r.status==='ok' || (r.status==='allpinned' && r.ev.inBand)){
-    if (r.status==='allpinned') body += '<p class="sub">Nincs mit kiszámolni — minden adag rögzítve.</p>';
     body += '<p class="head ok"><span class="ic">'+I.check.replace('<svg','<svg width="14" height="14"')+'</span><span>Minden érték a sávon belül.</span></p>';
-    if (r.kcalNote) body += '<p class="note">Kalória: '+Math.round(r.ev.kcalOver||r.ev.kcalUnder)+' kcal-lal a sáv '+(r.ev.kcalOver?'fölött':'alatt')+'.</p>';
-    var sp = S.plate.origin ? savedById(S.plate.origin) : null;
-    if (!sp) acts = '<button class="btn primary" data-a="save-open">Tányér mentése</button>';
-    else if (differsFromSaved(r)) acts = '<button class="btn primary" data-a="update">'+esc(sp.name)+' frissítése</button><button class="btn secondary" data-a="save-open" data-new="1">Mentés új néven</button>';
+    if (r.kcalNote) body += '<p class="note">'+kcalLine(r.ev)+'</p>';
+    if (r.status==='allpinned') body += '<p class="sub">Nincs mit kiszámolni — minden adag rögzítve.</p>';
+    acts = '<button class="btn primary" data-a="done">Kész</button>'+saveActions(r);
   } else {
     body = renderWarn(r, K);
     acts = warnActions(r, K);
@@ -690,65 +758,73 @@ function renderPanel(r, K){
 function renderWarn(r, K){
   var ev = r.ev, items = S.plate.items, h = '', v = violLines(ev);
   var pinned = items.filter(function(it){ return it.pin!=null; });
-  if (r.status==='allpinned'){
-    h += '<p class="sub">Nincs mit kiszámolni — minden adag rögzítve.</p><div class="evlist">';
-    MK.forEach(function(k){
-      var st = ev.over[k]>0 ? 'sáv fölött' : ev.under[k]>0 ? 'sáv alatt' : '✓';
-      h += '<span>'+MAC[k].s+'</span><span class="'+(st!=='✓'?'bad':'')+'">'+f1(ev.tot[k])+' g '+(st==='✓'?'✓':'('+st+')')+'</span>';
-    });
-    h += '<span>Arány</span><span class="'+(ev.ratioViol>0?'bad':'')+'">'+f1(ev.ratio)+' : 1'+(ev.ratioViol>0?' (minimum '+fn(K.min)+' : 1)':' ✓')+'</span></div>';
-  } else {
-    var first = true;
-    v.forEach(function(x){
-      h += first ? '<p class="head warn"><span class="ic">!</span><span>'+x.t+'</span></p>' : '<p class="head warn" style="font-size:15px"><span class="ic" style="visibility:hidden">!</span><span>'+x.t+'</span></p>';
-      first = false;
-    });
-    if (ev.ratioViol>0) h += '<p class="head warn"'+(first?'':' style="font-size:15px"')+'><span class="ic"'+(first?'':' style="visibility:hidden"')+'>!</span><span>'+ratioLine(ev, K)+'</span></p>', first=false;
-    if (r.zero && r.zero.length){
-      var zf = food(r.zero[0]);
-      h += '<p class="head warn"'+(first?'':' style="font-size:15px"')+'><span class="ic"'+(first?'':' style="visibility:hidden"')+'>!</span><span>'+Art(low(zf))+' '+esc(low(zf))+' 0 g-ra szorult — nélküle jönne ki. Cseréld vagy vedd ki.</span></p>';
+  warnLines(r, K).forEach(function(t, j){
+    h += j===0 ? '<p class="head warn"><span class="ic">!</span><span>'+esc(t)+'</span></p>' : '<p class="head warn" style="font-size:15px"><span class="ic" style="visibility:hidden">!</span><span>'+esc(t)+'</span></p>';
+  });
+  if (r.status==='allpinned') h += '<p class="sub">Nincs mit kiszámolni — minden adag rögzítve.</p>';
+  // ok: a rögzítés
+  else if (pinned.length && v.length){
+    var top = v[0], k = top.k;
+    if (top.dir==='fölött'){
+      var best = null;
+      pinned.forEach(function(p){ var f = food(p.fid), c = f[k]*p.pin/100; if (!best || c>best.c) best = { f:f, p:p, c:c }; });
+      if (best.c > K[k][1]) h += '<p class="sub">Rögzítve: '+esc(best.f.name)+' '+best.p.pin+' g (nyersen). Ez önmagában '+f1(best.c)+' g '+MAC[k].acc+' hoz. A sáv teteje '+fn(K[k][1])+' g.</p>';
+      else h += '<p class="sub">A rögzített adagok miatt a '+MAC[k].l+' nem fér a sávba.</p>';
+    } else {
+      var rp = r.release ? food(r.release.id) : food(pinned[0].fid), rpin = null;
+      pinned.forEach(function(p){ if (p.fid===rp.id) rpin = p.pin; });
+      h += '<p class="sub">Rögzítve: '+esc(rp.name)+' '+rpin+' g (nyersen). Mellette a '+MAC[k].l+' legfeljebb '+f1(ev.tot[k])+' g lehet. A sáv alja '+fn(K[k][0])+' g.</p>';
     }
-    // ok
-    if (pinned.length && v.length){
-      var top = v[0], k = top.k;
-      if (top.dir==='fölött'){
-        var best = null;
-        pinned.forEach(function(p){ var f = food(p.fid), c = f[k]*p.pin/100; if (!best || c>best.c) best = { f:f, p:p, c:c }; });
-        if (best.c > K[k][1]) h += '<p class="sub">A rögzített '+best.p.pin+' g '+esc(low(best.f))+' önmagában '+f1(best.c)+' g '+MAC[k].acc+' hoz. A sáv teteje '+fn(K[k][1])+' g.</p>';
-        else h += '<p class="sub">A rögzített adagok miatt a '+MAC[k].l+' nem fér a sávba.</p>';
-      } else {
-        var rp = r.release ? food(r.release.id) : food(pinned[0].fid), rpin = null;
-        pinned.forEach(function(p){ if (p.fid===rp.id) rpin = p.pin; });
-        h += '<p class="sub">A rögzített '+rpin+' g '+esc(low(rp))+' mellett '+art(MAC[k].l)+' '+MAC[k].l+' legfeljebb '+f1(ev.tot[k])+' g lehet. A sáv alja '+fn(K[k][0])+' g.</p>';
-      }
-    }
-    if (!pinned.length && !(r.zero && r.zero.length && ev.inBand)){
-      var hint = noPinHint(r, K);
-      if (hint) h += '<p class="sub">'+esc(hint.text)+'</p>';
-    }
+  }
+  if (!pinned.length && !(r.zero && r.zero.length && ev.inBand)){
+    var hint = noPinHint(r, K);
+    if (hint) h += '<p class="sub">'+esc(hint.text)+'</p>';
   }
   if (r.release){
     h += releasePreview(r.release, K);
-    if (r.deadEnd) h += '<p class="sub">Ebből '+(/^(1|5)\d?$/.test(String(items.length))?'az':'a')+' '+items.length+' alapanyagból nem jön ki. Adj hozzá egy újat, vagy cserélj egyet.</p>';
+    if (r.releaseAll) h += releaseAllPreview(r.releaseAll, K);
+    if (r.deadEnd) h += '<p class="sub">Ezekből az alapanyagokból nem jön ki. Adj hozzá egy újat, vagy cserélj egyet.</p>';
   }
   return h;
 }
 
+var probeMemo = { key:null, val:null };
+function probeCategory(r){
+  // kategóriánként egy mintaalapanyag próbafuttatásban; az nyer, amelyik a 6.3 ⚠-sorrendje szerint a legjobban javít
+  var key = JSON.stringify([r.its, r.K]);
+  if (probeMemo.key===key) return probeMemo.val;
+  var best = null;
+  if (S.plate.items.length < MAX_ITEMS) CATS.forEach(function(c){
+    var fid = SAMPLE[c.id];
+    if (onPlate(fid)){ var alt = foods().filter(function(f){ return f.cat===c.id && !onPlate(f.id); })[0]; if (!alt) return; fid = alt.id; }
+    var f = food(fid);
+    var its = r.its.concat([{ id:fid, ch:f.ch, fe:f.fe, zs:f.zs, ref:refOf(fid, S.plate.origin), pin:null }]);
+    var t = KetaraSolver.solveCore(its, r.K);
+    if (!best || lessKey(t.key, best.key)) best = { cat:c.id, key:t.key };
+  });
+  var cur = KetaraSolver.solveCore(r.its, r.K).key;
+  var val = best && lessKey(best.key, cur) ? best.cat : null;
+  probeMemo = { key:key, val:val };
+  return val;
+}
+function lessKey(a, b){ for (var i=0;i<a.length;i++){ if (a[i]<b[i]) return true; if (a[i]>b[i]) return false; } return false; }
 function noPinHint(r, K){
   var ev = r.ev, v = violLines(ev);
-  var lowFat = ev.ratioViol>0 && !v.some(function(x){ return x.k==='zs' && x.dir==='fölött'; });
+  var dead = { type:'dead', text:'Ezekből az alapanyagokból nem jön ki. Adj hozzá egy újat, vagy cserélj egyet.' };
+  if (ev.ratioViol>0){
+    if (S.plate.items.length >= MAX_ITEMS) return dead;
+    return { type:'low', cat:'zsi', k:'zs', text:'Kevés a zsír — adj hozzá a Zsiradék közül.' };
+  }
   var top = v[0];
-  if ((!top && lowFat) || (top && top.dir==='alatt')){
-    var k = top ? top.k : 'zs', cat = CAT[LOW_CAT[k]];
-    return { type:'low', cat:cat.id, text:'Kevés '+art(MAC[k].l)+' '+MAC[k].l+' — adj hozzá '+art(cat.name)+' '+cat.name+' közül.' };
+  if (!top) return null;
+  if (top.dir==='alatt'){
+    var cid = probeCategory(r);
+    if (!cid) return dead;
+    return { type:'low', cat:cid, k:top.k, text:'Kevés a '+MAC[top.k].l+' — adj hozzá a '+CAT[cid].name+' közül.' };
   }
-  if (top && top.dir==='fölött'){
-    var best = null;
-    S.plate.items.forEach(function(it){ var f = food(it.fid), c = f[top.k]*r.grams[it.fid]/100; if (!best || c>best.c) best = { f:f, c:c }; });
-    var acc = best.f.acc || best.f.name;
-    return { type:'high', fid:best.f.id, text:'Sok '+art(MAC[top.k].l)+' '+MAC[top.k].l+' — cseréld '+art(acc)+' '+acc+' egy másik '+CAT[best.f.cat].name.toLowerCase()+'-félére.' };
-  }
-  return null;
+  var best = null;
+  S.plate.items.forEach(function(it){ var f = food(it.fid), c = f[top.k]*r.grams[it.fid]/100; if (!best || c>best.c) best = { f:f, c:c }; });
+  return { type:'high', fid:best.f.id, text:'Sok a '+MAC[top.k].l+' — '+best.f.name+' cseréje segít.' };
 }
 
 function warnActions(r, K){
@@ -757,19 +833,19 @@ function warnActions(r, K){
   if (r.release){
     var f = food(r.release.id);
     a += '<button class="btn primary" data-a="release" data-fid="'+f.id+'">'+esc(f.name)+' feloldása</button>';
-    if (pinned.length>1 && !r.release.ok) a += '<button class="btn secondary" data-a="release-all">Rögzítések feloldása</button>';
+    if (r.releaseAll) a += '<button class="btn secondary" data-a="release-all">Rögzítések feloldása</button>';
     if (r.status!=='allpinned') a += '<button class="btn secondary" data-a="picker">'+I.plus+'Alapanyag</button>';
   } else if (r.zero && r.zero.length && r.ev.inBand){
     var zf = food(r.zero[0]), zi = items.findIndex(function(it){ return it.fid===zf.id; });
-    a += '<button class="btn primary" data-a="swap" data-i="'+zi+'">'+esc(zf.name)+' cseréje</button><button class="btn secondary" data-a="delete" data-i="'+zi+'">Kivétel</button>';
+    a += '<button class="btn primary" data-a="swap" data-i="'+zi+'">'+esc(zf.name)+' cseréje</button><button class="btn secondary" data-a="delete" data-i="'+zi+'">Törlés</button>';
   } else {
     var hint = noPinHint(r, K);
-    if (hint && hint.type==='low') a += '<button class="btn primary" data-a="picker" data-cat="'+hint.cat+'">'+I.plus+esc(CAT[hint.cat].name)+'</button>';
+    if (hint && hint.type==='low') a += '<button class="btn primary" data-a="picker" data-cat="'+hint.cat+'" data-k="'+hint.k+'">'+I.plus+esc(CAT[hint.cat].name)+'</button>';
     else if (hint && hint.type==='high'){ var hi = items.findIndex(function(it){ return it.fid===hint.fid; }); a += '<button class="btn primary" data-a="swap" data-i="'+hi+'">'+esc(food(hint.fid).name)+' cseréje</button>'; }
-    a += '<button class="btn secondary" data-a="picker">'+I.plus+'Alapanyag</button>';
+    if (items.length < MAX_ITEMS) a += '<button class="btn '+(hint && hint.type!=='dead'?'secondary':'primary')+'" data-a="picker">'+I.plus+'Alapanyag</button>';
   }
-  var sp = S.plate.origin ? savedById(S.plate.origin) : null;
-  if (!sp || differsFromSaved(r)) a += '<button class="btn text" data-a="save-open" data-asis="1">Mentés így</button>';
+  a += saveActions(r).replace(/btn secondary/g, 'btn text');
+  a += '<button class="btn text" data-a="done">Kész</button>';
   return a;
 }
 
@@ -793,11 +869,13 @@ function renderPicker(s){
   h += '<div class="sh-body">';
   h += '<label class="search">'+I.search+'<input id="pick-q" type="search" placeholder="Keresés" value="'+esc(s.q)+'" autocomplete="off"></label>';
   h += '<div id="pick-res" style="display:flex;flex-direction:column;gap:12px">'+pickerResults(s)+'</div>';
-  h += '</div><div class="actions"><button class="btn primary" data-a="close">'+(s.added.length?'Kész ('+s.added.length+')':'Kész')+'</button></div>';
+  h += '</div><div class="actions"><button class="btn primary" data-a="close">'+pickLabel(s)+'</button></div>';
   return h;
 }
+function pickLabel(s){ return s.added.length ? 'Hozzáadás ('+s.added.length+')' : 'Bezárás'; }
 function pickerResults(s){
   var h = '';
+  if (S.plate.items.length >= MAX_ITEMS) h += '<div class="hint">Egy tányéron legfeljebb 8 alapanyag lehet.</div>';
   if (s.q.trim()){
     var q = norm(s.q.trim()), res = foods().filter(function(f){ return norm(f.name).indexOf(q)>=0; });
     if (!res.length) return '<p style="margin:0">Nincs ilyen a listában. Felviszed sajátként?</p><button class="btn secondary" data-a="custom-new">'+I.plus+'Saját alapanyag: '+esc(s.q.trim())+'</button>';
@@ -839,14 +917,15 @@ function renderSwap(s){
 }
 function renderSave(s){
   var sp = S.plate.origin ? savedById(S.plate.origin) : null, r = currentResult();
-  var h = sheetHead(s.asis ? 'Mentés így' : 'Tányér mentése')+'<div class="sh-body">';
-  if (s.asis){
-    var v = violLines(r.ev), t = v.length ? v[0].t : (r.ev.ratioViol>0 ? ratioLine(r.ev, r.K) : 'Egy alapanyag 0 g-ra szorult.');
-    h += '<div class="hint">'+esc(t)+'</div>';
+  var h = sheetHead(sp ? 'Mentés új néven' : 'Tányér mentése')+'<div class="sh-body">';
+  if (r.status!=='ok' && !(r.status==='allpinned' && r.ev.inBand)){
+    var w = warnLines(r, r.K).filter(function(t){ return t.indexOf('0 g-ra szorult')!==0; });
+    if (w.length) h += '<div class="hint">'+esc(w[0])+'</div>';
   }
-  if (sp && s.asis) h += '<button class="btn primary" data-a="update">'+esc(sp.name)+' frissítése</button><p class="lbl">Vagy új tányérként</p>';
+  (r.zero||[]).forEach(function(fid){ h += '<div class="hint">Kimarad a tányérból, mert 0 g: '+esc(food(fid).name)+'.</div>'; });
   h += '<div class="field"><label for="save-name">Név</label><input class="inp" id="save-name" value="'+esc(s.name)+'" autocomplete="off"></div>';
-  h += '</div><div class="actions"><button class="btn '+(sp&&s.asis?'secondary':'primary')+'" data-a="save-do">'+(sp?'Mentés új néven':'Mentés')+'</button></div>';
+  if (s.taken) h += '<p class="err" style="margin:0">Már van ilyen nevű tányér.</p>';
+  h += '</div><div class="actions"><button class="btn primary" data-a="save-do">Mentés</button></div>';
   return h;
 }
 
@@ -953,7 +1032,7 @@ function renderKeret(){
   h += '<div class="field"><span class="fl">Napi sávok</span>';
   [['ch','Szénhidrát','g'],['fe','Fehérje','g'],['zs','Zsír','g'],['kcal','Kalória','kcal']].forEach(function(x){
     var m = x[0];
-    if (m==='kcal') h += '<p class="note" style="margin:6px 0 -4px">Kalória: ha a papíron van.</p>';
+    if (m==='kcal') h += '<p class="note" style="margin:6px 0 -4px">Ha a papíron van.</p>';
     h += '<div class="band"><label class="nm" for="k-'+m+'-0">'+x[1]+'</label><input class="inp num'+(p.err[m]?' bad':'')+'" id="k-'+m+'-0" data-k="'+m+'" data-j="0" inputmode="decimal" value="'+esc(d[m][0])+'" aria-label="'+x[1]+' alsó határ"><span class="dash">–</span><input class="inp num'+(p.err[m]?' bad':'')+'" id="k-'+m+'-1" data-k="'+m+'" data-j="1" inputmode="decimal" value="'+esc(d[m][1])+'" aria-label="'+x[1]+' felső határ"><span class="u">'+x[2]+'</span><div class="err" id="e-'+m+'">'+(p.err[m]||'')+'</div></div>';
   });
   h += '</div>';
@@ -987,13 +1066,9 @@ function afterRender(){
 
 /* ---------- műveletek ---------- */
 function closeSheet(){ ui.sheet = null; }
-function openPicker(cat){
+function openPicker(cat, k){
   var hint = null;
-  if (cat){ var r = currentResult(), k = null;
-    MK.forEach(function(m){ if (r.ev && r.ev.under[m]>0 && LOW_CAT[m]===cat) k = m; });
-    if (!k && cat==='zsi') k = 'zs';
-    if (k) hint = 'A '+{ch:'szénhidráthoz',fe:'fehérjéhez',zs:'zsírhoz'}[k]+' ezek segítenek a legtöbbet.';
-  }
+  if (cat && k) hint = 'A '+{ch:'szénhidráthoz',fe:'fehérjéhez',zs:'zsírhoz'}[k]+' ezek segítenek a legtöbbet.';
   ui.sheet = { type:'picker', q:'', open:cat||null, added:[], hint:hint };
 }
 function setPin(i, val){
@@ -1012,7 +1087,7 @@ function commitGram(){
 }
 function doSave(name, asNew){
   var r = currentResult(), now = Date.now();
-  var items = S.plate.items.map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; });
+  var items = S.plate.items.filter(function(it){ return r.grams[it.fid] > 0; }).map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; });
   var p = { id:'p'+now, name:name, items:items, used:now };
   S.saved.push(p);
   items.forEach(function(it){ S.lastUsed[it.fid] = { g:it.g, ts:now }; });
@@ -1021,10 +1096,19 @@ function doSave(name, asNew){
 }
 function doUpdate(){
   var r = currentResult(), sp = savedById(S.plate.origin), now = Date.now();
-  sp.items = S.plate.items.map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; });
+  sp.items = S.plate.items.filter(function(it){ return r.grams[it.fid] > 0; }).map(function(it){ return { fid:it.fid, g:r.grams[it.fid] }; });
   sp.used = now;
   sp.items.forEach(function(it){ S.lastUsed[it.fid] = { g:it.g, ts:now }; });
   S.plate.dirty = false; closeSheet(); toast('Frissítve. Legközelebb innen indul.');
+}
+function doDone(){
+  // Kész: „ezt eszem" — a kiírt grammok lesznek a legutóbb használt mennyiségek (0 g kivételével); tányért nem ment
+  var r = currentResult(), now = Date.now();
+  S.plate.items.forEach(function(it){ var g = r.grams[it.fid]; if (g > 0) S.lastUsed[it.fid] = { g:g, ts:now }; });
+  if (S.plate.origin){ var sp = savedById(S.plate.origin); if (sp) sp.used = now; }
+  // a tányér a képernyőn marad (mérni kell róla), de a következő megnyitás üres tányérral indul
+  S.plate.dirty = false; S.plate.done = true;
+  toast('Megjegyeztem. Legközelebb ebből indulok.');
 }
 function openPlate(id){
   var sp = savedById(id); sp.used = Date.now();
@@ -1042,14 +1126,14 @@ app.addEventListener('click', function(e){
     case 'go-plates': ui.screen='plates'; ui.plMenu=null; ui.plConfirm=null; break;
     case 'go-plate': ui.screen='plate'; break;
     case 'go-keret': ui.screen='keret'; ui.keretDraft=null; ui.keretConfirm=null; break;
-    case 'picker': openPicker(t.dataset.cat); break;
+    case 'picker': openPicker(t.dataset.cat, t.dataset.k); break;
     case 'close': closeSheet(); break;
     case 'row': ui.sheet = { type:'row', i:i }; break;
     case 'edit': ui.editing = i; break;
     case 'pin': setPin(i); flashSkip = S.plate.items[i].fid; closeSheet(); break;
     case 'delete': {
       var snap = snapshot(), f = food(S.plate.items[i].fid);
-      S.plate.items.splice(i,1); modified(); closeSheet(); toast(f.name+' törölve.', snap); break; }
+      S.plate.items.splice(i,1); modified(); closeSheet(); toast('Törölve: '+f.name+'.', snap); break; }
     case 'swap': ui.sheet = { type:'swap', i:i, all:false }; break;
     case 'swap-all': ui.sheet.all = true; break;
     case 'swap-to': {
@@ -1060,9 +1144,9 @@ app.addEventListener('click', function(e){
     case 'pick': {
       var fid = t.dataset.fid, s = ui.sheet, k = s.added.indexOf(fid);
       if (k>=0){ s.added.splice(k,1); S.plate.items = S.plate.items.filter(function(x){ return x.fid!==fid; }); modified(); }
-      else if (!onPlate(fid)){ s.added.push(fid); S.plate.items.push({ fid:fid, pin:null }); modified(); }
+      else if (!onPlate(fid) && S.plate.items.length < MAX_ITEMS){ s.added.push(fid); S.plate.items.push({ fid:fid, pin:null }); modified(); }
       document.getElementById('pick-res').innerHTML = pickerResults(s);
-      t = null; var btn = app.querySelector('.sheet .actions .btn'); if (btn) btn.textContent = s.added.length ? 'Kész ('+s.added.length+')' : 'Kész';
+      t = null; var btn = app.querySelector('.sheet .actions .btn'); if (btn) btn.textContent = pickLabel(s);
       var sc = app.querySelector('.screen'); if (sc){ var tmp = document.createElement('div'); tmp.innerHTML = renderPlate(); sc.replaceWith(tmp.firstChild); afterRender(); }
       save(); return; }
     case 'cat': ui.sheet.open = ui.sheet.open===t.dataset.cat ? null : t.dataset.cat; document.getElementById('pick-res').innerHTML = pickerResults(ui.sheet); return;
@@ -1073,15 +1157,19 @@ app.addEventListener('click', function(e){
       var d = ui.customDraft; if (!customValid(d)) return;
       var nfood = { id:'c'+Date.now(), name:d.name.trim(), cat:d.cat, ch:num(d.ch), fe:num(d.fe), zs:num(d.zs), acc:null, ov:null, custom:true };
       S.custom.push(nfood);
-      if (d.fromPicker && !onPlate(nfood.id)){ S.plate.items.push({ fid:nfood.id, pin:null }); modified(); }
+      if (d.fromPicker && !onPlate(nfood.id) && S.plate.items.length < MAX_ITEMS){ S.plate.items.push({ fid:nfood.id, pin:null }); modified(); }
       ui.screen='plate'; toast(nfood.name+' felvéve a listába.'); break; }
     case 'release': S.plate.items.forEach(function(x){ if (x.fid===t.dataset.fid) x.pin = null; }); modified(); break;
     case 'release-all': S.plate.items.forEach(function(x){ x.pin = null; }); modified(); break;
     case 'save-open': {
-      var nm = S.plate.items.map(function(x,j){ var f=food(x.fid); return j ? low(f) : f.name; }).join(', ');
-      ui.sheet = { type:'save', name:nm, asis:!!t.dataset.asis }; break; }
-    case 'save-do': { var n = document.getElementById('save-name').value.trim(); if (!n) return; doSave(n); break; }
+      var rr = currentResult(), nm = S.plate.items.filter(function(x){ return rr.grams && rr.grams[x.fid] > 0; }).map(function(x,j){ var f=food(x.fid); return j ? low(f) : f.name; }).join(', ');
+      ui.sheet = { type:'save', name:nm }; break; }
+    case 'save-do': {
+      var n = document.getElementById('save-name').value.trim(); if (!n) return;
+      if (S.saved.some(function(x){ return x.name===n; })){ ui.sheet.name = n; ui.sheet.taken = true; break; }
+      doSave(n); break; }
     case 'update': doUpdate(); break;
+    case 'done': doDone(); break;
     case 'open-plate':
       if (hasUnsaved() && !t.dataset.force){ ui.plConfirm = { id:t.dataset.id }; ui.plMenu = null; break; }
       openPlate(t.dataset.id); toast(savedById(t.dataset.id).name+' betöltve.'); break;
@@ -1096,7 +1184,7 @@ app.addEventListener('click', function(e){
       var snapS = JSON.stringify(S.saved), p = savedById(t.dataset.id);
       S.saved = S.saved.filter(function(x){ return x.id!==p.id; });
       if (S.plate.origin===p.id) S.plate.origin = null;
-      ui.plMenu=null; toast(p.name+' törölve.', snapS); break; }
+      ui.plMenu=null; toast('Törölve: '+p.name+'.', snapS); break; }
     case 'undo-pl': if (ui.toast && ui.toast.undo) S.saved = JSON.parse(ui.toast.undo); ui.toast=null; break;
     case 'reset': S = sampleState(); ui.screen='plate'; prevGrams=null; toast('Alaphelyzetbe állítva.'); break;
     case 'reset-first': S = firstRunState(); ui.screen='keret'; ui.keretDraft=null; ui.keretConfirm=null; prevGrams=null; break;
@@ -1116,7 +1204,7 @@ app.addEventListener('click', function(e){
 app.addEventListener('input', function(e){
   var t = e.target;
   if (t.id==='pick-q'){ ui.sheet.q = t.value; document.getElementById('pick-res').innerHTML = pickerResults(ui.sheet); return; }
-  if (t.id==='save-name'){ ui.sheet.name = t.value; return; }
+  if (t.id==='save-name'){ ui.sheet.name = t.value; if (ui.sheet.taken){ ui.sheet.taken = false; var er = app.querySelector('.sheet .err'); if (er) er.remove(); } return; }
   if (/^c-(name|ch|fe|zs)$/.test(t.id)){
     ui.customDraft[t.id.slice(2)] = t.value;
     document.getElementById('c-err').textContent = customErr(ui.customDraft);
