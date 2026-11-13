@@ -1,7 +1,7 @@
-# Ketara — Tech terv (alfa) v0.1
+# Ketara — Tech terv (alfa) v0.2
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
-*Alapja: PRD v1.3, Folyamatok és képernyők v0.10, UX-terv v0.6, prototípus v1.1.*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, prototípus v1.1.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -120,7 +120,7 @@ A felhasználó által kért hat mező mellé a PRD további mezőket követel m
 | `kcal` | szám, 100 g-ra, nyersen | igen | felhasználó (csak ellenőrző adat, 5.3) |
 | `protein` | szám, g / 100 g, nyersen | igen | felhasználó |
 | `fat` | szám, g / 100 g, nyersen | igen | felhasználó |
-| `carbohydrate` | szám, g / 100 g, nyersen | igen | felhasználó |
+| `carbohydrate` | szám, g / 100 g, nyersen, **rosttal együtt** (5.1) | igen | felhasználó |
 | `category` | a hat kategória-azonosító egyike (5.4) | igen | PRD 4.2, 6.3: minden alapanyag pontosan egy kategóriába tartozik; a csere és az alapérték ebből jön |
 | `accusative` | string, a név tárgyesete, pl. „tojást" | igen | a mondatok („137 g tojást", Folyamatok 7.) helyes magyarsága; a prototípus is tárolja |
 | `defaultGrams` | szám, opcionális | nem | PRD 6.3: egyedi (gondozói) alapérték-felülírás, pl. saláta 50 g |
@@ -128,9 +128,15 @@ A felhasználó által kért hat mező mellé a PRD további mezőket követel m
 | `source` | `{ "db": "usda-fdc", "fdcId": 171287 }` | igen | PRD 4.2: a tápérték forrása az USDA FoodData Central, nyers értékek; így minden szám visszakereshető |
 | `retired` | `true`, opcionális | nem | 5.2: kivezetett tétel, a választóban nem jelenik meg |
 
-A szénhidrát az USDA „Carbohydrate, by difference" értéke (a rostot is tartalmazza), mert
-a papír ezt nem bontja tovább (PRD 5.: rost out of scope). Ha a dietetikus nettó CH-t
-használ, ez a 8.1-es dietetikusi átnézésnél derül ki.
+A szénhidrát **rosttal együtt** értendő, mert az orvos / dietetikus a rosttal együtti
+szénhidrátot nézi (a felhasználó döntése, 2026-11-13). A listába ezért az USDA
+**„Carbohydrate, by difference"** értéke kerül változatlanul (ez a rostot tartalmazza).
+
+**Figyelem, saját alapanyag:** a magyar és az EU-s csomagolásokon a „Szénhidrát" sor
+**rost nélkül** szerepel, a rost (ha fel van tüntetve) külön sorban. Ha a felhasználó a
+csomagolásról a szénhidrátot írja be, a saját alapanyag kevesebb CH-t kap, mint a
+valóság. Ezért a Saját alapanyag lapon a szénhidrát mező alatt egy emlékeztető sor áll
+(Folyamatok 6.2); külön Rost mező nincs (15./4).
 
 ### 5.2 A fájl szerkezete és verziózása
 
@@ -455,10 +461,11 @@ listájával is tesztelhető, amíg az nincs kész.
 
 ## 15. Nyitott kérdések
 
-1. **Saját domain:** kell-e, és mi legyen? A külső tesztelők előtt dől el (12.).
-2. **Nettó vagy teljes szénhidrát:** a dietetikus papírja melyiket érti (5.1)? A
-   dietetikusi átnézéssel (PRD 8.1/1–2) együtt.
-3. **Alfa-tesztelők:** kik és mikor? A 9. lépés előtt.
+1. ~~**Saját domain:** kell-e, és mi legyen?~~ Eldöntve 2026-11-13: egyelőre nincs (12.).
+2. ~~**Nettó vagy teljes szénhidrát**~~ Eldöntve 2026-11-13: rosttal együtt (5.1).
+3. ~~**Alfa-tesztelők:** kik és mikor?~~ 2026-11-13: a felhasználó megtalálta őket.
+4. ~~**Saját alapanyag szénhidrátja:** kell-e „Rost" mező?~~ Eldöntve 2026-11-13: nem, csak
+   egy emlékeztető sor a szénhidrát mező alatt (PRD 6.5, Folyamatok 6.2).
 
 ## Döntésnapló
 
@@ -470,4 +477,6 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | A listát a felhasználó állítja össze | a felhasználó döntése; a terv formátumot és ellenőrzést ad |
 | 2026-11-13 | Egyszeri iOS-tipp a kezdőképernyőről | az iOS 7 napos törlése a legvalószínűbb adatvesztés, és export nincs |
 | 2026-11-13 | Terv magyarul, kód angolul | a felhasználó jóváhagyta |
+| 2026-11-13 | Szénhidrát rosttal együtt: USDA „by difference" változatlanul | az orvos a rosttal együtti CH-t nézi (a korábbi „rost nélkül" döntést aznap felülírta) |
+| 2026-11-13 | Egyelőre nincs saját domain | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak (12.) |
 | 2026-11-13 | `localStorage`, hash-útvonalak, PWA, saját szimplex TS-ben, Vitest + orákulum | terv; a felhasználó a PR-ban felülbírálhatja |

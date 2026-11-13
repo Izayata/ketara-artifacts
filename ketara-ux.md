@@ -1,6 +1,6 @@
-# Ketara — UX-terv v0.6
+# Ketara — UX-terv v0.7
 
-*Kísérőanyag a PRD v1.3-hoz és a Folyamatok és képernyők v0.10-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.11-hez. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
 *Utolsó frissítés: 2026-11-13*
 
@@ -10,7 +10,8 @@ változásokat követi: `Kész` gomb a `Mentés így` helyett, egységes „(nye
 kód, hozzájárulás-kapu; és a PR auditját (2026-10-24): navigáció, ⚠ panel, megerősítési
 szabály, fiók blokk, `Hozzáadás (3)`. A v0.5 (2026-11-13) a PRD v1.2-t követi: nincs
 fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszközön marad. A v0.6
-(2026-11-13) a tech terv interjújából az iOS-tippet adja hozzá (2. fejezet).
+(2026-11-13) a tech terv interjújából az iOS-tippet adja hozzá (2. fejezet). A v0.7
+(2026-11-13) a Saját alapanyag lapra a rost-emlékeztetőt (6. fejezet).
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -238,6 +239,8 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
 - Numerikus mezők tizedesvesszővel („0,7"), a telefon numerikus billentyűzetével.
 - A kategória **választógombsor** (6 elem), nem legördülő: egy koppintás, és mind látszik.
   (A Folyamatok 6.2 vázlata is így mutatja.)
+- A szénhidrát mező alatt másodlagos szöveggel, mindig látszik: „Ha a csomagoláson külön sorban van a rost, add hozzá a szénhidráthoz."
+  (a CH rosttal együtt értendő, a csomagolás rost nélkül adja meg; PRD 6.5).
 - Az ellenőrzés (CH + Fe + Zs ≤ 100) a mező alatt jelenik meg, amint teljesül vagy sérül,
   nem csak mentéskor.
 - Mentés után az alapanyag rögtön a tányérra kerül, ha a választóból jött.
@@ -313,6 +316,7 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
 | Kövesse-e a prototípus a v1.1-et? (2026-10-24) | Igen, a PR #4-ben frissítve (11. fejezet) |
 | Marad-e fiók, belépés, szinkron? (2026-11-13) | Nem: minden az eszközön (PRD v1.2, 5. és 6.6) |
 | Kérje-e iPhone-on a kezdőképernyőre tételt? (2026-11-13) | Igen, egyszeri, bezárható sávval (2. fejezet) |
+| Kell-e Rost mező a Saját alapanyagra? (2026-11-13) | Nem, csak egy emlékeztető sor a szénhidrát alatt (6. fejezet) |
 
 ## 11. A prototípusról
 
