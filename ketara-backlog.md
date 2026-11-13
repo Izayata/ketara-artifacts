@@ -240,30 +240,30 @@ E2-ben nincs, mert még nincs felület; ezek az S7.7, S8.5 és S9.5.*
 *Cél: a gondozott lista és a konfiguráció JSON-ban, ellenőrizve, a buildbe fordítva.
 Forrás: PRD 4.2, 6.1, 6.3; Tech 5.*
 
-- [ ] **S3.1 — Formátum és típusok** · *Kész, ha:* a TS-típusok a Tech 5.1–5.2 mezőit írják le,
+- [x] **S3.1 — Formátum és típusok** · *Kész, ha:* a TS-típusok a Tech 5.1–5.2 mezőit írják le,
   és a buildbe importálható a lista.
-  - [ ] T3.1.1 `src/data/types.ts`: `Ingredient` (id, name, accusative, category, kcal, protein,
+  - [x] T3.1.1 `src/data/types.ts`: `Ingredient` (id, name, accusative, category, kcal, protein,
     fat, carbohydrate, defaultGrams?, sample?, source, retired?), `IngredientList` (version,
     updated, items).
-  - [ ] T3.1.2 `data/config.json` + típus: a hat kategória (azonosító, magyar név, alapérték),
+  - [x] T3.1.2 `data/config.json` + típus: a hat kategória (azonosító, magyar név, alapérték),
     a Keret gyanús-érték küszöbei, az arány alapértéke (2), a tányéronkénti maximum (8) (Tech 5.4).
-  - [ ] T3.1.3 Betöltő: a lista és a konfiguráció `import`-tal a buildbe, a kivezetett tételek
+  - [x] T3.1.3 Betöltő: a lista és a konfiguráció `import`-tal a buildbe, a kivezetett tételek
     szűrése a választóhoz.
-- [ ] **S3.2 — Ellenőrző szkript** (Tech 5.5) · *Kész, ha:* a `pnpm validate-data` minden
+- [x] **S3.2 — Ellenőrző szkript** (Tech 5.5) · *Kész, ha:* a `pnpm validate-data` minden
   szabályt ellenőriz, és a CI-ban fut.
-  - [ ] T3.2.1 Kötelező mezők, 0–100 közötti számok, `carbohydrate + protein + fat ≤ 100`.
-  - [ ] T3.2.2 Egyedi, `kebab-case` id-k; egyedi nevek (kis- és nagybetűtől függetlenül);
+  - [x] T3.2.1 Kötelező mezők, 0–100 közötti számok, `carbohydrate + protein + fat ≤ 100`.
+  - [x] T3.2.2 Egyedi, `kebab-case` id-k; egyedi nevek (kis- és nagybetűtől függetlenül);
     létező kategória; kategóriánként pontosan egy nem kivezetett `sample`.
-  - [ ] T3.2.3 Eltűnt id tiltása: összevetés a `main` ág fájljával (id nem törölhető, csak
+  - [x] T3.2.3 Eltűnt id tiltása: összevetés a `main` ág fájljával (id nem törölhető, csak
     `retired`).
-  - [ ] T3.2.4 Figyelmeztetések (nem hiba): 4/4/9-es kcal 15%-nál jobban eltér a tárolttól;
+  - [x] T3.2.4 Figyelmeztetések (nem hiba): 4/4/9-es kcal 15%-nál jobban eltér a tárolttól;
     40 alatti vagy 60 feletti tételszám; a `version` nem nőtt, pedig a tartalom változott.
-  - [ ] T3.2.5 Bekötés a `ci.yml`-be.
-- [ ] **S3.3 — Kiinduló lista a prototípusból** · *Kész, ha:* a prototípus 40 tétele JSON-ban,
+  - [x] T3.2.5 Bekötés a `ci.yml`-be.
+- [x] **S3.3 — Kiinduló lista a prototípusból** · *Kész, ha:* a prototípus 40 tétele JSON-ban,
   a validálás zöld (figyelmeztetés lehet).
-  - [ ] T3.3.1 A prototípus alapanyagainak átírása az új formátumba (id, tárgyeset, kategória,
+  - [x] T3.3.1 A prototípus alapanyagainak átírása az új formátumba (id, tárgyeset, kategória,
     felülírás); a hiányzó `source.fdcId` mezők jelölése, hogy a végleges lista pótolja.
-  - [ ] T3.3.2 Rövid leírás a repóban (`data/README.md`): a mezők, a szabályok (id soha nem
+  - [x] T3.3.2 Rövid leírás a repóban (`data/README.md`): a mezők, a szabályok (id soha nem
     változik, törlés helyett `retired`, verzióemelés), hogyan futtasd a validálást.
 - [ ] **S3.4 — A végleges alapanyaglista 👤** (PRD 4.2) · *Kész, ha:* 40–60 tétel, USDA FDC
   forrással, a validálás figyelmeztetés nélkül zöld, a lista PR-ral a `main`-en.
