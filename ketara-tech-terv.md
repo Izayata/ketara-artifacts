@@ -1,4 +1,4 @@
-# Ketara — Tech terv (alfa) v0.2
+# Ketara — Tech terv (alfa) v0.3
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, prototípus v1.1.*
@@ -230,7 +230,8 @@ változtatunk**, csak szerkezetet:
 | `stages.ts` | sávon belüli LP (kcal-lal és nélküle), ⚠ ág a 0 g-os halmazokkal |
 | `rounding.ts` | egész grammra kerekítés, ±1 majd ±2 g-os keresés |
 | `solvePlate.ts` | a teljes futás: kevés alapanyag, minden rögzítve, feloldás-előzetesek |
-| `compare.ts` | a 6.3-as ⚠-sorrend kulcsa (arány → kilógás → 0 g-os sorok → referencia → sorrend) |
+| `compare.ts` | a 6.3-as ⚠-sorrend kulcsa (arány → kilógás → 0 g-os sorok → sávon belül: kcal → referencia → sorrend) |
+| `mealTarget.ts` | étkezési cél: napi sáv ÷ étkezésszám, pontos értékkel (PRD 6.1) |
 
 A tippek (PRD 6.4: melyik kategóriát ajánlja, melyik sort cserélné) a prototípusban az
 `app.html`-ben vannak; az alfában a `src/domain/hints.ts`-be kerülnek, mert ezek is
@@ -258,18 +259,27 @@ legrosszabb esetet (8 alapanyag, több rögzítés, ⚠). Ha a cél nem teljesü
 1. **A PRD példái** mint rögzített tesztek: a 6.4-es ✓ példa (137 / 100 / 31 g) és a ⚠
    példa (240 g rögzített tojás → 48 g brokkoli / 39 g olaj, fehérje 6,6 g-mal fölötte), a
    Folyamatok minden számszerű példája, és a 7. peremesetek közül minden, ami számot ad.
-2. **Orákulum-teszt:** a prototípus `solver.js`-e bekerül a tesztek közé, és több ezer
+2. **Modulonkénti egységtesztek:** a 6.1 minden modulja (`simplex`, `evaluate`, `compare`,
+   `stages`, `rounding`, `solvePlate`, `mealTarget`) saját tesztfájlt kap, amely a modult
+   közvetlenül hívja, kis, kézzel ellenőrizhető bemenetekkel: szélső esetek (nem megoldható,
+   nem korlátos, `1e-9` alatti zaj), Bland-szabály holtversenynél, a döntetlen-szabályok
+   (sorrend, egyforma feloldások). A tesztek elég erősek: a `pnpm mutate:solver` rögzített
+   listájának minden szándékos egysoros hibáját legalább egy egységteszt elkapja, és az
+   eredmény a PR-ba kerül. Részletek: backlog T2.2.1–T2.2.8.
+3. **Orákulum-teszt:** a prototípus `solver.js`-e bekerül a tesztek közé, és több ezer
    véletlen tányéron (3–8 alapanyag, véletlen keret, rögzítések) a TS-port eredményének
    grammra pontosan egyeznie kell vele. Ez bizonyítja, hogy a port nem változtatott a
    végfelhasználó által elfogadott viselkedésen.
-3. **Tulajdonságok** (fast-check): ✓ esetén minden makró és az arány a sávon belül van a
+4. **Tulajdonságok** (fast-check): ✓ esetén minden makró és az arány a sávon belül van a
    kiírt grammokon; sávon belül minden szabad sor ≥ 1 g; nincs negatív gramm; a rögzített
-   gramm nem változik; ugyanarra a bemenetre ugyanaz a kimenet (determinizmus, PRD 6.5);
-   a sorok sorrendjének felcserélése csak a döntetlen-szabály szerint hat.
-4. **Tartomány:** referencia-forrás sorrendje, „legutóbb használt" frissítése (Kész,
+   gramm nem változik; ugyanarra a bemenetre ugyanaz a kimenet (determinizmus, PRD 6.5).
+   Hogy a sorok sorrendjének felcserélése csak a döntetlen-szabály szerint hat, azt
+   kézzel választott egységtesztek ellenőrzik (2., backlog T2.2.3 és T2.2.6), nem
+   tulajdonság-teszt, mert véletlen tányéron a döntetlen ritka és nehezen jósolható.
+5. **Tartomány:** referencia-forrás sorrendje, „legutóbb használt" frissítése (Kész,
    mentés; 0 g nem írja felül), Keret-ellenőrzés, saját alapanyag törlése tányérokból,
    mentett tányér eltérés-vizsgálata.
-5. **Végponttól végpontig** (Playwright, mobil nézet): első indítás → Keret → 3 alapanyag
+6. **Végponttól végpontig** (Playwright, mobil nézet): első indítás → Keret → 3 alapanyag
    → ✓ → Kész → újranyitás; ⚠ rögzítéssel és feloldással; offline újranyitás.
 
 ## 7. Tárolás az eszközön
@@ -480,3 +490,5 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | Szénhidrát rosttal együtt: USDA „by difference" változatlanul | az orvos a rosttal együtti CH-t nézi (a korábbi „rost nélkül" döntést aznap felülírta) |
 | 2026-11-13 | Egyelőre nincs saját domain | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak (12.) |
 | 2026-11-13 | `localStorage`, hash-útvonalak, PWA, saját szimplex TS-ben, Vitest + orákulum | terv; a felhasználó a PR-ban felülbírálhatja |
+| 2026-11-13 | A mutációs ellenőrzés rögzített hibalistával (`pnpm mutate:solver`) történik, nem CI-eszközzel | gyors, átlátható, és a CI-t nem lassítja; a felhasználó jóváhagyta |
+| 2026-11-13 | Modulonkénti egységtesztek kötelezők (6.4/2) | a felhasználó kérése a ketara-app PR #3 átnézése után |
