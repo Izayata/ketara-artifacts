@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.8
+# Ketara — Folyamatok és képernyők v0.9
 
-*Kísérőanyag a PRD v1.1-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-10-24*
+*Kísérőanyag a PRD v1.2-höz. Minden döntés onnan származik.*
+*Utolsó frissítés: 2026-11-13*
 
 ---
 
@@ -21,9 +21,8 @@
    A **Tányér a főképernyő**; a Tányérjaim nem előzmény, hanem **kiindulópont-tár**.
    Egy mentett tányér megnyitása nem olvasás, hanem újraszámolás.
 
-5. **Nyilvános weboldal, fiókkal** (PRD 6.6). Belépés e-mailes linkkel vagy kóddal, egyszer
-   eszközönként; utána a konyhában a fiók észrevétlen: hálózat nélkül is működik, a
-   szinkron a háttérben fut. A fiókbeállítások a Keret alján vannak, nem külön képernyőn.
+5. **Weboldal, fiók nélkül** (PRD 6.6). Nincs belépés, nincs szinkron: minden adat az
+   eszközön marad, és hálózat nélkül is működik. Az első megnyitás egyből a Kerettel indul.
 
 ---
 
@@ -115,15 +114,8 @@ régi tányérokon. Külön ellenőrzés nem kell.
 
 ```mermaid
 flowchart TD
-    A0[Első megnyitás] --> A1["Belépés: e-mail-cím<br/>alul süti-sáv"]
-    A1 --> A2["Nézd meg a leveled"]
-    A2 --> A3["Koppintás a linkre,<br/>vagy a kód beírása"]
-    A3 --> A4{"Van hozzájárulás<br/>az aktuális szövegre?"}
-    A4 -- nem --> A5["Hozzájárulás: figyelmeztetés +<br/>adatkezelési hozzájárulás + 16 év"]
-    A5 -- Tovább --> A6
-    A5 -- "Kijelentkezés / Fiók törlése" --> A1
-    A4 -- igen --> A6{Van már keret?}
-    A6 -- igen --> J0["Tányér — a fiók adataival"]
+    A0[Első megnyitás] --> A6{Van már keret<br/>ezen az eszközön?}
+    A6 -- igen --> J0["Tányér — az eszközön tárolt adatokkal"]
     A6 -- nem --> B["Keret: egy képernyő<br/>(sávok, étkezésszám, arány)"]
     B --> H["Egy étkezésre ez jön ki:<br/>élőben, gépelés közben"]
     H --> I["Ez stimmel, kezdjük"]
@@ -136,30 +128,10 @@ flowchart TD
     F3 -- nem --> J[Tányér, üres]
 ```
 
-**Belépés.** Egy mező, egy gomb. Jelszó nincs. Az e-mailben egy link és egy 6 jegyű kód
-jön. A kettő **egy belépési token**: bármelyik felhasználása mindkettőt érvényteleníti,
-15 percig érvényes, és 5 hibás kód után új kell. A link azt a böngészőt lépteti be, amelyben
-megnyílik. Ha máshol nyílt meg (laptop, a levelezőalkalmazás saját böngészője), a kódot a
-várakozó képernyőn lehet beírni. Ha lejárt vagy már felhasználták, a képernyő megmondja, és
-egy gombbal újat küld. Egy eszközön a belépés 1 évig megmarad, és minden használattal
-megújul: a konyhában gyakorlatilag soha nem kell újra belépni.
+Nincs belépés, hozzájárulás és süti-sáv (PRD 5., 6.6). Másik eszközön vagy a böngésző
+adatainak törlése után a Ketara újra itt kezd.
 
-**Hozzájárulás.** Akkor jelenik meg, ha a fiókhoz nincs rögzített hozzájárulás az aktuális
-szövegverzióhoz — nem az számít, hogy új-e a fiók vagy az eszköz: fiókonként és
-szövegverziónként egyszer kell. Ha valaki a hozzájárulás előtt bezárja az oldalt, a
-következő megnyitáskor újra ez jön. Ha a jogi szöveg változik, újra megjelenik.
-Három dolog egy képernyőn: a figyelmeztetés („A Ketara számol, nem tanácsot ad."), a
-kifejezett hozzájárulás az étrendi adatok kezeléséhez (PRD 6.6), az adatvédelmi
-tájékoztató linkjével, és a nyilatkozat, hogy elmúlt 16 éves. Hozzájárulás nélkül nincs
-tovább: új fióknál addig étrendi adat sehova nem kerül; meglévő fióknál (új szövegverzió)
-az adat zárolva van — megmarad, de nem látszik és nem szinkronizál. Aki nem fogadja el,
-nem ragad be: a képernyő alján `Kijelentkezés` és `Fiók törlése` is van.
-
-**Süti-sáv.** Az első megnyitáskor alul, a Belépés fölött. Két egyenrangú gomb:
-`Elfogadom` és `Csak a szükségesek`. A választás a Keret alján bármikor módosítható. Az
-analitika csak elfogadás után indul (PRD 6.8).
-
-**Keret.** Egyetlen képernyő (UX 8.2): a számított étkezési cél gépelés közben élőben
+**Keret.** Egyetlen képernyő (UX 8.1): a számított étkezési cél gépelés közben élőben
 frissül, a gomb `Ez stimmel, kezdjük`. Gombnyomáskor jön az ellenőrzés: logikai hiba esetén
 megnevezi a sort és nem menti; gyanús értéknél egyszer visszakérdez (`Igen, így van` /
 `Javítom`).
@@ -178,14 +150,9 @@ számunk más, azonnal látja, és rögtön kiderül, hogy félreértettük a pa
 | 2 | **Alapanyag-választó** | Alsó lap: keresés, kategóriák, legutóbbiak. |
 | 3 | **Saját alapanyag** | Név, kategória, 100 g tápérték. |
 | 4 | **Tányérjaim** | Kiindulópontok: mentett alapanyag-kombinációk, megnyitáskor újraszámolva. |
-| 5 | **Keret** | A dietetikus számai, a belőlük számolt étkezési cél, alul a fiók. |
+| 5 | **Keret** | A dietetikus számai, a belőlük számolt étkezési cél, alul a figyelmeztetés. |
 
 Öt képernyő. Ha ennél több lesz, valamit rosszul csinálunk.
-
-A **Belépés** és a **Hozzájárulás** nem számít bele: a Belépés eszközönként egyszer
-látszik, a Hozzájárulás fiókonként és szövegverziónként egyszer; a konyhai használat része
-egyik sem. A fiókbeállítások a Keret alján vannak (6.4), mert az is
-ritkán nyitott képernyő.
 
 ---
 
@@ -507,40 +474,12 @@ névmező alatt *„Már van ilyen nevű tányér."*, és a mentés addig nem ak
 │ ──────────────────────────────── │
 │ A Ketara számol, nem tanácsot ad.│
 │ Nem helyettesíti a dietetikust.  │
-│ ──────────────────────────────── │
-│ Fiók                             │
-│ anna@pelda.hu                    │
-│ Minden eszközödön szinkronban.   │
-│ Sütik: csak a szükségesek     >  │
-│ Adatvédelmi tájékoztató       >  │
-│ Adataim letöltése                │
-│ Kijelentkezés                    │
-│ Kijelentkezés minden eszközről   │
-│ Fiók törlése                     │
-│ A hozzájárulás visszavonása a    │
-│ fiók törlésével történik.        │
 └──────────────────────────────────┘
 ```
 
-**Fiók blokk.** A Keret alatt, a Mentés gomb után, hogy a beállítás útjában ne legyen. A
-szinkron állapota egy sor: „Minden eszközödön szinkronban." vagy, ha hálózat nélkül van
-el nem küldött változás: „Nincs kapcsolat. A változásaid megvannak, és elküldöm őket,
-amint lesz." A Tányéron a szinkron nem jelenik meg: a konyhában nem kell tudni róla.
+**Figyelmeztetés.** A Keret alján, a Mentés gomb után, egy sorban (PRD 6.7).
 
-**Adataim letöltése:** a fiók teljes tartalma egy JSON fájlban (PRD 6.6), az eszközön
-tartott aktuális tányérral együtt.
-
-**Kijelentkezés** (és **Kijelentkezés minden eszközről**): előbb szinkronizál. Ha nincs
-kapcsolat, és van el nem küldött változás, egyszer figyelmeztet: *„3 változás még nincs
-elküldve. Ha most kilépsz, elvesznek."* — `Kilépek` / `Mégse`. Különben megerősítés nélkül
-kilép.
-
-**Fiók törlése** a fiókhoz kötött egyetlen megerősítő kérdés visszavonás helyett, mert nem
-vonható vissza: alsó lap — a 7. fejezet „Fiók törlése" szövege — `Végleg törlöm` / `Mégse`.
-Utána minden eszköz kijelentkezik; egy offline eszköz a következő kapcsolódáskor törli a
-helyi adatot, és nem tölt fel semmit. A hozzájárulás visszavonása ugyanez az út.
-
-Az alsó blokk a lényeg. **Nem beviteli mező, hanem visszajelzés** — ő négy éve tudja
+Az „Egy étkezésre ez jön ki” blokk a lényeg. **Nem beviteli mező, hanem visszajelzés** — ő négy éve tudja
 fejből, mennyi jön ki egy étkezésre, és itt azonnal látja, hogy jól értettük-e a papírt.
 
 Az arány mezőben csak a zsír oldala írható, alapértéke 2. Minden szöveg ezt az értéket
@@ -557,72 +496,6 @@ beleférni. Biztosan így van a papíron?"* — és ha igen, elfogadja. A küsz�
 felső határa 1200 — csak ha van kcal-sáv —, a fehérjesáv felső határa 50 g, a sávszélesség a
 felső határ 10%-a) helykitöltők, a dietetikus erősíti meg őket.
 Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elgépelést.
-
----
-
-### 6.5 Belépés
-
-```
-┌──────────────────────────────────┐
-│ Ketara                           │
-│                                  │
-│ Megmondja, hány grammot vegyél   │
-│ abból, ami előtted van.          │
-│                                  │
-│ E-mail-cím                       │
-│ [ anna@pelda.hu                ] │
-│                                  │
-│ [ Belépési link küldése        ] │
-│                                  │
-│ Jelszó nincs: e-mailben küldök   │
-│ egy linket és egy kódot.         │
-└──────────────────────────────────┘
-```
-
-**Elküldés után** ugyanez a képernyő: „Elküldtem a linket és a kódot ide: anna@pelda.hu."
-+ egy 6 jegyű kódmező („Ha a link máshol nyílt meg, írd be ide a kódot.") + `Újraküldés` ·
-`Másik e-mail-cím`.
-
-### 6.6 Hozzájárulás
-
-```
-┌──────────────────────────────────┐
-│ Mielőtt elkezded                 │
-│                                  │
-│ A Ketara számol, nem tanácsot ad.│
-│ Nem helyettesíti a dietetikust:  │
-│ a számokat ő adja, te írod be.   │
-│                                  │
-│ ☐ Hozzájárulok, hogy a Ketara    │
-│   tárolja az e-mail-címemet és az│
-│   étrendi adataimat (keret, saját│
-│   alapanyagok, tányérok, legutóbb│
-│   használt mennyiségek).         │
-│   Adatvédelmi tájékoztató >      │
-│ ☐ Elmúltam 16 éves.              │
-│                                  │
-│ [ Tovább                       ] │
-│ ──────────────────────────────── │
-│ Kijelentkezés · Fiók törlése     │
-└──────────────────────────────────┘
-```
-
-A `Tovább` mindkét pipa nélkül nem aktív. A figyelmeztetés itt a hosszú változat, a Keret
-alján a rövid (7. fejezet). A `Kijelentkezés` és a `Fiók törlése` ugyanaz, mint a Fiók
-blokkban (6.4); így aki egy új szövegverziót nem fogad el, kiléphet vagy törölheti a fiókját. A hozzájárulás szövegverzióval és időponttal
-mentődik.
-
-### 6.7 Süti-sáv
-
-```
-│ ──────────────────────────────── │
-│ Sütiket használok, hogy lássam,  │
-│ mi működik. Étrendi adat nem     │
-│ kerül bele.                      │
-│ [ Elfogadom ]                    │
-│ [ Csak a szükségesek ]           │
-└──────────────────────────────────┘
-```
 
 ## 7. Szövegek egy helyen
 
@@ -683,32 +556,7 @@ mentődik.
 | Keret, gyanúsan szűk | Ez a sáv nagyon szűk, kevés tányér fog beleférni. Biztosan így van a papíron? |
 | Keret, lehetetlen (alsó > felső) | Az alsó határ nagyobb a felsőnél. Nézd meg a papírt. |
 | Keret, lehetetlen (arány) | A zsírsáv teteje kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jönne ki. |
-| Belépés, ígéret | Megmondja, hány grammot vegyél abból, ami előtted van. |
-| Belépés, magyarázat | Jelszó nincs: e-mailben küldök egy linket és egy kódot. |
-| Belépés gombjai | Belépési link küldése · Újraküldés · Másik e-mail-cím |
-| Link elküldve | Elküldtem a linket és a kódot ide: {e-mail}. |
-| Kódmező | Ha a link máshol nyílt meg, írd be ide a kódot. |
-| Link vagy kód lejárt / felhasznált | Ez a link vagy kód már nem érvényes. Küldök egy újat. |
-| Hibás kód | Ez a kód nem jó. Nézd meg újra a leveled. |
-| Hozzájárulás, cím | Mielőtt elkezded |
-| Figyelmeztetés, hosszú (Hozzájárulás) | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust: a számokat ő adja, te írod be. |
-| Figyelmeztetés, rövid (Keret alja) | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust. |
-| Hozzájárulás gombjai | Tovább · Kijelentkezés · Fiók törlése |
-| Hozzájárulás | Hozzájárulok, hogy a Ketara tárolja az e-mail-címemet és az étrendi adataimat (keret, saját alapanyagok, tányérok, legutóbb használt mennyiségek). |
-| Korhatár | Elmúltam 16 éves. |
-| Süti-sáv | Sütiket használok, hogy lássam, mi működik. Étrendi adat nem kerül bele. |
-| Süti-sáv gombjai | Elfogadom · Csak a szükségesek |
-| Fiók blokk, sütik | Sütik: {csak a szükségesek / elfogadva} |
-| Fiók blokk, tájékoztató | Adatvédelmi tájékoztató |
-| Szinkron rendben | Minden eszközödön szinkronban. |
-| Szinkron, nincs kapcsolat | Nincs kapcsolat. A változásaid megvannak, és elküldöm őket, amint lesz. |
-| Kijelentkezés | Kijelentkezés |
-| Kijelentkezés, offline, el nem küldött változással | {N} változás még nincs elküldve. Ha most kilépsz, elvesznek. — Kilépek / Mégse |
-| Fiók törlése | Minden adatod törlődik: az e-mail-címed, a keret, a saját alapanyagaid, a tányérjaid és a legutóbb használt mennyiségeid, minden eszközödön. Ez nem vonható vissza. — Végleg törlöm / Mégse |
-| Hozzájárulás visszavonása | A hozzájárulás visszavonása a fiók törlésével történik. |
-| Kijelentkezés mindenhol | Kijelentkezés minden eszközről |
-| Adatletöltés | Adataim letöltése |
-| Inaktív fiók, értesítő e-mail | Két éve nem használtad a Ketarát. Ha 30 napon belül nem nyitod meg, a fiókod és minden adatod törlődik. |
+| Figyelmeztetés (Keret alja) | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust. |
 
 
 Minden szöveg tegező, kijelentő, és **megmondja a következő lépést.** Nincs „Hiba
@@ -727,5 +575,7 @@ mindig helyes. A célértékek egy tizedessel jelennek meg, egész számnál tiz
 
 - **Napközbeni eltérés** — ha egy étkezésnél kilépett a sávból, a következőnél ezt nem
   tudja beszámítani. Tudatos: a napkövetés out of scope.
-- **Az adatvédelmi tájékoztató és a figyelmeztetés végleges szövege** — a fenti mondatok
-  helykitöltők, amíg szakértő át nem nézi őket (PRD 8.1/2).
+- **A figyelmeztetés végleges szövege** — a fenti mondat helykitöltő, amíg a dietetikus
+  át nem nézi (PRD 8.1/2).
+- **Adatvesztés** — ha a böngésző adatai törlődnek, vagy a telefon elveszik, a tányérok
+  és a saját alapanyagok elvesznek. Vállalt kockázat; export v1-ben nincs (PRD 6.6).

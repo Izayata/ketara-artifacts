@@ -1,8 +1,8 @@
-# Ketara — PRD v1.1
+# Ketara — PRD v1.2
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
-*Utolsó frissítés: 2026-10-24*
+*Utolsó frissítés: 2026-11-13*
 
 ---
 
@@ -29,9 +29,10 @@ Nem sportoló, nem fitneszes, nem a konditeremből érkezik.
 
 **Másodlagos:** v1-ben nincs. Szándékosan.
 
-**Elérés:** a Ketara **nyilvános weboldal**, böngészőből használható, **ingyenes** és
-**magyar nyelvű**. Bárki regisztrálhat, de a termék továbbra is a fenti elsődleges
-felhasználóra készül: egy ember, a saját dietetikusi papírjával.
+**Elérés:** a Ketara **böngészőben futó weboldal**, **ingyenes** és **magyar nyelvű**.
+Nincs fiók, nincs belépés, nincs szerver: minden adat azon az eszközön marad, amelyen a
+felhasználó beírta. A termék a fenti elsődleges felhasználóra készül: egy ember, egy
+telefon, a saját dietetikusi papírjával.
 
 **Kifejezetten nem:** a makrót követő testépítő; az edző és a rábízott kliensek; aki
 étrendet *kap* kész grammokkal (annak nincs mit számolni).
@@ -75,12 +76,9 @@ felhasználóra készül: egy ember, a saját dietetikusi papírjával.
 11. **Mentett tányér előhívása** és újraszámolása.
 12. **Tányér frissítése** — mentett tányérból indulva a horgony felülírható az új
     összetétellel és grammokkal, egy gombbal.
-13. **Fiók és szinkron** — belépés e-mailben kapott linkkel vagy kóddal, jelszó nélkül.
-    A fiók tartalma (6.6) minden eszközön ugyanaz. Adatok letöltése, kijelentkezés
-    minden eszközről, fióktörlés.
-14. **Jogi szövegek** — egészségügyi figyelmeztetés, adatvédelmi tájékoztató, süti-
-    hozzájárulás (6.7).
-15. **Használati mérés** — anonim webanalitika, a süti-hozzájárulás után (6.8).
+13. **Tárolás az eszközön** — a keret, a saját alapanyagok, a tányérok és a „legutóbb
+    használt" mennyiségek az eszközön maradnak (6.6). Hálózat nélkül is működik.
+14. **Egészségügyi figyelmeztetés** — a Ketara számol, nem tanácsot ad (6.7).
 
 ## 5. Out of scope — és miért
 
@@ -89,10 +87,12 @@ felhasználóra készül: egy ember, a saját dietetikusi papírjával.
 | Napi naplózás, étkezésnyilvántartás | Étkezésenként dolgozunk. A napkövetés külön termék, és ott a KalóriaBázis 150 000 tétellel és félmillió felhasználóval van jelen. |
 | Vonalkód, Open Food Facts integráció | A gondozott lista lefedi a főzős életet. Az OFF adatait önkéntesek viszik fel, pontosságra nincs garancia — dietetikusi sávnál ez érzékeny. |
 | Célkalkulátor (BMR/TDEE) | A számokat a dietetikus adja. Fél terméknyi munka megspórolva. |
-| Edző / kliens szerepek, közös vagy megosztott fiók | Másik termék. Minden fiók egy emberé. |
+| Edző / kliens szerepek, közös vagy megosztott használat | Másik termék. Egy eszköz, egy ember. |
+| Fiók, belépés, szinkron, szerver, adatbázis | A termék iránti igény még nincs igazolva; a háttérrendszer építése és üzemeltetése ennek kockázatos és drága előfeltétele. Az adat az eszközön marad (6.6). Ha az igény igazolódik, újra napirendre kerül. |
+| Webanalitika, használati mérés | Nincs szerver, ahova küldeni lehetne, és süti-hozzájárulást sem kell kérni. A feltételezéseket felhasználói teszt méri (9.). |
+| Adatok exportja, mentési fájl | Dísz (10.). Az adat elvesztésének kockázata vállalt (6.6). |
 | Főtt–nyers súlyátváltás, receptek | **Véglegesen kimarad**, nem csak v1-ből: minden számolás nyers alapanyaggal történik. |
 | Mikrotápanyagok, rost, só, vitaminok | A papíron nincsenek. |
-| Jelszavas belépés, Google- / Apple-belépés | Az e-mailes link a legkevesebb tárolt titok és a legkevesebb függés. |
 | Fizetés, előfizetés | A termék ingyenes. |
 | Alkalmazásbolti (iOS / Android) kiadás | Böngészőből fut, nincs mit telepíteni. |
 | Más nyelvek | Indulásnál csak magyar; a szövegek később fordíthatók (10. Dísz). |
@@ -327,84 +327,37 @@ adja, így eltérés csak valódi okból lehet (javított keret, módosított t�
 csere). A horgony így csak szándékosan mozdul el — nem sodródik csendben, és nem is ragad be
 véglegesen.
 
-### 6.6 Fiók és szinkron
-**A felhasználó:** megadja az e-mail-címét, és a kapott linkre koppint, vagy beírja a
-kapott kódot.
-**A termék:** belépteti; a fiók adatai minden eszközén megjelennek.
+### 6.6 Tárolás az eszközön
+**A felhasználó:** megnyitja az oldalt, és használja. Nem regisztrál, nem lép be.
+**A termék:** minden adatot az eszközön, a böngészőben tárol. Semmi nem hagyja el az
+eszközt.
 
 **Szabályok:**
-- **Belépés nélkül nem használható.** Az első indítás sorrendje: belépés → hozzájárulás →
-  Keret → üres Tányér (a `+ Alapanyag` és a `Tányérjaim` gombbal).
-- A belépési e-mail egy **linket** és egy **6 jegyű kódot** tartalmaz. A link azt a
-  böngészőt lépteti be, amelyben megnyitják. Ha máshol nyílt meg (másik eszköz, a
-  levelezőalkalmazás beépített böngészője), a kódot a kérő eszköz várakozó képernyőjén
-  lehet beírni. A link és a kód **egy belépési token**: bármelyik felhasználása mindkettőt
-  érvényteleníti. **15 percig** érvényes; **5 hibás kód** után érvénytelen, új kell.
-- Egy eszközön a belépés **1 évig** megmarad, és minden használattal megújul.
-- **A fiók tartalma** (kanonikus lista; minden szöveg — hozzájárulás, adatvédelmi
-  tájékoztató, fióktörlés, szószedet — ezt használja): az e-mail-cím, a keret, a saját
-  alapanyagok, a mentett tányérok, a „legutóbb használt" mennyiségek és a hozzájárulás
-  (szövegverzió, időpont). A gondozott alapanyaglista közös, nem a fiók része.
-- **Csak az eszközön:** az **aktuális tányér** (a sorai, grammjai és rögzítései). Nem
-  szinkronizál: ha a felhasználó főzés közben bezárja az appot, újranyitáskor ugyanaz a
-  tányér várja, a rögzítésekkel együtt. A **Kész** vagy egy új tányér törli (a Kész után a
-  tányér a képernyőn marad, hogy mérni lehessen róla, de a következő megnyitás már üres
-  tányérral indul). A letöltésben szerepel, és a fiókkal együtt törlődik.
-- **Hálózat nélkül is működik**: a megoldó és az adatok az eszközön vannak, a változás a
-  következő kapcsolatnál szinkronizál. A konyhában ez nem luxus.
-- **Szinkron-tétel** a keret, egy saját alapanyag, egy tányér, illetve egy alapanyag
-  „legutóbb használt" értéke. Ha ugyanazt a tételt két eszközön is módosították, a változás
-  **eszközoldali időpontja** szerint a későbbi marad (egyezésnél az, amelyik előbb ért a
-  szerverre). A **törlés mindig győz**: a törölt tételt egy másik eszközön végzett módosítás
-  sem hozza vissza. Ha egy tányér sora törölt alapanyagra mutat, összefésüléskor a sor
-  kimarad (mint a 6.5 törlésénél).
-- **Visszavonható törlés** (tányér, sor): a törlés a visszavonási ablak (~5 mp) alatt csak
-  az eszközön van meg, és csak az ablak bezárulása után szinkronizál.
-- **Kijelentkezés:** előbb szinkronizál. Ha nincs kapcsolat, és van el nem küldött
-  változás, egyszer figyelmeztet: *„{N} változás még nincs elküldve. Ha most kilépsz,
-  elvesznek."* — `Kilépek` / `Mégse`. A **Kijelentkezés minden eszközről** (a Fiók
-  blokkban) ugyanígy viselkedik az aktuális eszközön.
-- **Adataim letöltése**: a fiók teljes tartalma egy JSON fájlban (GDPR: hozzáférés és
-  adathordozhatóság).
-- A felhasználó **törölheti a fiókját**; ekkor minden adata törlődik a szerverről, és
-  minden eszközén kijelentkezik. Egy offline eszköz a következő kapcsolódáskor **nem tölt
-  fel semmit**: törli a helyi adatot, és a belépésre áll vissza.
-- Az étrendi adat egészségügyi adatnak minősülhet (GDPR), ezért a felhasználó
-  **kifejezetten hozzájárul** a kezeléséhez, és nyilatkozik, hogy **elmúlt 16 éves**. A
-  hozzájárulás-képernyő akkor jelenik meg, ha a fiókhoz **nincs rögzített hozzájárulás az
-  aktuális szövegverzióhoz** — nem csak új fióknál. A hozzájárulás **fiókonként és
-  szövegverziónként** egyszer kell, nem eszközönként. Ha a jogi szöveg változik, újra
-  megjelenik. Új fióknál hozzájárulás előtt étrendi adat nem keletkezik. Meglévő fióknál
-  (új szövegverzió) az adat hozzájárulásig **zárolva**: megmarad, de nem látszik és nem
-  szinkronizál. A hozzájárulás-képernyőn ott a **Kijelentkezés** és a **Fiók törlése** is,
-  hogy aki nem fogadja el, ne ragadjon be.
-- **A hozzájárulás visszavonása a fiók törlése.** A Fiók blokk ezt egy mondatban kimondja;
-  külön visszavonási út nincs.
-- **Megőrzés:** 24 hónap **használat nélkül** (használat: az app megnyitása belépve vagy
-  egy szinkron; a belépés 1 évig megmarad, ezért a belépés nem jó mérce) → e-mailes
-  értesítés (*„Két éve nem használtad a Ketarát."*) → ha 30 napon belül nem használja, a
-  fiók törlődik, ugyanúgy, mint kézi törlésnél.
+- **Az első indítás sorrendje:** Keret → üres Tányér (a `+ Alapanyag` és a `Tányérjaim`
+  gombbal).
+- **Az eszközön tárolt adat** (kanonikus lista; minden szöveg — figyelmeztetés,
+  szószedet — ezt használja): a keret, a saját alapanyagok, a mentett tányérok és a
+  „legutóbb használt" mennyiségek. A gondozott alapanyaglista a termék része, nem a
+  felhasználó adata.
+- **Az aktuális tányér** (a sorai, grammjai és rögzítései) is megmarad: ha a felhasználó
+  főzés közben bezárja az appot, újranyitáskor ugyanaz a tányér várja, a rögzítésekkel
+  együtt. A **Kész** vagy egy új tányér törli (a Kész után a tányér a képernyőn marad, hogy
+  mérni lehessen róla, de a következő megnyitás már üres tányérral indul).
+- **Hálózat nélkül is működik**: a megoldó, a gondozott lista és az adatok az eszközön
+  vannak. A konyhában ez nem luxus.
+- **Egy eszköz, egy böngésző.** Másik eszközön vagy másik böngészőben a Ketara üresen
+  indul; az adatok nem költöznek át.
+- **Vállalt kockázat:** ha a felhasználó törli a böngésző adatait, vagy elveszíti a
+  telefont, az adatai elvesznek. A keret újra beírható a papírról; a tányérok és a saját
+  alapanyagok elvesznek. Export v1-ben nincs (10. Dísz).
+- **Visszavonható törlés** (tányér, sor): a törlés ~5 mp-ig visszavonható, megerősítő
+  kérdés nélkül.
 
-### 6.7 Jogi szövegek
-- **Egészségügyi figyelmeztetés:** a Ketara számol, nem tanácsot ad; nem helyettesíti a
-  dietetikust. A Hozzájárulás képernyőn (hosszú változat) és a Keret képernyőn (rövid
-  változat) látható.
-- **Adatvédelmi tájékoztató:** mit tárolunk (a 6.6 listája), hol, meddig (24 hónap
-  használat nélkül + 30 nap), hogyan tölthető le és törölhető, és hogy az anonim analitika
-  (6.8) a fióktörlés hatályán kívül esik.
-- **Süti-hozzájárulás:** az analitika csak elfogadás után indul (6.8).
-
-### 6.8 Használati mérés
-- **Anonim** webanalitika (pl. Google Analytics), **csak süti-hozzájárulás után**.
-  Elutasítás esetén a termék ugyanúgy működik.
-- Az analitika **nem kap felhasználói azonosítót**, ezért a fióktörlés nem érinti; ezt az
-  adatvédelmi tájékoztató kimondja.
-- Az analitikába **nem kerül** étrendi adat: sem a keret, sem a grammok, sem az
-  alapanyagok tápértéke. Az URL-ek és az oldalcímek **nem tartalmaznak felhasználói
-  szöveget** (tányér- vagy alapanyagnevet). Csak az alábbi események és időtartamok.
-- A mért események a feltételezések tesztjei (9.), és csak ezek: a Keret kitöltésének
-  megkezdése és befejezése (9.1), tányér összeállításának ideje (9.5), „Saját alapanyag"
-  felvitele (9.9), tányér mentése és mentett tányér újrahasználata (9.11).
+### 6.7 Egészségügyi figyelmeztetés
+- A Ketara számol, nem tanácsot ad; nem helyettesíti a dietetikust. A Keret képernyőn
+  látható, egy sorban.
+- Adatvédelmi tájékoztató és süti-hozzájárulás nem kell: nincs fiók, nincs analitika, és
+  semmi nem hagyja el az eszközt. Ha ez változik, a jogi szövegek is visszakerülnek.
 
 ## 7. Peremesetek
 
@@ -426,21 +379,13 @@ kapott kódot.
 | Lehetetlen keret (alsó > felső, vagy a zsírsáv teteje < {min} × fehérjesáv alja) | Nem menti. Megnevezi a hibás sort. |
 | Gyanúsan alacsony vagy szűk keret (6.1 helykitöltő küszöbei) | A termék nem hajtja végre szó nélkül. Egyszer visszakérdez; igen után elfogadja. |
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
-| Első indítás | Belépés e-mailes linkkel vagy kóddal → hozzájárulás → Keret → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
-| Nincs hálózat | Minden helyben működik; a változás a következő kapcsolatnál szinkronizál. |
-| Lejárt vagy már használt belépési link | Megmondja, és egy gombbal újat küld. |
-| A belépési link másik eszközön vagy beépített böngészőben nyílt meg | A link azt a böngészőt lépteti be; a kérő eszközön az e-mailben kapott 6 jegyű kód beírható. |
-| Belépett, de a hozzájárulás előtt bezárta az oldalt | A következő megnyitáskor újra a hozzájárulás jön; addig nincs tárolt étrendi adat. |
-| Új jogi szövegverzió, meglévő fiók | A hozzájárulás-képernyő jön; az adat addig zárolva (megvan, de nem látszik, nem szinkronizál). A képernyőn Kijelentkezés és Fiók törlése is van. |
-| Kijelentkezés el nem küldött változással, hálózat nélkül | Egyszer figyelmeztet: „{N} változás még nincs elküldve. Ha most kilépsz, elvesznek." — Kilépek / Mégse. |
-| Tányérsor törölt alapanyagra mutat (másik eszközön törölték) | Összefésüléskor a sor kimarad (6.6). |
-| Ugyanaz a tétel két eszközön módosítva | A változás eszközoldali időpontja szerint a későbbi marad; törlés és módosítás ütközésekor a törlés (6.6). |
-| Fióktörlés, miközben egy másik eszköz offline | Kapcsolódáskor az eszköz nem tölt fel semmit, törli a helyi adatot, és a belépésre áll vissza. |
+| Első indítás | Keret → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
+| Nincs hálózat | Minden helyben működik. |
+| Másik eszköz vagy másik böngésző | A Ketara üresen indul, a Keret kitöltésével; az adatok nem költöznek át (6.6). |
+| A böngésző adatai törölve | Mint az első indítás: a keret, a tányérok és a saját alapanyagok elvesztek (vállalt kockázat, 6.6). |
 | Saját alapanyag törlése, amit mentett tányér használ | A megerősítés felsorolja a tányérokat; törléskor a sor kikerül belőlük. Az üressé váló tányér törlődik; a 3-nál kevesebb sorú megmarad, és hiányos állapotban nyílik. |
 | ⚠ tányér mentése 0 g-os sorral | A 0 g-os sor nem kerül a tányérba; a mentés lapja kiírja (6.5). |
 | Foglalt tányérnév | „Már van ilyen nevű tányér." Nem menti, amíg más nevet nem kap. |
-| Új eszköz, első belépés | Letölti a fiók adatait; a Keret nem kérdeződik újra. |
-| Süti-hozzájárulás elutasítva | Minden működik, csak a mérés marad el. |
 | A horgony elavult | A felhasználó frissítheti a tányért egy gombbal. A termék nem dönti el helyette, hogy melyik összetétel az érvényes. |
 | Csere rögzített soron | A rögzítés lekerül, a termék ezt kiírja: „A rögzítés lekerült, mert az alapanyag változott." |
 | Nyers–főtt félreértés | **Minden** kiírt mennyiség mellett ott áll a „(nyersen)", egyetlen formában: sorban „Csirkemell 90 g (nyersen)", mondatban és felsorolásban „90 g csirkemell (nyersen)", egy felsorolás végén egyszer. Az ok-mondatokban is („Rögzítve: Tojás 240 g (nyersen)."). Alapanyagonkénti „főzve változik" jelölés nincs: minden számolás nyers súllyal történik. A nyers súly héj, csont és tisztítási hulladék nélkül értendő. |
@@ -453,8 +398,12 @@ kapott kódot.
    helykitöltők. *Hogyan derül ki:* a dietetikus megerősíti vagy lecseréli őket az
    indulás előtt.
 
-2. **A jogi szövegek tartalma** (figyelmeztetés, adatvédelmi tájékoztató, egészségügyi
-   adatként való kezelés, 16 éves korhatár). *Hogyan derül ki:* adatvédelmi szakértő átnézi az indulás előtt.
+2. **Az egészségügyi figyelmeztetés szövege.** *Hogyan derül ki:* a dietetikus átnézi az
+   indulás előtt.
+
+3. **Van-e igény a termékre a projektgazda körén túl?** Ettől függ, hogy a fiók, a
+   szinkron és a mérés (5.) valaha visszakerül-e. *Hogyan derül ki:* felhasználói teszt a
+   prototípussal, néhány más ketogén étrendet követő emberrel.
 
 ### 8.2 Lezárva
 
@@ -516,21 +465,26 @@ visszavonható törlés csak az ablak után szinkronizál · egy tizedes a célb
 token 15 perc, 5 próba · legfeljebb 8 alapanyag tányéronként · a prototípus v1.1-re
 frissítve.
 
+**Lezárva v1.2-ben (2026-11-13):** nincs fiók, belépés, szinkron, szerver, adatbázis és
+analitika — az igény még nincs igazolva · minden adat az eszközön, egy eszköz, egy böngésző
+· export nincs, az adatvesztés vállalt kockázat · a jogi szövegekből csak az egészségügyi
+figyelmeztetés marad · a v1.1 megoldó- és képernyőszabályai változatlanok.
+
 ## 9. Feltételezés-nyilvántartás
 
 | # | Feltételezés | Miből ered | Bizalom | Legolcsóbb teszt |
 |---|---|---|---|---|
-| 9.1 | A dietetikusi jelölésmód általánosan felismerhető | a projektgazda állítja, egy forrásból — **lejjebb vitte, hogy az étrend ketogén: a jelölés a ketón belül általános, nem minden dietetikus papírján**. **v1.0: a nyilvános weboldal miatt ez már nem csak elméleti kérdés** | **alacsony** | nézz meg egy nem ketós étrendet ugyanettől a dietetikustól; az indulás után: hány regisztráló hagyja félbe a Keret kitöltését |
+| 9.1 | A dietetikusi jelölésmód általánosan felismerhető | a projektgazda állítja, egy forrásból — **lejjebb vitte, hogy az étrend ketogén: a jelölés a ketón belül általános, nem minden dietetikus papírján**. **v1.2: ettől függ, van-e igény a projektgazda körén túl (8.1/3)** | **alacsony** | nézz meg egy nem ketós étrendet ugyanettől a dietetikustól; felhasználói teszt: néhány más ketós felhasználó ki tudja-e tölteni a Keretet a saját papírjáról |
 | 9.2 | A felhasználónak vannak stabil, megszokott **összetételei** (a grammok nem ismétlődnek, az összetételek igen) | **a felhasználó megerősítette**: a készlet ismétlődik, a grammok nem | magas | — |
 | 9.3 | A papíros számolás fájdalmas | **megmérve: 10–15 perc étkezésenként** | **magas** | — |
 | 9.4 | Minden számolás nyers alapanyaggal | **a felhasználó mondta** | magas | — |
-| 9.5 | Fél perc alatt használhatónak kell lennie | tervezői következtetés, nem felhasználói adat | közepes | analitika: a tányér összeállításának ideje (6.8) |
+| 9.5 | Fél perc alatt használhatónak kell lennie | tervezői következtetés, nem felhasználói adat | közepes | felhasználói teszt: stopperrel mérve a tányér összeállításának ideje |
 | 9.6 | Saját alapanyagot és saját tányért is menteni akar | **a felhasználó mondta** | magas | — |
 | 9.7 | Rögzített adag köré akarja számoltatni a többit | **a felhasználó mondta** | magas | — |
 | 9.8 | A makrók **egyenletesen** oszlanak el az étkezések között | **a felhasználó megerősítette** (napi makró ÷ étkezésszám) | magas | — |
-| 9.9 | v1-ben 40–60 alapanyag elég (a méret eldöntött, az elégségesség nem) | becslés | közepes | analitika: hányszor nyúl a „Saját alapanyag" felé az első héten (6.8) |
+| 9.9 | v1-ben 40–60 alapanyag elég (a méret eldöntött, az elégségesség nem) | becslés | közepes | megfigyelés / megkérdezés: hányszor nyúl a „Saját alapanyag" felé az első héten |
 | 9.10 | A rögzített mennyiség ízlés szerinti választás („ennyi tojást akarok"), nem a hűtőben lévő darab súlya | **a felhasználó megerősítette** | magas | — |
-| 9.11 | A mentés nála **szándékos gesztus**, nem „hátha jó lesz" — ezért érdemes a tárolt összetételt horgonynak tekinteni | a 08-29/A opció (a mentett tányér grammjai a referencia) választásából | közepes | analitika: hány tányért ment el az első héten, és hányat használ újra (6.8) |
+| 9.11 | A mentés nála **szándékos gesztus**, nem „hátha jó lesz" — ezért érdemes a tárolt összetételt horgonynak tekinteni | a 08-29/A opció (a mentett tányér grammjai a referencia) választásából | közepes | megfigyelés / megkérdezés: hány tányért ment el az első héten, és hányat használ újra |
 
 ## 10. Vágásvonal
 
@@ -546,9 +500,7 @@ frissítve.
   horgony" szerepelt itt; mivel a grammok minden étkezésnél újraszámolódnak, a gyorsítás
   mellékes, a horgony az egyetlen valódi indok.)
 - Alapanyag cseréje — „nincs brokkoli, van zöldbab" gyakori művelet, a felhasználó mondta
-- Fiók és szinkron — a mentett tányér a horgony; ha a telefonnal elveszik, az ígéret is
-- Jogi szövegek — nyilvános weboldalon étrendi adattal nem indulhat nélkülük
-- Adataim letöltése és fióktörlés — hozzájárulásos kezelésnél GDPR-kötelezettség, nem dísz
+- Tárolás az eszközön — a mentett tányér a horgony; ha minden megnyitáskor elveszne, a horgony is
 
 **Dísz** — jó, de nem szükséges:
 - Tányérok rendezése mappákba, kedvencek
@@ -556,7 +508,7 @@ frissítve.
 - Sötét mód, témák
 - Alapanyag-fotók
 - Megosztás
-- Használati mérés (6.8) — a feltételezések tesztjéhez kell, de az ígéret nélküle is teljesül
+- Adatok exportja / mentési fájl — védené az adatot a telefon elvesztésétől, de az ígéret nélküle is teljesül
 - Több nyelv
 
 ## 11. Szószedet
@@ -578,9 +530,8 @@ frissítve.
 | **feloldás** | a rögzítés visszavonása: az adag újra szabaddá válik a megoldónak |
 | **referenciatányér** | a megszokott mennyiségek, amikhez a megoldó a legközelebbi megoldást keresi (relatív eltérésben mérve) |
 | **alapérték** | a referencia, amikor még nincs korábbi használat: az egyedi (gondozói) felülírás vagy a kategória alapértéke |
-| **fiók** | egy ember adatai (a 6.6 kanonikus listája), e-mailes linkkel vagy kóddal elérve, minden eszközén ugyanazok |
 | **legközelebbi elérhető** | a kimenet, ha a sáv nem érhető el: a 6.3 ⚠-sorrendje szerinti legjobb tányér (előbb az arány, aztán a legkisebb teljes kilógás); mindig a kilógás mértékével együtt |
-| **aktuális tányér** | az épp szerkesztett tányér a rögzítéseivel; csak az eszközön él, a Kész vagy egy új tányér törli |
+| **aktuális tányér** | az épp szerkesztett tányér a rögzítéseivel; újranyitáskor megmarad, a Kész vagy egy új tányér törli |
 
 ---
 
@@ -660,8 +611,18 @@ frissítve.
 | 2026-10-24 | **Belépési token: link és kód együtt, 15 perc, 5 hibás kód** | egyszerű és biztonságos |
 | 2026-10-24 | **Legfeljebb 8 alapanyag egy tányéron** | a 0 g-os halmazok sorra vétele így kicsi marad; a valós tányérok ennél kisebbek |
 | 2026-10-24 | **A prototípus v1.1-re frissítve**: Kész, ≥ 1 g, 0 g-os lépés, ±2 g, kcal a ⚠-n kívül, „sok" csere, döntetlen, (nyersen), ◯/🔒, legfeljebb 8 | a 10-08-i elfogadás óta változott viselkedés így kipróbálható |
+| 2026-11-13 | **Vissza a termék- és UX-definícióhoz: nincs fiók, belépés, szinkron, szerver, adatbázis, analitika.** Visszavonja a 2026-10-08-i fiók/szinkron és analitika döntést, valamint a 10-24-i fiók-, hozzájárulás-, belépés-, megőrzés- és analitika-döntéseket | a projektgazda döntése: igény nélkül egy teljes alkalmazás megépítése kockázatos és drága. A v1.1 megoldó- és képernyőszabályai maradnak |
+| 2026-11-13 | **Minden adat az eszközön**, export nélkül; az adatvesztés vállalt kockázat | a 0.9-es „egy telefon, egy ember" visszaáll; az export dísz |
 
 ## Javítások
+
+- **v1.2:** a 2026-11-13-i döntés (fiók, szinkron, szerver, analitika nélkül) szerint
+  törölve a 6.6 Fiók és szinkron, a 6.7 jogi szövegeiből az adatvédelmi tájékoztató és a
+  süti-hozzájárulás, a 6.8 Használati mérés, a belépés, hozzájárulás, kijelentkezés,
+  szinkron és fióktörlés peremesetei, a vágásvonal fiók- és GDPR-sorai és a szószedet
+  „fiók" sora. Az új 6.6 az eszközön tárolt adatot írja le. A 9.5, 9.9 és 9.11 legolcsóbb
+  tesztje az analitika helyett ismét a megfigyelés. A v1.0 és v1.1 alábbi bejegyzései
+  történetiek; a fiókra, szinkronra és analitikára vonatkozó részük már nem érvényes.
 
 - **v1.1 (audit):** a PR független auditja (`reviews/ketara-pr4-audit.md`, 40 pont) alapján.
   A megőrzés a belépést mérte, pedig a belépés egy évig megmarad. A ⚠ tányér 0 g-os sora
