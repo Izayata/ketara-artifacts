@@ -3,7 +3,7 @@
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
 *Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.2.*
-*Utolsó frissítés: 2026-11-13*
+*Utolsó frissítés: 2026-11-13 (E1: ketara-app PR #2)*
 
 ---
 
@@ -94,43 +94,43 @@ PRD 8.1.*
 
 *Cél: üres, de élesben futó React-app minden minőségi kapuval. Forrás: Tech 3., 4., 11.*
 
-- [ ] **S1.1 — Projekt felállítása** · *Kész, ha:* `pnpm dev` egy „Ketara" oldalt mutat, a
+- [x] **S1.1 — Projekt felállítása** · *Kész, ha:* `pnpm dev` egy „Ketara" oldalt mutat, a
   mappaszerkezet a Tech 4. szerinti.
-  - [ ] T1.1.1 Vite + React 19 + TypeScript (`strict`), pnpm; a Tech 4. mappaszerkezete üres
+  - [x] T1.1.1 Vite + React 19 + TypeScript (`strict`), pnpm; a Tech 4. mappaszerkezete üres
     `index.ts`-ekkel (`src/solver`, `src/domain`, `src/data`, `src/storage`, `src/texts`,
     `src/ui`, `data/`, `scripts/`, `tests/`).
-  - [ ] T1.1.2 ESLint + Prettier; `tsc --noEmit` script.
-  - [ ] T1.1.3 ESLint import-szabály a rétegekre: a `solver` semmit nem importál, a `domain` nem
+  - [x] T1.1.2 ESLint + Prettier; `tsc --noEmit` script.
+  - [x] T1.1.3 ESLint import-szabály a rétegekre: a `solver` semmit nem importál, a `domain` nem
     importál Reactot és böngésző-API-t, csak a `storage` nyúl a `localStorage`-hoz (Tech 3.).
-  - [ ] T1.1.4 Vite `base: '/ketara-app/'`; `lang="hu"` az `index.html`-ben.
-  - [ ] T1.1.5 README lecserélése: a félretett Cloudflare-terv helyett az alfa-terv, a
+  - [x] T1.1.4 Vite `base: '/ketara-app/'`; `lang="hu"` az `index.html`-ben.
+  - [x] T1.1.5 README lecserélése: a félretett Cloudflare-terv helyett az alfa-terv, a
     dokumentumok aktuális verzióival (Tech 13.).
-  - [ ] T1.1.6 Verziók rögzítése: **Node 26** (Active LTS 2027 októberéig) a `.nvmrc`-ben és a
+  - [x] T1.1.6 Verziók rögzítése: **Node 26** (Active LTS 2027 októberéig) a `.nvmrc`-ben és a
     `package.json` `engines.node` mezőjében (`>=26 <27`); **pnpm** pontos verzióval a
     `packageManager` mezőben. A Node 25-től a Corepack nem része a Node-nak, ezért a pnpm-et
     külön kell telepíteni (helyben `npm i -g pnpm`, a CI-ban `pnpm/action-setup`).
-  - [ ] T1.1.7 `pnpm-lock.yaml` commitolva (a `.gitignore` nem zárja ki); a CI
+  - [x] T1.1.7 `pnpm-lock.yaml` commitolva (a `.gitignore` nem zárja ki); a CI
     `pnpm install --frozen-lockfile`-lal telepít, így eltérő lockfile-nál elbukik. A
     `.gitignore` Cloudflare-részének törlése (a félretett tervből maradt).
-- [ ] **S1.2 — Teszt-keretrendszer** · *Kész, ha:* `pnpm test` és `pnpm e2e` fut egy-egy
+- [x] **S1.2 — Teszt-keretrendszer** · *Kész, ha:* `pnpm test` és `pnpm e2e` fut egy-egy
   mintateszttel.
-  - [ ] T1.2.1 Vitest + fast-check; egy mintateszt.
-  - [ ] T1.2.2 Playwright mobil nézettel (pl. Pixel 7 és iPhone 14 emuláció) a buildelt appon
+  - [x] T1.2.1 Vitest + fast-check; egy mintateszt.
+  - [x] T1.2.2 Playwright mobil nézettel (pl. Pixel 7 és iPhone 14 emuláció) a buildelt appon
     (`vite preview`); egy mintateszt.
 - [ ] **S1.3 — CI minden PR-on** · *Kész, ha:* egy hibás PR piros, egy jó zöld.
-  - [ ] T1.3.1 `.github/workflows/ci.yml`: Node a `.nvmrc`-ből (`actions/setup-node`), pnpm
+  - [x] T1.3.1 `.github/workflows/ci.yml`: Node a `.nvmrc`-ből (`actions/setup-node`), pnpm
     (`pnpm/action-setup`), `pnpm install --frozen-lockfile` → `tsc` → ESLint → (később `validate-data`) →
     Vitest → `vite build` → Playwright (Tech 11.).
-  - [ ] T1.3.2 pnpm-cache a CI-ban, hogy gyors maradjon.
+  - [x] T1.3.2 pnpm-cache a CI-ban, hogy gyors maradjon.
   - [ ] T1.3.3 👤 Az első CI-futás után a CI-job felvétele kötelező ellenőrzésként a `main` védelmébe (T0.1.3 második fele).
-- [ ] **S1.4 — Deploy a `main`-ről** · *Kész, ha:* merge után pár percen belül az új verzió a
+- [x] **S1.4 — Deploy a `main`-ről** · *Kész, ha:* merge után pár percen belül az új verzió a
   Pages URL-en van. (Függ: S0.1.)
-  - [ ] T1.4.1 `.github/workflows/deploy.yml`: build → `actions/upload-pages-artifact` →
+  - [x] T1.4.1 `.github/workflows/deploy.yml`: build → `actions/upload-pages-artifact` →
     `actions/deploy-pages`.
-  - [ ] T1.4.2 Verzió és commit-hash a buildbe (`package.json` `0.x` + rövid hash, Vite
+  - [x] T1.4.2 Verzió és commit-hash a buildbe (`package.json` `0.x` + rövid hash, Vite
     `define`) (Tech 11.).
-- [ ] **S1.5 — Karbantartás** · *Kész, ha:* a Dependabot havonta nyit PR-t.
-  - [ ] T1.5.1 `.github/dependabot.yml` (npm + GitHub Actions, havonta).
+- [x] **S1.5 — Karbantartás** · *Kész, ha:* a Dependabot havonta nyit PR-t.
+  - [x] T1.5.1 `.github/dependabot.yml` (npm + GitHub Actions, havonta).
 
 ---
 
