@@ -64,6 +64,8 @@ PRD 8.1.*
   - [x] T0.1.2 👤 `ketara-app` → Settings → Pages → *Source: GitHub Actions*.
   - [ ] T0.1.3 👤 Branch-védelem a `main`-en: PR kötelező, a CI zöldje kötelező (a CI-job neve
     az E1 után ismert).
+  - [ ] T0.1.4 👤 Helyi gépen: Node 26 és pnpm telepítve (`node -v` → v26.x, `pnpm -v`).
+    Csak ha helyben is futtatnád az appot; a CI nélküle is működik.
 - [x] **S0.2 — Saját domain eldöntve** (Tech 12., 15./1) · *Kész, ha:* tudjuk, marad-e a
   `izayata.github.io/ketara-app`, vagy saját domain jön. **A külső tesztelők előtt kell**, mert
   a tárolt adat a címhez kötött.
@@ -103,13 +105,21 @@ PRD 8.1.*
   - [ ] T1.1.4 Vite `base: '/ketara-app/'`; `lang="hu"` az `index.html`-ben.
   - [ ] T1.1.5 README lecserélése: a félretett Cloudflare-terv helyett az alfa-terv, a
     dokumentumok aktuális verzióival (Tech 13.).
+  - [ ] T1.1.6 Verziók rögzítése: **Node 26** (Active LTS 2027 októberéig) a `.nvmrc`-ben és a
+    `package.json` `engines.node` mezőjében (`>=26 <27`); **pnpm** pontos verzióval a
+    `packageManager` mezőben. A Node 25-től a Corepack nem része a Node-nak, ezért a pnpm-et
+    külön kell telepíteni (helyben `npm i -g pnpm`, a CI-ban `pnpm/action-setup`).
+  - [ ] T1.1.7 `pnpm-lock.yaml` commitolva (a `.gitignore` nem zárja ki); a CI
+    `pnpm install --frozen-lockfile`-lal telepít, így eltérő lockfile-nál elbukik. A
+    `.gitignore` Cloudflare-részének törlése (a félretett tervből maradt).
 - [ ] **S1.2 — Teszt-keretrendszer** · *Kész, ha:* `pnpm test` és `pnpm e2e` fut egy-egy
   mintateszttel.
   - [ ] T1.2.1 Vitest + fast-check; egy mintateszt.
   - [ ] T1.2.2 Playwright mobil nézettel (pl. Pixel 7 és iPhone 14 emuláció) a buildelt appon
     (`vite preview`); egy mintateszt.
 - [ ] **S1.3 — CI minden PR-on** · *Kész, ha:* egy hibás PR piros, egy jó zöld.
-  - [ ] T1.3.1 `.github/workflows/ci.yml`: install → `tsc` → ESLint → (később `validate-data`) →
+  - [ ] T1.3.1 `.github/workflows/ci.yml`: Node a `.nvmrc`-ből (`actions/setup-node`), pnpm
+    (`pnpm/action-setup`), `pnpm install --frozen-lockfile` → `tsc` → ESLint → (később `validate-data`) →
     Vitest → `vite build` → Playwright (Tech 11.).
   - [ ] T1.3.2 pnpm-cache a CI-ban, hogy gyors maradjon.
   - [ ] T1.3.3 👤 Az első CI-futás után a CI-job felvétele kötelező ellenőrzésként a `main` védelmébe (T0.1.3 második fele).
