@@ -1,6 +1,6 @@
 # Ketara — UX-terv v0.7
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.11-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.12-hez. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
 *Utolsó frissítés: 2026-11-13*
 

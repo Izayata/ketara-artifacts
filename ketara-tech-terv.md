@@ -1,8 +1,8 @@
-# Ketara — Tech terv (alfa) v0.4
+# Ketara — Tech terv (alfa) v0.5
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, prototípus v1.1.*
-*Utolsó frissítés: 2026-11-13 (7.2 séma a ketara-app PR #5 szerint)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.12, UX-terv v0.7, prototípus v1.1.*
+*Utolsó frissítés: 2026-11-13 (3. állapot-réteg és 9. saját router a ketara-app PR #7 szerint)*
 
 ---
 
@@ -70,6 +70,7 @@ hosztolásának felel meg, a GitHub Actions a deploy pipeline.
 | Tartomány | `src/domain/` | megoldó, adattípusok (referencia-forrás, ⚠-tippek, mentési szabályok, Keret-ellenőrzés) |
 | Adat | `src/data/` | gondozott lista és konfiguráció betöltése, típusai |
 | Tárolás | `src/storage/` | tartomány típusai; csak ez a réteg nyúl a `localStorage`-hoz |
+| Állapot | `src/state/` | tartomány, adat, tárolás típusai; tiszta reducer, nincs React, nincs böngésző-API; a megoldót egy helyen hívja (`computePlateView`) |
 | Szövegek | `src/texts/hu.ts` | — |
 | UI | `src/ui/` | minden fenti |
 
@@ -394,8 +395,9 @@ A GitHub Pages nem tud minden útvonalat az `index.html`-re irányítani, ezért
 
 Az **alsó lapok** (választó, sor-műveletek, csere, mentés) nem útvonalak, de megnyitáskor
 egy history-bejegyzést tesznek le, így az Android vissza-gombja a lapot zárja be, nem az
-appot (UX 2.: rendszer-visszalépés). Router: `react-router` hash módban, vagy egy ~50
-soros saját megoldás; az első képernyőnél döntjük el, a viselkedés ugyanaz.
+appot (UX 2.: rendszer-visszalépés). Router: **saját, kis megoldás** (`src/ui/navigation/`,
+ketara-app PR #7), mert a lapok history-kezelése (egymásra nyíló lapok, lapról képernyőre
+lépés, újratöltés lappal) úgyis saját kód lett volna a `react-router` mellett.
 
 A Vite `base` beállítása `/ketara-app/` (a Pages alútvonala). Saját domainnél `/` (12.).
 
@@ -503,4 +505,5 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | `localStorage`, hash-útvonalak, PWA, saját szimplex TS-ben, Vitest + orákulum | terv; a felhasználó a PR-ban felülbírálhatja |
 | 2026-11-13 | A mutációs ellenőrzés rögzített hibalistával (`pnpm mutate:solver`) történik, nem CI-eszközzel | gyors, átlátható, és a CI-t nem lassítja; a felhasználó jóváhagyta |
 | 2026-11-13 | Modulonkénti egységtesztek kötelezők (6.4/2) | a felhasználó kérése a ketara-app PR #3 átnézése után |
+| 2026-11-13 | Saját hash-router és külön `src/state/` réteg | ketara-app PR #7; kevesebb függőség, a reducer Node-ban tesztelhető |
 | 2026-11-13 | Időbélyeg a „legutóbb használt" értékeken és a tányérokon; újabb verziójú adatot régi app nem ír felül | a felhasználó jóváhagyta (ketara-app PR #5) |

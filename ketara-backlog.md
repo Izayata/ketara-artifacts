@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.4.*
-*Utolsó frissítés: 2026-11-13 (E4 kész: ketara-app PR #5)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.12, UX-terv v0.7, Tech terv v0.5.*
+*Utolsó frissítés: 2026-11-13 (E5 kész: ketara-app PR #7)*
 
 ---
 
@@ -312,42 +312,54 @@ Tech 7.*
 *Cél: állapotkezelés, útvonalak, szövegek, formázás és a közös UI-elemek, mielőtt a képernyők
 jönnek. Forrás: Tech 3., 9., 10.; UX 2., 3., 9.*
 
-- [ ] **S5.1 — Állapot** · *Kész, ha:* egy store kezeli az app állapotát, és minden változás
+*Kész: ketara-app PR #7 (négy független átnézés után). Eltérések és előrehozott munka:*
+- *Új réteg: `src/state/` (tiszta reducer, React nélkül), Tech 3.*
+- *Saját hash-router (`src/ui/navigation/`), nem `react-router`; a döntés a Tech 9.-ben.*
+- *Rendszerbetű, ahogy a T5.4.1 kéri; iOS-en a rendszer betűméretét követi.*
+- *A reducer már tartalmazza a T7.1.1 (referencia-sorrend), a T7.1.2 („legutóbb használt"
+  csak Kész/mentés/frissítés) és a T7.6.1 (`currentPlate` mentése) logikáját; az E7-ben ezeket
+  a képernyő köti be, és ott kapnak pipát.*
+- *Négy új szöveg került a Folyamatok 7.-be (csere visszavonása, három tárolási sáv).*
+- *Az E7 elején javítandó (4. átnézés, N4-1, N4-2): egy alsó lapról indított navigáció és egy
+  ~10 ms-on belüli vissza-gomb kiléptet az appból; a lap megnyitása után megjelenő tárolási
+  sáv nem lesz `inert`.*
+
+- [x] **S5.1 — Állapot** · *Kész, ha:* egy store kezeli az app állapotát, és minden változás
   kiíródik.
-  - [ ] T5.1.1 `useReducer` + context; akciók a domain-műveletekre (Keret mentése, sor
+  - [x] T5.1.1 `useReducer` + context; akciók a domain-műveletekre (Keret mentése, sor
     hozzáadása, rögzítés, csere, Kész, mentés…).
-  - [ ] T5.1.2 Írás a store-ba minden változás után; a visszavonható törlés ~5 mp-ig csak
+  - [x] T5.1.2 Írás a store-ba minden változás után; a visszavonható törlés ~5 mp-ig csak
     memóriában vár (Tech 7.2).
-  - [ ] T5.1.3 Újraszámolás minden tányér-változásra (megoldó hívása a reducerből vagy egy
+  - [x] T5.1.3 Újraszámolás minden tányér-változásra (megoldó hívása a reducerből vagy egy
     effectből, egy helyen).
-- [ ] **S5.2 — Útvonalak** (Tech 9.) · *Kész, ha:* a hash-útvonalak működnek, és az Android
+- [x] **S5.2 — Útvonalak** (Tech 9.) · *Kész, ha:* a hash-útvonalak működnek, és az Android
   vissza-gomb az alsó lapot zárja be, nem az appot.
-  - [ ] T5.2.1 Hash-router (`#/`, `#/tanyerjaim`, `#/keret`, `#/sajat`, `#/sajat/:id`); döntés
+  - [x] T5.2.1 Hash-router (`#/`, `#/tanyerjaim`, `#/keret`, `#/sajat`, `#/sajat/:id`); döntés
     `react-router` vagy kis saját megoldás között.
-  - [ ] T5.2.2 Alsó lap megnyitása history-bejegyzést tesz le; vissza → a lap bezárul.
-  - [ ] T5.2.3 Első indítás: ha nincs keret, a Keret nyílik (F 3.).
-- [ ] **S5.3 — Szövegek és formázás** (Tech 10.) · *Kész, ha:* minden felületi szöveg a
+  - [x] T5.2.2 Alsó lap megnyitása history-bejegyzést tesz le; vissza → a lap bezárul.
+  - [x] T5.2.3 Első indítás: ha nincs keret, a Keret nyílik (F 3.).
+- [x] **S5.3 — Szövegek és formázás** (Tech 10.) · *Kész, ha:* minden felületi szöveg a
   `hu.ts`-ben van, és a formázók tesztjei zöldek.
-  - [ ] T5.3.1 `src/texts/hu.ts`: a Folyamatok 7. táblázatának minden sora, sablonfüggvényként a
+  - [x] T5.3.1 `src/texts/hu.ts`: a Folyamatok 7. táblázatának minden sora, sablonfüggvényként a
     változókkal ({Alapanyag}, {n,n}, {min} …).
-  - [ ] T5.3.2 `src/domain/format.ts`: tizedesvessző (`Intl.NumberFormat('hu-HU')`), egy
+  - [x] T5.3.2 `src/domain/format.ts`: tizedesvessző (`Intl.NumberFormat('hu-HU')`), egy
     tizedes a makróknál, egész számnál tizedes nélkül a célnál („23,3", „20"); a kilógás minimum
     „0,1 g"; arány „2,2 : 1"; sáv „5–10".
-  - [ ] T5.3.3 A „(nyersen)" egyetlen formája egy helyen: sorban, mondatban, felsorolás végén
+  - [x] T5.3.3 A „(nyersen)" egyetlen formája egy helyen: sorban, mondatban, felsorolás végén
     (PRD 7.).
-  - [ ] T5.3.4 Ékezet- és kisbetű-független keresés, `localeCompare(…, 'hu')` rendezés.
-- [ ] **S5.4 — Vizuális alap és közös komponensek** (UX 9.) · *Kész, ha:* a képernyők ezekből
+  - [x] T5.3.4 Ékezet- és kisbetű-független keresés, `localeCompare(…, 'hu')` rendezés.
+- [x] **S5.4 — Vizuális alap és közös komponensek** (UX 9.) · *Kész, ha:* a képernyők ezekből
   épülnek, és a prototípus kinézetét adják.
-  - [ ] T5.4.1 Design-tokenek CSS-változókban a prototípusból (törtfehér, grafit, mélyzöld
+  - [x] T5.4.1 Design-tokenek CSS-változókban a prototípusból (törtfehér, grafit, mélyzöld
     akcentus, borostyán ⚠, nincs piros); rendszerbetű, táblázatos számjegyek; méretek
     (24 / 17 / 15 / 14).
-  - [ ] T5.4.2 Elrendezés: egy oszlop, asztali gépen középre igazítva; álló tájolás (UX 2.).
-  - [ ] T5.4.3 `BottomSheet` komponens (fejléc, ✕, görgethető tartalom, fókuszkezelés).
-  - [ ] T5.4.4 `UndoSnackbar`: 5 mp-es sáv „Visszavonás" gombbal, és rövid visszajelzések
+  - [x] T5.4.2 Elrendezés: egy oszlop, asztali gépen középre igazítva; álló tájolás (UX 2.).
+  - [x] T5.4.3 `BottomSheet` komponens (fejléc, ✕, görgethető tartalom, fókuszkezelés).
+  - [x] T5.4.4 `UndoSnackbar`: 5 mp-es sáv „Visszavonás" gombbal, és rövid visszajelzések
     („Mentve: …", „Megjegyeztem. …").
-  - [ ] T5.4.5 `ConfirmSheet` a három megerősítő kérdéshez (UX 8.2).
-  - [ ] T5.4.6 Számmező: `inputmode="decimal"`, vessző és pont is elfogadott.
-  - [ ] T5.4.7 Akadálymentesség: valódi gombok és címkék, 44 px érintési cél, a rendszer
+  - [x] T5.4.5 `ConfirmSheet` a három megerősítő kérdéshez (UX 8.2).
+  - [x] T5.4.6 Számmező: `inputmode="decimal"`, vessző és pont is elfogadott.
+  - [x] T5.4.7 Akadálymentesség: valódi gombok és címkék, 44 px érintési cél, a rendszer
     betűméretének követése.
 
 ---
