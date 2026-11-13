@@ -1,8 +1,8 @@
-# Ketara — Tech terv (alfa) v0.3
+# Ketara — Tech terv (alfa) v0.4
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, prototípus v1.1.*
-*Utolsó frissítés: 2026-11-13*
+*Utolsó frissítés: 2026-11-13 (7.2 séma a ketara-app PR #5 szerint)*
 
 ---
 
@@ -304,15 +304,26 @@ type StoredState = {
   schemaVersion: 1;
   keret: Keret | null;              // sávok, étkezésszám, arány, kcal-sáv
   customIngredients: CustomIngredient[]; // id: "u-" + crypto.randomUUID()
-  plates: Plate[];                  // id, név, sorok: { ingredientId, grams }
-  lastUsed: Record<string, number>; // ingredientId → gramm
-  currentPlate: CurrentPlate | null;// sorok, grammok, rögzítések, honnan indult
+  plates: Plate[];                  // id, név, sorok: { ingredientId, grams }, usedAt
+  lastUsed: Record<string, { grams: number; at: number }>; // ingredientId → gramm + mikor
+  currentPlate: CurrentPlate | null;// sorok rögzítéssel, honnan indult, Kész-e
   ui: { iosInstallHintDismissed: boolean };
 };
 ```
 
+- **Időbélyegek:** a „legutóbb használt" értékek és a tányérok azt is tárolják, mikor
+  használták őket utoljára (`at`, `usedAt`, epoch ms). A választó „Legutóbb használt"
+  chipjei és a Tányérjaim lista ez alapján rendeződik (UX 5., 7.).
+- **Az aktuális tányér** a sorokat és a rögzítéseket tárolja, a számolt grammokat nem: a
+  megoldó determinisztikus, újraszámolja őket. A `done` jelzi a Kész utáni állapotot (PRD 6.6).
+- **Sérült adat:** csak a hibás rész esik ki (egy sor, egy tányér, egy bejegyzés); a keret
+  egészben marad vagy egészben kiesik. A sérült szöveg felülírás előtt a `ketara-damaged`
+  kulcsra másolódik.
+
 - **Migrációk:** minden sémaváltozás új `schemaVersion` és egy migrációs függvény. Betöltéskor
-  a régi adat sorban végigmegy rajtuk. Visszafelé nem migrálunk.
+  a régi adat sorban végigmegy rajtuk. Visszafelé nem migrálunk. **Újabb verziójú adatot
+  (pl. frissítés után még nyitva maradt régi app) soha nem írunk felül:** a régi app
+  megmutatja, amit el tud olvasni, de csak a memóriában fut. Ugyanígy, ha egy migráció hibát dob.
 - **Írás:** minden állapotváltozás után, egyben. A visszavonható törlés (PRD 6.6) a memóriában
   vár ~5 mp-ig, és csak utána íródik ki.
 - **Saját alapanyag id-ja** `u-`-val kezdődik, így soha nem ütközik gondozott id-val.
@@ -492,3 +503,4 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | `localStorage`, hash-útvonalak, PWA, saját szimplex TS-ben, Vitest + orákulum | terv; a felhasználó a PR-ban felülbírálhatja |
 | 2026-11-13 | A mutációs ellenőrzés rögzített hibalistával (`pnpm mutate:solver`) történik, nem CI-eszközzel | gyors, átlátható, és a CI-t nem lassítja; a felhasználó jóváhagyta |
 | 2026-11-13 | Modulonkénti egységtesztek kötelezők (6.4/2) | a felhasználó kérése a ketara-app PR #3 átnézése után |
+| 2026-11-13 | Időbélyeg a „legutóbb használt" értékeken és a tányérokon; újabb verziójú adatot régi app nem ír felül | a felhasználó jóváhagyta (ketara-app PR #5) |
