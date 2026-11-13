@@ -1,4 +1,4 @@
-# Ketara — Tech terv (alfa) v0.1
+# Ketara — Tech terv (alfa) v0.2
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Alapja: PRD v1.3, Folyamatok és képernyők v0.10, UX-terv v0.6, prototípus v1.1.*
@@ -120,7 +120,7 @@ A felhasználó által kért hat mező mellé a PRD további mezőket követel m
 | `kcal` | szám, 100 g-ra, nyersen | igen | felhasználó (csak ellenőrző adat, 5.3) |
 | `protein` | szám, g / 100 g, nyersen | igen | felhasználó |
 | `fat` | szám, g / 100 g, nyersen | igen | felhasználó |
-| `carbohydrate` | szám, g / 100 g, nyersen | igen | felhasználó |
+| `carbohydrate` | szám, g / 100 g, nyersen, **rost nélkül** (5.1) | igen | felhasználó |
 | `category` | a hat kategória-azonosító egyike (5.4) | igen | PRD 4.2, 6.3: minden alapanyag pontosan egy kategóriába tartozik; a csere és az alapérték ebből jön |
 | `accusative` | string, a név tárgyesete, pl. „tojást" | igen | a mondatok („137 g tojást", Folyamatok 7.) helyes magyarsága; a prototípus is tárolja |
 | `defaultGrams` | szám, opcionális | nem | PRD 6.3: egyedi (gondozói) alapérték-felülírás, pl. saláta 50 g |
@@ -128,9 +128,11 @@ A felhasználó által kért hat mező mellé a PRD további mezőket követel m
 | `source` | `{ "db": "usda-fdc", "fdcId": 171287 }` | igen | PRD 4.2: a tápérték forrása az USDA FoodData Central, nyers értékek; így minden szám visszakereshető |
 | `retired` | `true`, opcionális | nem | 5.2: kivezetett tétel, a választóban nem jelenik meg |
 
-A szénhidrát az USDA „Carbohydrate, by difference" értéke (a rostot is tartalmazza), mert
-a papír ezt nem bontja tovább (PRD 5.: rost out of scope). Ha a dietetikus nettó CH-t
-használ, ez a 8.1-es dietetikusi átnézésnél derül ki.
+A szénhidrát **rost nélkül** értendő, ahogy a magyar és az EU-s csomagolásokon is áll
+(a felhasználó döntése, 2026-11-13: az app Magyarországot célozza). Az USDA ezt nem adja
+meg külön, ezért a listába ez kerül: **„Carbohydrate, by difference" − „Fiber, total
+dietary"**. Így a gondozott lista és a csomagolásról felvitt saját alapanyag ugyanazt
+jelenti. A rost külön mezőként nem kell (PRD 5.: rost out of scope).
 
 ### 5.2 A fájl szerkezete és verziózása
 
@@ -178,7 +180,9 @@ A kcal-sáv mindenhol `4 × CH + 4 × fehérje + 9 × zsír` szerint számol (PR
 gondozott és a saját alapanyagnál egyaránt. A JSON `kcal` mezője ezért nem kerül a
 megoldóba. Arra való, hogy az ellenőrző szkript **elírást fogjon**: ha a 4/4/9-es érték
 15%-nál jobban eltér a tárolt kcal-tól, figyelmeztet (az USDA saját szorzói miatt
-néhány százalék eltérés normális). Saját alapanyagnál nincs kcal-mező (PRD 6.5
+néhány százalék eltérés normális). Rostos zöldségnél a rost nélküli CH-ból számolt érték
+alacsonyabb lehet az USDA kcal-nál, mert az USDA a rost energiájának egy részét is
+beszámítja; ilyenkor a figyelmeztetés várható, és nem hiba. Saját alapanyagnál nincs kcal-mező (PRD 6.5
 változatlan).
 
 ### 5.4 Konfiguráció (`data/config.json`)
@@ -455,10 +459,9 @@ listájával is tesztelhető, amíg az nincs kész.
 
 ## 15. Nyitott kérdések
 
-1. **Saját domain:** kell-e, és mi legyen? A külső tesztelők előtt dől el (12.).
-2. **Nettó vagy teljes szénhidrát:** a dietetikus papírja melyiket érti (5.1)? A
-   dietetikusi átnézéssel (PRD 8.1/1–2) együtt.
-3. **Alfa-tesztelők:** kik és mikor? A 9. lépés előtt.
+1. ~~**Saját domain:** kell-e, és mi legyen?~~ Eldöntve 2026-11-13: egyelőre nincs (12.).
+2. ~~**Nettó vagy teljes szénhidrát**~~ Eldöntve 2026-11-13: rost nélkül (5.1).
+3. ~~**Alfa-tesztelők:** kik és mikor?~~ 2026-11-13: a felhasználó megtalálta őket.
 
 ## Döntésnapló
 
@@ -470,4 +473,6 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | A listát a felhasználó állítja össze | a felhasználó döntése; a terv formátumot és ellenőrzést ad |
 | 2026-11-13 | Egyszeri iOS-tipp a kezdőképernyőről | az iOS 7 napos törlése a legvalószínűbb adatvesztés, és export nincs |
 | 2026-11-13 | Terv magyarul, kód angolul | a felhasználó jóváhagyta |
+| 2026-11-13 | Szénhidrát rost nélkül: USDA „by difference" − rost | az app Magyarországot célozza; a magyar és EU-s csomagolás is így adja meg, így a saját alapanyag ugyanazt jelenti |
+| 2026-11-13 | Egyelőre nincs saját domain | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak (12.) |
 | 2026-11-13 | `localStorage`, hash-útvonalak, PWA, saját szimplex TS-ben, Vitest + orákulum | terv; a felhasználó a PR-ban felülbírálhatja |

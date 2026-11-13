@@ -2,7 +2,7 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.3, Folyamatok és képernyők v0.10, UX-terv v0.6, Tech terv v0.1.*
+*Alapja: PRD v1.3, Folyamatok és képernyők v0.10, UX-terv v0.6, Tech terv v0.2.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -77,8 +77,8 @@ PRD 8.1.*
   - [ ] T0.3.1 👤 A Keret-ellenőrzés küszöbei (1200 kcal, 50 g fehérje, 10%) megerősítve vagy
     lecserélve → `data/config.json`.
   - [ ] T0.3.2 👤 Az egészségügyi figyelmeztetés szövege jóváhagyva → `src/texts/hu.ts`.
-  - [ ] T0.3.3 👤 Nettó vagy teljes szénhidrát: a papír melyiket érti? (Ha nettó, az
-    alapanyaglista formátuma és a dokumentumok is változnak.)
+  - [x] T0.3.3 👤 Nettó vagy teljes szénhidrát? → **Rost nélkül** (2026-11-13), ahogy a magyar
+    csomagolásokon; a Tech terv v0.2 5.1 szerint.
   - [ ] T0.3.4 👤 A kategória-alapértékek (100 / 10 / 100 / 30 / 50 / 50 g) rendben vannak-e.
 - [x] **S0.4 — Alfa-tesztelők** (PRD 8.1/3, Tech 15./3) · *Kész, ha:* megvan 3–5 ketogén
   étrendet követő tesztelő és egy időpont.
@@ -201,7 +201,7 @@ Forrás: PRD 4.2, 6.1, 6.3; Tech 5.*
   - [ ] T3.2.3 Eltűnt id tiltása: összevetés a `main` ág fájljával (id nem törölhető, csak
     `retired`).
   - [ ] T3.2.4 Figyelmeztetések (nem hiba): 4/4/9-es kcal 15%-nál jobban eltér a tárolttól;
-    40 alatti vagy 60 feletti tételszám; a `version` nem nőtt, pedig a tartalom változott.
+    40 alatti vagy 60 feletti tételszám (rostos zöldségnél a kcal-eltérés várható, Tech 5.3); a `version` nem nőtt, pedig a tartalom változott.
   - [ ] T3.2.5 Bekötés a `ci.yml`-be.
 - [ ] **S3.3 — Kiinduló lista a prototípusból** · *Kész, ha:* a prototípus 40 tétele JSON-ban,
   a validálás zöld (figyelmeztetés lehet).
@@ -213,7 +213,8 @@ Forrás: PRD 4.2, 6.1, 6.3; Tech 5.*
   forrással, a validálás figyelmeztetés nélkül zöld, a lista PR-ral a `main`-en.
   - [ ] T3.4.1 👤 A tételek kiválasztása: keto-súlypont, mind a hat kategória lefedve.
   - [ ] T3.4.2 👤 Tápértékek a USDA FoodData Centralból, nyers értékek, 100 g-ra; `fdcId` minden
-    tételnél.
+    tételnél. A `carbohydrate` = „Carbohydrate, by difference” − „Fiber, total dietary” (rost
+    nélkül, Tech 5.1).
   - [ ] T3.4.3 👤 Magyar név és tárgyeset; egyedi alapérték-felülírás, ahol a kategória
     alapértéke nyilvánvalóan rossz (pl. saláta 50 g).
   - [ ] T3.4.4 👤 Kategóriánként egy mintaalapanyag (`sample`) kijelölése (a ⚠-tippekhez, PRD 6.4).
@@ -551,4 +552,5 @@ dönteni kell róluk.
 |---|---|---|
 | 2026-11-13 | Backlog epic → story → ticket bontásban, egy `.md` fájlban, pipálható listákkal | a felhasználó kérése |
 | 2026-11-13 | Egyelőre nincs saját domain; az alfa a GitHub Pages címén fut | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak |
+| 2026-11-13 | Szénhidrát rost nélkül | a felhasználó döntése: magyar piac, a csomagolások is így adják meg |
 | 2026-11-13 | Az epicek a Tech terv 14. munkasorrendjét követik, E0 a felhasználó előfeltételeivel | egy sorrend a tervben és a backlogban |
