@@ -58,7 +58,7 @@ prototípus listájával tesztelhető.
 *Cél: minden, ami nem kód, de a fejlesztést vagy a kiadást blokkolja. Forrás: Tech 11., 12., 15.;
 PRD 8.1.*
 
-- [ ] **S0.1 — GitHub beállítva a deployhoz** · *Kész, ha:* a `ketara-app` repóból GitHub
+- [x] **S0.1 — GitHub beállítva a deployhoz** · *Kész, ha:* a `ketara-app` repóból GitHub
   Actions-szel lehet Pages-re deployolni.
   - [x] T0.1.1 👤 GitHub Pro előfizetés a `Izayata` fiókra (privát repóból csak így van Pages).
   - [x] T0.1.2 👤 `ketara-app` → Settings → Pages → *Source: GitHub Actions*.
