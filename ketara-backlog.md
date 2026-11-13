@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.3.*
-*Utolsó frissítés: 2026-11-13 (E2 S2.1–S2.5: ketara-app PR #3; S2.6 nyitva)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.4.*
+*Utolsó frissítés: 2026-11-13 (E4 kész: ketara-app PR #5)*
 
 ---
 
@@ -282,27 +282,27 @@ Forrás: PRD 4.2, 6.1, 6.3; Tech 5.*
 *Cél: minden felhasználói adat a `localStorage`-ban, verziózott sémával. Forrás: PRD 6.6,
 Tech 7.*
 
-- [ ] **S4.1 — Séma és store** · *Kész, ha:* az állapot egy kulcs alatt mentődik és töltődik
+- [x] **S4.1 — Séma és store** · *Kész, ha:* az állapot egy kulcs alatt mentődik és töltődik
   vissza, tesztekkel.
-  - [ ] T4.1.1 `src/storage/schema.ts`: `StoredState` (`schemaVersion`, `keret`,
+  - [x] T4.1.1 `src/storage/schema.ts`: `StoredState` (`schemaVersion`, `keret`,
     `customIngredients`, `plates`, `lastUsed`, `currentPlate`, `ui`) (Tech 7.2).
-  - [ ] T4.1.2 `src/storage/store.ts`: interfész (`load`, `save`, `subscribe`) és
+  - [x] T4.1.2 `src/storage/store.ts`: interfész (`load`, `save`, `subscribe`) és
     `localStorage`-implementáció a `ketara` kulcson; memóriás implementáció a tesztekhez.
-  - [ ] T4.1.3 Sérült vagy ismeretlen adat kezelése: nem omlik össze, a hibás részt eldobja, a
+  - [x] T4.1.3 Sérült vagy ismeretlen adat kezelése: nem omlik össze, a hibás részt eldobja, a
     többit megtartja.
-- [ ] **S4.2 — Migrációk** · *Kész, ha:* van migrációs lánc, és egy próba-migráció tesztje zöld.
-  - [ ] T4.2.1 `src/storage/migrations.ts`: `schemaVersion` szerinti sorrendes migrálás,
+- [x] **S4.2 — Migrációk** · *Kész, ha:* van migrációs lánc, és egy próba-migráció tesztje zöld.
+  - [x] T4.2.1 `src/storage/migrations.ts`: `schemaVersion` szerinti sorrendes migrálás,
     visszafelé nem.
-- [ ] **S4.3 — Robusztusság** · *Kész, ha:* két fül, letiltott tárolás és tartós tárolás kérése
+- [x] **S4.3 — Robusztusság** · *Kész, ha:* két fül, letiltott tárolás és tartós tárolás kérése
   működik.
-  - [ ] T4.3.1 Két nyitott fül: a `storage` esemény újratölti az állapotot; az utolsó írás nyer
+  - [x] T4.3.1 Két nyitott fül: a `storage` esemény újratölti az állapotot; az utolsó írás nyer
     (Tech 7.3).
-  - [ ] T4.3.2 Ha az írás hibát dob (privát böngészés): memóriában fut tovább, és jelzi a UI-nak
+  - [x] T4.3.2 Ha az írás hibát dob (privát böngészés): memóriában fut tovább, és jelzi a UI-nak
     (a sáv: S11.4) (PRD 6.6, Tech 7.4).
-  - [ ] T4.3.3 `navigator.storage.persist()` első indításkor (Tech 7.5).
-- [ ] **S4.4 — Hivatkozások épsége** · *Kész, ha:* eltűnt alapanyagra hivatkozó tányér nem
+  - [x] T4.3.3 `navigator.storage.persist()` első indításkor (Tech 7.5).
+- [x] **S4.4 — Hivatkozások épsége** · *Kész, ha:* eltűnt alapanyagra hivatkozó tányér nem
   omlik össze.
-  - [ ] T4.4.1 Ismeretlen vagy kivezetett `ingredientId` a tányérban: a kivezetett működik tovább,
+  - [x] T4.4.1 Ismeretlen vagy kivezetett `ingredientId` a tányérban: a kivezetett működik tovább,
     az ismeretlen kimarad, és a tányér hiányos állapotban nyílik (PRD 6.5, Tech 7.2).
 
 ---
