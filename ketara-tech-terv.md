@@ -1,7 +1,7 @@
 # Ketara — Tech terv (alfa) v0.5
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.12, UX-terv v0.7, prototípus v1.1.*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.13, UX-terv v0.7, prototípus v1.1.*
 *Utolsó frissítés: 2026-11-13 (3. állapot-réteg és 9. saját router a ketara-app PR #7 szerint)*
 
 ---

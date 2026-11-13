@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.12, UX-terv v0.7, Tech terv v0.5.*
-*Utolsó frissítés: 2026-11-13 (E5 kész: ketara-app PR #7)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.13, UX-terv v0.7, Tech terv v0.5.*
+*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: ketara-app PR #8)*
 
 ---
 
@@ -369,28 +369,40 @@ jönnek. Forrás: Tech 3., 9., 10.; UX 2., 3., 9.*
 *Cél: a felhasználó egyszer beírja a dietetikus számait, és látja az étkezési célt.
 Forrás: PRD 6.1, 6.7; F 3., 6.4; UX 8.*
 
-- [ ] **S6.1 — A Keret képernyő** · *Kész, ha:* a Keret kitölthető, menthető, újranyitva a
+*Kész: ketara-app PR #8 (öt független átnézés után). Eltérések:*
+- *A gyanús érték kérdése megnevezi a sávot („A fehérjesáv teteje alacsonyabb…", „A zsírsáv
+  nagyon szűk…"), és a „Biztosan így van a papíron?" egyszer, a végén szerepel (F 7.).*
+- *Négy mező-hibaszöveg a prototípusból; az étkezésszám 1–10 lehet.*
+- *Egy sor hibája akkor jelenik meg, ha a felhasználó elhagyta a sort (nem gépelés közben). A
+  halvány Mentés megnyomható: ilyenkor minden hibát mutat, és a javítandó mezőre ugrik.*
+- *Nincs „Keret mentve." visszajelzés; az új sáv a fejlécben látszik.*
+- *Fejléc: „Étkezési cél" felirat a cél-sáv fölött. Reszponzív ellenőrzés: 320/360 px-en 200%-os
+  betűmérettel sincs vízszintes görgetés (e2e).*
+- *Készüléken még nem ellenőrzött: a VoiceOver/TalkBack felolvassa-e a mezőt a halvány Mentés
+  megnyomása után (alfa-tesztelőkkel).*
+
+- [x] **S6.1 — A Keret képernyő** · *Kész, ha:* a Keret kitölthető, menthető, újranyitva a
   mentett értékekkel jön.
-  - [ ] T6.1.1 Mezők párban (CH, fehérje, zsír, kcal alsó–felső), étkezésszám, arány (csak a
+  - [x] T6.1.1 Mezők párban (CH, fehérje, zsír, kcal alsó–felső), étkezésszám, arány (csak a
     zsír oldala, alapérték 2); „Tovább" a következő mezőre ugrik.
-  - [ ] T6.1.2 A kcal-sáv opcionális, fölötte: „Ha a papíron van."
-  - [ ] T6.1.3 „Egy étkezésre ez jön ki:" blokk élőben frissül gépelés közben.
-  - [ ] T6.1.4 Első indításkor fölül a bevezető mondat, a gomb `Ez stimmel, kezdjük`; később
+  - [x] T6.1.2 A kcal-sáv opcionális, fölötte: „Ha a papíron van."
+  - [x] T6.1.3 „Egy étkezésre ez jön ki:" blokk élőben frissül gépelés közben.
+  - [x] T6.1.4 Első indításkor fölül a bevezető mondat, a gomb `Ez stimmel, kezdjük`; később
     `Mentés`.
-  - [ ] T6.1.5 Alul a figyelmeztetés egy sorban, és a verziósor: „Ketara {verzió} ·
+  - [x] T6.1.5 Alul a figyelmeztetés egy sorban, és a verziósor: „Ketara {verzió} ·
     Alapanyaglista: {n}. változat" (Tech 11.).
-- [ ] **S6.2 — Keret-ellenőrzés** (`src/domain/keret.ts`) · *Kész, ha:* a logikai hibák nem
+- [x] **S6.2 — Keret-ellenőrzés** (`src/domain/keret.ts`) · *Kész, ha:* a logikai hibák nem
   menthetők, a gyanús értékekre egyszer visszakérdez; tesztekkel.
-  - [ ] T6.2.1 Logikai hiba: alsó > felső; zsírsáv teteje < {min} × fehérjesáv alja. A hibás sor
+  - [x] T6.2.1 Logikai hiba: alsó > felső; zsírsáv teteje < {min} × fehérjesáv alja. A hibás sor
     alatt borostyán szöveg, mentés tiltva.
-  - [ ] T6.2.2 Gyanús érték a `config.json` küszöbeivel (kcal felső < 1200, ha van; fehérje felső
+  - [x] T6.2.2 Gyanús érték a `config.json` küszöbeivel (kcal felső < 1200, ha van; fehérje felső
     < 50 g; sávszélesség < a felső 10%-a): párbeszéd `Igen, így van` / `Javítom`, alacsony és
     szűk változattal.
-- [ ] **S6.3 — Első indítás végig** · *Kész, ha:* üres böngészőben a Keret → üres Tányér út
+- [x] **S6.3 — Első indítás végig** · *Kész, ha:* üres böngészőben a Keret → üres Tányér út
   végigmegy (e2e teszt).
-  - [ ] T6.3.1 Mentés után üres Tányér a `+ Alapanyag` és a nagy `Tányérjaim` gombbal (F 5.1).
-  - [ ] T6.3.2 A fejléc cél-sávja (CH · Fe · Zs ⚙) a Keretet nyitja (UX 3.).
-  - [ ] T6.3.3 Playwright: első indítás → Keret → Tányér.
+  - [x] T6.3.1 Mentés után üres Tányér a `+ Alapanyag` és a nagy `Tányérjaim` gombbal (F 5.1).
+  - [x] T6.3.2 A fejléc cél-sávja (CH · Fe · Zs ⚙) a Keretet nyitja (UX 3.).
+  - [x] T6.3.3 Playwright: első indítás → Keret → Tányér.
 
 ---
 
