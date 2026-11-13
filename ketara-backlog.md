@@ -1,9 +1,9 @@
-# Ketara — Fejlesztési backlog (alfa) v0.1
+# Ketara — Fejlesztési backlog (alfa) v0.2
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.2.*
-*Utolsó frissítés: 2026-11-13 (E1: ketara-app PR #2)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.3.*
+*Utolsó frissítés: 2026-11-13 (E2: modulonkénti egységtesztek követelményként)*
 
 ---
 
@@ -146,19 +146,46 @@ Forrás: PRD 6.3–6.4, Tech 6.*
     státusz, okok, feloldás-javaslatok).
   - [ ] T2.1.2 `MealTarget` számítása a napi keretből (napi sáv ÷ étkezésszám, pontos értékkel;
     PRD 6.1).
-- [ ] **S2.2 — A modulok portja** (Tech 6.1) · *Kész, ha:* minden modul átkerült, és
-  egységtesztje zöld.
+- [ ] **S2.2 — A modulok portja** (Tech 6.1, 6.4/2) · *Kész, ha:* minden modul átkerült, és
+  **minden modulnak saját egységteszt-fájlja van** (`tests/solver/unit/<modul>.test.ts`), amely
+  a modult közvetlenül hívja, nem csak a `solvePlate`-en keresztül, és zöld. Minden ticket
+  „Egységteszt" sora a minimum.
   - [ ] T2.2.1 `simplex.ts`: kétfázisú szimplex, Bland-szabály, `≤ / ≥ / =` sorok, `1e-9` tűrés.
+    *Egységteszt:* ismert optimum `≤`, `≥` és `=` sorokkal; negatív jobb oldal; nem megoldható
+    és nem korlátos → `null`; redundáns egyenlőség (mesterséges változó kivezetése); Bland
+    belépő és kilépő szabálya (holtversenynél rögzített csúcs; degenerált példán nem ciklizál);
+    a bemenet nem változik.
   - [ ] T2.2.2 `evaluate.ts`: makrók, kcal (4/4/9), arány, kilógás grammban egy grammkiosztásra.
+    *Egységteszt:* összegek 100 g-ra, kcal 4/4/9, kilógás és hiány makrónként, a hiányzó zsír
+    az arányhoz, `1e-9` alatti zaj nulla, fehérje nélkül az arány végtelen, a kcal nem dönt a
+    sávról, a referencia-távolság csak a nem rögzített sorokra számol.
   - [ ] T2.2.3 `stages.ts`: sávon belüli LP (minden szabad sor ≥ 1 g), kcal mint puha feltétel
     (előbb kcal-lal, aztán nélküle); a ⚠ ág a 0 g-os halmazokkal, a legkevesebbtől.
+    *Egységteszt:* sávon belüli törtgrammos tányér, minden szabad sor ≥ 1 g; kcal-mód `null`,
+    ha a kcal nem teljesíthető, és a kcal-sávon belül marad, ha igen; ⚠ mód előbb az arányt,
+    aztán a kilógást csökkenti; a 0 g-os halmaz sora 0 g; döntetlennél a korábbi sor marad a
+    referenciánál; a ⚠ ág a legkevesebb 0 g-os sort választja.
   - [ ] T2.2.4 `compare.ts`: a ⚠-sorrend kulcsa (arány → kilógás → 0 g-os sorok → referencia →
     sorrend szerinti döntetlen; PRD 6.3).
+    *Egységteszt:* a kulcs elemeinek sorrendje és egymás előtti elsőbbsége; a kcal csak sávon
+    belül számít; a 0 g-os sor a sávon belüli tányért is hátrébb sorolja; a `less` szigorú
+    (döntetlennél a korábbi marad); hat tizedesre kerekítés.
   - [ ] T2.2.5 `rounding.ts`: egész grammra kerekítés, ±1 g, majd ±2 g keresés; ha így sincs
     sávon belüli, ⚠ a kerekítés okával.
+    *Egységteszt:* sima kerekítés megmarad, ha sávon belüli; ±1 g javít; ±2 g sem segít → nem
+    sávon belüli; a rögzített gramm nem változik, a 0 g-os sor 0 marad, a többi ≥ 1 g; a gyors
+    pontozó véletlen bemeneten ugyanazt adja, mint a sima `evaluate` + kulcs keresés.
   - [ ] T2.2.6 `solvePlate.ts`: teljes futás — 3 alatt nem számol; minden rögzítve →
     kiértékelés; egyenkénti feloldás-előzetes rögzítésenként; „mindet feloldva" előzetes, ha
     egyik sem hoz sávba (PRD 6.4).
+    *Egységteszt:* minden ág (✓, ⚠ rögzítés nélkül, egy rögzítés zsákutcával, több rögzítés
+    „mindet feloldva" előzetessel); egyforma feloldásoknál a korábbi rögzítést ajánlja; két
+    egyforma sornál a korábbi marad a referenciánál, és a sorok cseréje csak ezt cseréli fel;
+    a rögzített gramm az előzetesekben sem változik.
+  - [ ] T2.2.7 `mealTarget.ts` (T2.1.2): *Egységteszt:* napi sáv ÷ étkezésszám mindkét határra,
+    pontos értékkel (70 ÷ 3); kcal-sáv nélkül `null`; az arány-minimum változatlan.
+  - [ ] T2.2.8 *Egységtesztek ereje:* a modul egy-egy szándékos hibáját (pl. Bland kilépő
+    szabályának elhagyása, a feloldás-döntetlen megfordítása) legalább egy egységteszt elkapja.
 - [ ] **S2.3 — A PRD példái mint tesztek** (Tech 6.4/1) · *Kész, ha:* a dokumentumok minden
   számszerű példája rögzített tesztként zöld.
   - [ ] T2.3.1 PRD 6.4 ✓ példa: 137 g tojás / 100 g brokkoli / 31 g olaj; CH 8,0 · Fe 20,1 ·
@@ -168,7 +195,7 @@ Forrás: PRD 6.3–6.4, Tech 6.*
   - [ ] T2.3.3 A Folyamatok 5. fejezetének összes számszerű vázlata.
   - [ ] T2.3.4 A PRD 7. peremesetei, amelyek számot adnak (0 g-ra szorulás, kerekítés miatti ⚠,
     kcal-megjegyzés, minden rögzítve).
-- [ ] **S2.4 — Orákulum-teszt** (Tech 6.4/2) · *Kész, ha:* több ezer véletlen tányéron a TS-port
+- [ ] **S2.4 — Orákulum-teszt** (Tech 6.4/3) · *Kész, ha:* több ezer véletlen tányéron a TS-port
   grammra pontosan egyezik a prototípussal.
   - [ ] T2.4.1 A prototípus `solver.js`-ének bemásolása `tests/oracle/`-be (forrás: projekt
     mappa `ux/prototipus/src/solver.js`; a `ketara-artifacts` repóban nincs benne), változtatás
@@ -177,8 +204,9 @@ Forrás: PRD 6.3–6.4, Tech 6.*
     kcal-sávval és anélkül; rögzített seed, hogy egy hiba újrajátszható legyen.
   - [ ] T2.4.3 Összevetés: grammok, státusz, ⚠-okok, feloldás-javaslat. Eltérésnél a teszt
     kiírja a bemenetet.
-- [ ] **S2.5 — Tulajdonság-alapú tesztek** (Tech 6.4/3) · *Kész, ha:* a fast-check tesztek
-  zöldek.
+- [ ] **S2.5 — Tulajdonság-alapú tesztek** (Tech 6.4/4) · *Kész, ha:* a fast-check tesztek
+  zöldek. Integrációs vagy végponttól végpontig teszt az E2-ben nincs, mert még nincs
+  felület; ezek az S7.7, S8.5 és S9.5 Playwright-tesztjei.
   - [ ] T2.5.1 ✓ esetén minden makró és az arány a sávon belül van a kiírt egész grammokon.
   - [ ] T2.5.2 Sávon belül minden szabad sor ≥ 1 g; nincs negatív gramm; a rögzített gramm nem
     változik.
@@ -567,3 +595,4 @@ dönteni kell róluk.
 | 2026-11-13 | Egyelőre nincs saját domain; az alfa a GitHub Pages címén fut | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak |
 | 2026-11-13 | Szénhidrát rosttal együtt (a korábbi „rost nélkül” aznap felülírva) | az orvos a rosttal együtti CH-t nézi |
 | 2026-11-13 | Az epicek a Tech terv 14. munkasorrendjét követik, E0 a felhasználó előfeltételeivel | egy sorrend a tervben és a backlogban |
+| 2026-11-13 | Minden megoldó-modulnak saját egységteszt-fájl kell (S2.2, T2.2.1–T2.2.8) | a felhasználó kérése a ketara-app PR #3 átnézése után: a modulok addig csak a `solvePlate`-en keresztül voltak tesztelve, és két szándékos hiba átment |
