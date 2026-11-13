@@ -1,6 +1,6 @@
-# Ketara — UX-terv v0.5
+# Ketara — UX-terv v0.6
 
-*Kísérőanyag a PRD v1.2-höz és a Folyamatok és képernyők v0.9-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.3-hoz és a Folyamatok és képernyők v0.10-hez. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
 *Utolsó frissítés: 2026-11-13*
 
@@ -9,7 +9,8 @@ fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 á
 változásokat követi: `Kész` gomb a `Mentés így` helyett, egységes „(nyersen)", belépési
 kód, hozzájárulás-kapu; és a PR auditját (2026-10-24): navigáció, ⚠ panel, megerősítési
 szabály, fiók blokk, `Hozzáadás (3)`. A v0.5 (2026-11-13) a PRD v1.2-t követi: nincs
-fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszközön marad.
+fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszközön marad. A v0.6
+(2026-11-13) a tech terv interjújából az iOS-tippet adja hozzá (2. fejezet).
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -47,6 +48,11 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 - **Nincs fiók, minden az eszközön.** Nincs belépés, nincs szinkron: a megoldó és az
   adatok az eszközön vannak, hálózat nélkül is működik (PRD 6.6). Nincs offline-jelzés,
   mert nincs mihez képest offline lenni.
+- **iOS-tipp a kezdőképernyőről** (v0.6). iPhone-on, Safariban, ha a Ketara nem a
+  kezdőképernyőről fut, a Tányér tetején, a fejléc alatt egy keskeny, semleges színű
+  sáv jelenik meg (nem ⚠-szín, nem modális), egy `Értem` gombbal. Bezárás után soha nem
+  jön vissza. Ok: a Safari egy hét szünet után törölheti a nem telepített oldal adatait
+  (PRD 6.6). Szöveg: Folyamatok 7.
 - **Az utolsó tányér megmarad.** Ha a felhasználó bezárja az appot főzés közben, és
   újranyitja, ugyanaz a tányér várja, ugyanazokkal a rögzítésekkel. Ez az **aktuális
   tányér**-t a `Kész` vagy egy új tányér törli (PRD 6.6). A mentett tányér ettől függetlenül rögzítés nélkül nyílik.
@@ -306,6 +312,7 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
 | Hogy néz ki számítógépen? (2026-10-08) | Ugyanaz az oszlop, középre igazítva (2. fejezet) |
 | Kövesse-e a prototípus a v1.1-et? (2026-10-24) | Igen, a PR #4-ben frissítve (11. fejezet) |
 | Marad-e fiók, belépés, szinkron? (2026-11-13) | Nem: minden az eszközön (PRD v1.2, 5. és 6.6) |
+| Kérje-e iPhone-on a kezdőképernyőre tételt? (2026-11-13) | Igen, egyszeri, bezárható sávval (2. fejezet) |
 
 ## 11. A prototípusról
 
