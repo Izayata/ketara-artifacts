@@ -60,16 +60,17 @@ PRD 8.1.*
 
 - [ ] **S0.1 — GitHub beállítva a deployhoz** · *Kész, ha:* a `ketara-app` repóból GitHub
   Actions-szel lehet Pages-re deployolni.
-  - [ ] T0.1.1 👤 GitHub Pro előfizetés a `Izayata` fiókra (privát repóból csak így van Pages).
-  - [ ] T0.1.2 👤 `ketara-app` → Settings → Pages → *Source: GitHub Actions*.
+  - [x] T0.1.1 👤 GitHub Pro előfizetés a `Izayata` fiókra (privát repóból csak így van Pages).
+  - [x] T0.1.2 👤 `ketara-app` → Settings → Pages → *Source: GitHub Actions*.
   - [ ] T0.1.3 👤 Branch-védelem a `main`-en: PR kötelező, a CI zöldje kötelező (a CI-job neve
     az E1 után ismert).
-- [ ] **S0.2 — Saját domain eldöntve** (Tech 12., 15./1) · *Kész, ha:* tudjuk, marad-e a
+- [x] **S0.2 — Saját domain eldöntve** (Tech 12., 15./1) · *Kész, ha:* tudjuk, marad-e a
   `izayata.github.io/ketara-app`, vagy saját domain jön. **A külső tesztelők előtt kell**, mert
   a tárolt adat a címhez kötött.
-  - [ ] T0.2.1 👤 Döntés: kell-e saját domain, és mi legyen.
-  - [ ] T0.2.2 👤 Ha igen: domain megvásárlása, DNS-rekordok a Pages-hez.
-  - [ ] T0.2.3 Ha igen: `CNAME` a buildbe, Vite `base` átállítása `/`-re (Tech 9.).
+  - [x] T0.2.1 👤 Döntés: kell-e saját domain, és mi legyen. → **Egyelőre nem** (2026-11-13); az alfa a `izayata.github.io/ketara-app` címen fut.
+  - [x] ~~T0.2.2 👤 Ha igen: domain megvásárlása, DNS-rekordok a Pages-hez.~~ Nem kell.
+  - [x] ~~T0.2.3 Ha igen: `CNAME` a buildbe, Vite `base` átállítása `/`-re (Tech 9.).~~ Nem kell.
+  - *Ha később mégis jön domain: a tesztelők addigi adatai a régi címen maradnak (Tech 12.).*
 - [ ] **S0.3 — Dietetikusi átnézés** (PRD 8.1/1–2, Tech 15./2) · *Kész, ha:* a küszöbök, a
   figyelmeztetés szövege és a szénhidrát-értelmezés megerősítve. Nem blokkolja a fejlesztést,
   csak az alfát (E12).
@@ -79,9 +80,9 @@ PRD 8.1.*
   - [ ] T0.3.3 👤 Nettó vagy teljes szénhidrát: a papír melyiket érti? (Ha nettó, az
     alapanyaglista formátuma és a dokumentumok is változnak.)
   - [ ] T0.3.4 👤 A kategória-alapértékek (100 / 10 / 100 / 30 / 50 / 50 g) rendben vannak-e.
-- [ ] **S0.4 — Alfa-tesztelők** (PRD 8.1/3, Tech 15./3) · *Kész, ha:* megvan 3–5 ketogén
+- [x] **S0.4 — Alfa-tesztelők** (PRD 8.1/3, Tech 15./3) · *Kész, ha:* megvan 3–5 ketogén
   étrendet követő tesztelő és egy időpont.
-  - [ ] T0.4.1 👤 Tesztelők kiválasztása és megkeresése.
+  - [x] T0.4.1 👤 Tesztelők kiválasztása és megkeresése.
 
 ---
 
@@ -109,6 +110,7 @@ PRD 8.1.*
   - [ ] T1.3.1 `.github/workflows/ci.yml`: install → `tsc` → ESLint → (később `validate-data`) →
     Vitest → `vite build` → Playwright (Tech 11.).
   - [ ] T1.3.2 pnpm-cache a CI-ban, hogy gyors maradjon.
+  - [ ] T1.3.3 👤 Az első CI-futás után a CI-job felvétele kötelező ellenőrzésként a `main` védelmébe (T0.1.3 második fele).
 - [ ] **S1.4 — Deploy a `main`-ről** · *Kész, ha:* merge után pár percen belül az új verzió a
   Pages URL-en van. (Függ: S0.1.)
   - [ ] T1.4.1 `.github/workflows/deploy.yml`: build → `actions/upload-pages-artifact` →
@@ -548,4 +550,5 @@ dönteni kell róluk.
 | Dátum | Döntés | Indok |
 |---|---|---|
 | 2026-11-13 | Backlog epic → story → ticket bontásban, egy `.md` fájlban, pipálható listákkal | a felhasználó kérése |
+| 2026-11-13 | Egyelőre nincs saját domain; az alfa a GitHub Pages címén fut | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak |
 | 2026-11-13 | Az epicek a Tech terv 14. munkasorrendjét követik, E0 a felhasználó előfeltételeivel | egy sorrend a tervben és a backlogban |
