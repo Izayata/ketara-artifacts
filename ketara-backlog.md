@@ -39,7 +39,7 @@
 
 **Mérföldkövek**
 
-- [ ] **M1 — Üres oldal élesben:** E0 (a Pages-hez szükséges része) + E1 kész; a Pages URL-en
+- [x] **M1 — Üres oldal élesben:** E0 (a Pages-hez szükséges része) + E1 kész; a Pages URL-en
   megnyílik a „Ketara" oldal.
 - [ ] **M2 — A motor kész:** E2 + E3 kész; a megoldó a prototípussal egyezik, az alapanyaglista
   ellenőrizve.
@@ -62,7 +62,7 @@ PRD 8.1.*
   Actions-szel lehet Pages-re deployolni.
   - [x] T0.1.1 👤 GitHub Pro előfizetés a `Izayata` fiókra (privát repóból csak így van Pages).
   - [x] T0.1.2 👤 `ketara-app` → Settings → Pages → *Source: GitHub Actions*.
-  - [ ] T0.1.3 👤 Branch-védelem a `main`-en: PR kötelező, a CI zöldje kötelező (a CI-job neve
+  - [x] T0.1.3 👤 Branch-védelem a `main`-en: PR kötelező, a CI zöldje kötelező (a CI-job neve
     az E1 után ismert).
   - [ ] T0.1.4 👤 Helyi gépen: Node 26 és pnpm telepítve (`node -v` → v26.x, `pnpm -v`).
     Csak ha helyben is futtatnád az appot; a CI nélküle is működik.
@@ -117,12 +117,12 @@ PRD 8.1.*
   - [x] T1.2.1 Vitest + fast-check; egy mintateszt.
   - [x] T1.2.2 Playwright mobil nézettel (pl. Pixel 7 és iPhone 14 emuláció) a buildelt appon
     (`vite preview`); egy mintateszt.
-- [ ] **S1.3 — CI minden PR-on** · *Kész, ha:* egy hibás PR piros, egy jó zöld.
+- [x] **S1.3 — CI minden PR-on** · *Kész, ha:* egy hibás PR piros, egy jó zöld.
   - [x] T1.3.1 `.github/workflows/ci.yml`: Node a `.nvmrc`-ből (`actions/setup-node`), pnpm
     (`pnpm/action-setup`), `pnpm install --frozen-lockfile` → `tsc` → ESLint → (később `validate-data`) →
     Vitest → `vite build` → Playwright (Tech 11.).
   - [x] T1.3.2 pnpm-cache a CI-ban, hogy gyors maradjon.
-  - [ ] T1.3.3 👤 Az első CI-futás után a CI-job felvétele kötelező ellenőrzésként a `main` védelmébe (T0.1.3 második fele).
+  - [x] T1.3.3 👤 Az első CI-futás után a CI-job felvétele kötelező ellenőrzésként a `main` védelmébe (T0.1.3 második fele).
 - [x] **S1.4 — Deploy a `main`-ről** · *Kész, ha:* merge után pár percen belül az új verzió a
   Pages URL-en van. (Függ: S0.1.)
   - [x] T1.4.1 `.github/workflows/deploy.yml`: build → `actions/upload-pages-artifact` →
