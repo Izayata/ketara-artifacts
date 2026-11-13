@@ -1,6 +1,6 @@
-# Ketara — Folyamatok és képernyők v0.9
+# Ketara — Folyamatok és képernyők v0.10
 
-*Kísérőanyag a PRD v1.2-höz. Minden döntés onnan származik.*
+*Kísérőanyag a PRD v1.3-hoz. Minden döntés onnan származik.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -556,6 +556,9 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Keret, gyanúsan szűk | Ez a sáv nagyon szűk, kevés tányér fog beleférni. Biztosan így van a papíron? |
 | Keret, lehetetlen (alsó > felső) | Az alsó határ nagyobb a felsőnél. Nézd meg a papírt. |
 | Keret, lehetetlen (arány) | A zsírsáv teteje kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jönne ki. |
+| iOS-tipp (Tányér teteje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
+| A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |
+| Verzió (Keret alja) | Ketara {verzió} · Alapanyaglista: {n}. változat |
 | Figyelmeztetés (Keret alja) | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust. |
 
 

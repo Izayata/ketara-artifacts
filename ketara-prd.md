@@ -1,7 +1,8 @@
-# Ketara — PRD v1.2
+# Ketara — PRD v1.3
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
+*Tech terv: `ketara-tech-terv.md`.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -350,6 +351,14 @@ eszközt.
 - **Vállalt kockázat:** ha a felhasználó törli a böngésző adatait, vagy elveszíti a
   telefont, az adatai elvesznek. A keret újra beírható a papírról; a tányérok és a saját
   alapanyagok elvesznek. Export v1-ben nincs (10. Dísz).
+- **Az adat védelme a böngészőtől:** első indításkor a termék tartós tárolást kér a
+  böngészőtől. iPhone-on a Safari egy weboldal adatait 7 nap használat nélkül törölheti,
+  ha az oldal nincs a kezdőképernyőre téve; ezért iOS Safariban, ha a Ketara nem a
+  kezdőképernyőről fut, a Tányér tetején egy **egyszeri, bezárható tipp** kéri, hogy
+  tegye a kezdőképernyőre. Bezárás után nem jön vissza. Androidon és számítógépen nem
+  jelenik meg.
+- **Ha a böngésző nem enged menteni** (pl. privát böngészés), a termék működik, de egy
+  sávban kiírja, hogy bezáráskor minden elveszik.
 - **Visszavonható törlés** (tányér, sor): a törlés ~5 mp-ig visszavonható, megerősítő
   kérdés nélkül.
 
@@ -381,6 +390,8 @@ eszközt.
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
 | Első indítás | Keret → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
 | Nincs hálózat | Minden helyben működik. |
+| iPhone, Safari, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |
+| A böngésző nem enged menteni | Működik, de kiírja, hogy bezáráskor minden elveszik (6.6). |
 | Másik eszköz vagy másik böngésző | A Ketara üresen indul, a Keret kitöltésével; az adatok nem költöznek át (6.6). |
 | A böngésző adatai törölve | Mint az első indítás: a keret, a tányérok és a saját alapanyagok elvesztek (vállalt kockázat, 6.6). |
 | Saját alapanyag törlése, amit mentett tányér használ | A megerősítés felsorolja a tányérokat; törléskor a sor kikerül belőlük. Az üressé váló tányér törlődik; a 3-nál kevesebb sorú megmarad, és hiányos állapotban nyílik. |
@@ -469,6 +480,10 @@ frissítve.
 analitika — az igény még nincs igazolva · minden adat az eszközön, egy eszköz, egy böngésző
 · export nincs, az adatvesztés vállalt kockázat · a jogi szövegekből csak az egészségügyi
 figyelmeztetés marad · a v1.1 megoldó- és képernyőszabályai változatlanok.
+
+**Lezárva v1.3-ban (2026-11-13, tech terv):** a kcal-sáv mindenhol 4/4/9-cel számol, a
+gondozott lista kcal-értéke csak ellenőrző adat · egyszeri iOS-tipp a kezdőképernyőre
+tételhez, tartós tárolás kérése · a gondozott listát a projektgazda állítja össze.
 
 ## 9. Feltételezés-nyilvántartás
 
@@ -614,7 +629,13 @@ figyelmeztetés marad · a v1.1 megoldó- és képernyőszabályai változatlano
 | 2026-11-13 | **Vissza a termék- és UX-definícióhoz: nincs fiók, belépés, szinkron, szerver, adatbázis, analitika.** Visszavonja a 2026-10-08-i fiók/szinkron és analitika döntést, valamint a 10-24-i fiók-, hozzájárulás-, belépés-, megőrzés- és analitika-döntéseket | a projektgazda döntése: igény nélkül egy teljes alkalmazás megépítése kockázatos és drága. A v1.1 megoldó- és képernyőszabályai maradnak |
 | 2026-11-13 | **Minden adat az eszközön**, export nélkül; az adatvesztés vállalt kockázat | a 0.9-es „egy telefon, egy ember" visszaáll; az export dísz |
 
+| 2026-11-13 | **Egyszeri iOS-tipp a kezdőképernyőre tételhez**; tartós tárolás kérése | az iOS Safari 7 nap használat nélkül törli a nem telepített oldal adatait; export nincs, így ez a legvalószínűbb adatvesztés |
+| 2026-11-13 | **A kcal mindenhol 4/4/9**; a gondozott lista kcal-értéke ellenőrző adat | egy szabály a gondozott és a saját alapanyagra (tech terv 5.3) |
+
 ## Javítások
+
+- **v1.3:** a tech terv (`ketara-tech-terv.md`) interjújából: 6.6 kiegészítve az iOS-tippel,
+  a tartós tárolással és a mentést nem engedő böngészővel; két új peremeset (7.).
 
 - **v1.2:** a 2026-11-13-i döntés (fiók, szinkron, szerver, analitika nélkül) szerint
   törölve a 6.6 Fiók és szinkron, a 6.7 jogi szövegeiből az adatvédelmi tájékoztató és a
