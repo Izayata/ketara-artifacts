@@ -2,7 +2,7 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.3, Folyamatok és képernyők v0.10, UX-terv v0.6, Tech terv v0.2.*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, Tech terv v0.2.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -79,8 +79,8 @@ PRD 8.1.*
   - [ ] T0.3.2 👤 Az egészségügyi figyelmeztetés szövege jóváhagyva → `src/texts/hu.ts`.
   - [x] T0.3.3 👤 Nettó vagy teljes szénhidrát? → **Rosttal együtt** (2026-11-13), mert az orvos
     ezt nézi; a Tech terv v0.2 5.1 szerint.
-  - [ ] T0.3.5 👤 Saját alapanyag: kell-e „Rost” mező, mert a csomagoláson a CH rost nélkül áll
-    (Tech 15./4)? A döntés után a PRD 6.5, a Folyamatok 6.2 és az S10.1 frissül.
+  - [x] T0.3.5 👤 Saját alapanyag: kell-e „Rost” mező? → **Nem, csak egy emlékeztető sor** a
+    szénhidrát alatt (2026-11-13; PRD 6.5, Folyamatok 6.2, T10.1.5).
   - [ ] T0.3.4 👤 A kategória-alapértékek (100 / 10 / 100 / 30 / 50 / 50 g) rendben vannak-e.
 - [x] **S0.4 — Alfa-tesztelők** (PRD 8.1/3, Tech 15./3) · *Kész, ha:* megvan 3–5 ketogén
   étrendet követő tesztelő és egy időpont.
@@ -472,6 +472,7 @@ Forrás: PRD 4.3, 6.5, 7.; F 6.1, 6.2; UX 6.*
   - [ ] T10.1.3 Egyedi név (a gondozott és a saját tételek között is, kis- és nagybetűtől
     függetlenül).
   - [ ] T10.1.4 „Nincs találat" → a beírt szöveg a névmezőben; mentés után a tányérra kerül.
+  - [ ] T10.1.5 Emlékeztető sor a szénhidrát mező alatt, mindig látszik: „Ha a csomagoláson külön sorban van a rost, add hozzá a szénhidráthoz." (F 6.2).
 - [ ] **S10.2 — Szerkesztés és törlés** · *Kész, ha:* a „…" menüből szerkeszthető és törölhető,
   a tányérokra gyakorolt hatással együtt; tesztekkel.
   - [ ] T10.2.1 Szerkesztés (ugyanaz a lap, kitöltve): név, kategória, tápérték.
@@ -545,8 +546,8 @@ dönteni kell róluk.
 2. **A prototípus forrása** (`solver.js`, `app.html`) nincs a `ketara-artifacts` repóban, csak a
    projekt mappában (`ux/prototipus/src/`). Az orákulum-teszt (S2.4) és a tipp-logika portja
    (S8.3) ebből dolgozik.
-3. **A Tech terv 1.** még „PRD v1.2 teljes v1-es scope"-ot ír; az aktuális a v1.3 (csak az
-   iOS-tippel bővült, a scope ugyanaz).
+3. **A Tech terv 1.** még „PRD v1.2 teljes v1-es scope"-ot ír; az aktuális a v1.4 (csak az
+   iOS-tippel és a szénhidrát pontosításával bővült, a scope ugyanaz).
 
 ## Döntésnapló
 

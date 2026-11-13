@@ -1,4 +1,4 @@
-# Ketara — PRD v1.3
+# Ketara — PRD v1.4
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
@@ -51,7 +51,8 @@ telefon, a saját dietetikusi papírjával.
    szerkeszthető, de a termék nem kínálja ismétlődő feladatként.
 2. **Alapanyaglista** — v1-ben kb. 40–60 kézzel gondozott alapanyag, 100 g-ra vetített
    tápértékkel, **nyers súlyra**. A tápértékek forrása az **USDA FoodData Central**
-   (közkincs, nyers értékek); a neveket magyarra fordítjuk. Összetétele **keto-súlypontú**: zsiradékok, húsok,
+   (közkincs, nyers értékek); a neveket magyarra fordítjuk. A szénhidrát **rosttal együtt**
+   értendő (az USDA „by difference” értéke), mert az orvos így számol. Összetétele **keto-súlypontú**: zsiradékok, húsok,
    tojás, sajtok, alacsony szénhidráttartalmú zöldségek; a gabonaköret és a gyümölcs
    kategória is megmarad. Kevés tétel, szűk kör — ez könnyíti az összeállítást. Nem
    korlátozódik magyar alapanyagokra: a lista alapanyag szerint épül, nem konyha szerint.
@@ -298,7 +299,9 @@ az arány kér (39 g):
 - Ha a ⚠ oka a kerekítés (6.3), a szöveg ezt mondja ki.
 
 ### 6.5 Mentés
-**Saját alapanyag:** név + kategória + 100 g tápérték, nyers súlyra. Bekerül a listába,
+**Saját alapanyag:** név + kategória + 100 g tápérték, nyers súlyra. A szénhidrát itt is
+rosttal együtt értendő; mivel a magyar csomagolás rost nélkül adja meg, a szénhidrát mező
+alatt egy sor emlékeztet, hogy a külön feltüntetett rostot adja hozzá. Bekerül a listába,
 kereshető. Szerkeszthető (név, kategória, tápérték) és törölhető. Ha a törölt alapanyag
 mentett tányérokban szerepel, a megerősítő kérdés felsorolja őket; törléskor a sor kikerül
 belőlük. Az így üressé váló tányér törlődik; a 3-nál kevesebb sorral maradó tányér megmarad,
@@ -631,6 +634,7 @@ tételhez, tartós tárolás kérése · a gondozott listát a projektgazda áll
 
 | 2026-11-13 | **Egyszeri iOS-tipp a kezdőképernyőre tételhez**; tartós tárolás kérése | az iOS Safari 7 nap használat nélkül törli a nem telepített oldal adatait; export nincs, így ez a legvalószínűbb adatvesztés |
 | 2026-11-13 | **A kcal mindenhol 4/4/9**; a gondozott lista kcal-értéke ellenőrző adat | egy szabály a gondozott és a saját alapanyagra (tech terv 5.3) |
+| 2026-11-13 | **Szénhidrát rosttal együtt**; a Saját alapanyag lapon egy emlékeztető sor, hogy a csomagoláson külön álló rostot hozzá kell adni (nincs külön Rost mező) | az orvos a rosttal együtti CH-t nézi; a magyar csomagolás rost nélkül adja meg |
 
 ## Javítások
 

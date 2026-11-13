@@ -1,6 +1,6 @@
-# Ketara — Folyamatok és képernyők v0.10
+# Ketara — Folyamatok és képernyők v0.11
 
-*Kísérőanyag a PRD v1.3-hoz. Minden döntés onnan származik.*
+*Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -401,6 +401,8 @@ Nincs találat esetén: *„Nincs ilyen a listában. Felviszed sajátként?"* �
 │                                  │
 │ 100 grammban, nyersen            │
 │ Szénhidrát  [  4 ] g             │
+│  Ha a csomagoláson külön sorban  │
+│  van a rost, add hozzá.          │
 │ Fehérje     [ 13 ] g             │
 │ Zsír        [  1 ] g             │
 │                                  │
@@ -413,6 +415,9 @@ A kategória választógombsor (hat elem, egy kijelölt; UX 6), nem legördülő
 **A kategória kötelező, és ez nem adminisztráció:** ebből jön az alapérték, amihez a
 megoldó horgonyoz az első használatnál. Ha nincs kategória, az első javaslat vaktában
 születik.
+
+**Rost.** A szénhidrát rosttal együtt értendő (PRD 4.2), a magyar csomagolás viszont rost
+nélkül adja meg. Ezért a szénhidrát mező alatt mindig ott áll egy másodlagos sor: *„Ha a csomagoláson külön sorban van a rost, add hozzá a szénhidráthoz."* Külön Rost mező nincs.
 
 **Ellenőrzés:** CH + fehérje + zsír ≤ 100 g. Ha nem, a szöveg: *„100 grammban ennyi nem
 fér el. Nézd meg a csomagolást."* Nem „érvénytelen bevitel".
@@ -530,6 +535,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Választó ⚠-ból nyitva | A {makróhoz} ezek segítenek a legtöbbet. |
 | Választó, saját | + Saját alapanyag |
 | Nincs keresési találat | Nincs ilyen a listában. Felviszed sajátként? |
+| Saját alapanyag, a szénhidrát mező alatt | Ha a csomagoláson külön sorban van a rost, add hozzá a szénhidráthoz. |
 | Érvénytelen tápérték | 100 grammban ennyi nem fér el. Nézd meg a csomagolást. |
 | Tányérjaim, üres | Még nincs mentett tányérod. Számolj ki egyet, és mentsd el — legközelebb innen indulhatsz. |
 | Mentett tányér megnyitva | {Tányér neve} — a mai célra újraszámolva. |

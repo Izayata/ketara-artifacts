@@ -1,7 +1,7 @@
 # Ketara — Tech terv (alfa) v0.2
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
-*Alapja: PRD v1.3, Folyamatok és képernyők v0.10, UX-terv v0.6, prototípus v1.1.*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.11, UX-terv v0.7, prototípus v1.1.*
 *Utolsó frissítés: 2026-11-13*
 
 ---
@@ -135,7 +135,8 @@ szénhidrátot nézi (a felhasználó döntése, 2026-11-13). A listába ezért 
 **Figyelem, saját alapanyag:** a magyar és az EU-s csomagolásokon a „Szénhidrát" sor
 **rost nélkül** szerepel, a rost (ha fel van tüntetve) külön sorban. Ha a felhasználó a
 csomagolásról a szénhidrátot írja be, a saját alapanyag kevesebb CH-t kap, mint a
-valóság. Hogyan kezeljük: 15./4.
+valóság. Ezért a Saját alapanyag lapon a szénhidrát mező alatt egy emlékeztető sor áll
+(Folyamatok 6.2); külön Rost mező nincs (15./4).
 
 ### 5.2 A fájl szerkezete és verziózása
 
@@ -463,9 +464,8 @@ listájával is tesztelhető, amíg az nincs kész.
 1. ~~**Saját domain:** kell-e, és mi legyen?~~ Eldöntve 2026-11-13: egyelőre nincs (12.).
 2. ~~**Nettó vagy teljes szénhidrát**~~ Eldöntve 2026-11-13: rosttal együtt (5.1).
 3. ~~**Alfa-tesztelők:** kik és mikor?~~ 2026-11-13: a felhasználó megtalálta őket.
-4. **Saját alapanyag szénhidrátja:** a csomagoláson a CH rost nélkül áll, a lista rosttal
-   együtt számol (5.1). Kell-e a Saját alapanyag lapra egy „Rost" mező, amit az app hozzáad
-   a CH-hoz? (Termékdöntés, a PRD 6.5-öt és a Folyamatok 6.2-t is érinti.)
+4. ~~**Saját alapanyag szénhidrátja:** kell-e „Rost" mező?~~ Eldöntve 2026-11-13: nem, csak
+   egy emlékeztető sor a szénhidrát mező alatt (PRD 6.5, Folyamatok 6.2).
 
 ## Döntésnapló
 
