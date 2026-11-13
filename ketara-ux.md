@@ -1,14 +1,15 @@
-# Ketara — UX-terv v0.4
+# Ketara — UX-terv v0.5
 
-*Kísérőanyag a PRD v1.1-hez és a Folyamatok és képernyők v0.8-hoz. A viselkedést azok
+*Kísérőanyag a PRD v1.2-höz és a Folyamatok és képernyők v0.9-hez. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-10-24*
+*Utolsó frissítés: 2026-11-13*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
 fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
 változásokat követi: `Kész` gomb a `Mentés így` helyett, egységes „(nyersen)", belépési
 kód, hozzájárulás-kapu; és a PR auditját (2026-10-24): navigáció, ⚠ panel, megerősítési
-szabály, fiók blokk, `Hozzáadás (3)`.
+szabály, fiók blokk, `Hozzáadás (3)`. A v0.5 (2026-11-13) a PRD v1.2-t követi: nincs
+fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszközön marad.
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -27,8 +28,6 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 5. **Nincs várakozás.** A megoldó kis lineáris programokkal dolgozik (egy tányéron
    legfeljebb 8 alapanyag): a számolás észrevétlen. Nincs pörgő ikon, nincs „Számolás…" gomb.
 6. **Öt képernyő.** Minden új igény előbb egy meglévő képernyő állapotaként próbálkozik.
-   (A Belépés eszközönként, a Hozzájárulás fiókonként és szövegverziónként egyszer
-   látszik; nem számítanak bele.)
 
 ---
 
@@ -38,21 +37,19 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
   Androidon is természetesek: alsó lapok, numerikus billentyűzet, bal felső vissza-gomb
   (a rendszer-visszalépés mellett). Platformspecifikus minta (iOS-kapcsoló, Android FAB)
   nincs.
-- **Böngészőben fut** (nyilvános weboldal, PRD 2). Telefonon teljes képernyős; a kezdőképernyőre
+- **Böngészőben fut** (weboldal, PRD 2). Telefonon teljes képernyős; a kezdőképernyőre
   tehető, így appként nyílik.
 - Álló tájolás, egy oszlop. **Számítógépen ugyanez az oszlop, középre igazítva** (a
   felhasználó döntése); külön asztali elrendezés nincs. Tablet és fekvő nézet v1-ben nincs.
 - Csak magyar nyelv, tegező hangnem (PRD 10: több nyelv „dísz").
 - Csak világos téma (PRD 10: sötét mód „dísz"). A színek úgy készülnek, hogy később
   sötét változat is kijöhessen belőlük.
-- **Fiók, de a konyhában észrevétlen.** A belépés eszközönként egyszer történik. Utána
-  minden helyben fut: a megoldó és az adatok az eszközön vannak, hálózat nélkül is
-  működik, a szinkron a háttérben megy. A Tányéron nincs szinkron- vagy offline-jelzés; a
-  szinkron állapota csak a Keret alján, a Fiók blokkban látszik (8. fejezet).
+- **Nincs fiók, minden az eszközön.** Nincs belépés, nincs szinkron: a megoldó és az
+  adatok az eszközön vannak, hálózat nélkül is működik (PRD 6.6). Nincs offline-jelzés,
+  mert nincs mihez képest offline lenni.
 - **Az utolsó tányér megmarad.** Ha a felhasználó bezárja az appot főzés közben, és
   újranyitja, ugyanaz a tányér várja, ugyanazokkal a rögzítésekkel. Ez az **aktuális
-  tányér** csak az eszközön van, nem szinkronizál; a `Kész` vagy egy új tányér törli (PRD
-  6.6). A mentett tányér ettől függetlenül rögzítés nélkül nyílik.
+  tányér**-t a `Kész` vagy egy új tányér törli (PRD 6.6). A mentett tányér ettől függetlenül rögzítés nélkül nyílik.
 
 ---
 
@@ -249,38 +246,17 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
   mentett munka, egy sor: „A mostani tányér nincs elmentve. Lecseréled?" (Lecserélem /
   Mégse).
 - Hosszú nyomás vagy „…" menü: `Átnevezés` · `Törlés` (visszavonással: „Törölve: {Név}.
-  Visszavonás"). A törlés a visszavonási ablak alatt csak az eszközön van meg, és csak az
-  ablak bezárulása után szinkronizál (PRD 6.6).
+  Visszavonás").
 - Üres állapot: a Folyamatok 6.3 szövege.
 - `+ Új tányér`: üres Tányér (ugyanaz a figyelmeztetés, ha van nem mentett munka).
 
 ---
 
-## 8. Belépés, Keret és első indítás
+## 8. Keret és első indítás
 
-### 8.1 Belépés és hozzájárulás
+### 8.1 Keret
 
-- **Belépés:** a termék ígérete egy mondatban, egy e-mail-mező (e-mail-billentyűzettel,
-  automatikus kitöltéssel), egy gomb. Jelszó nincs (Folyamatok 6.5).
-- Elküldés után ugyanaz a képernyő mutatja, hova ment a link és a kód, egy 6 jegyű kódmezővel
-  (numerikus billentyűzet, a levélből automatikus kitöltéssel, ahol a rendszer engedi),
-  `Újraküldés` és `Másik e-mail-cím` gombbal. Lejárt vagy felhasznált linknél egy sor és egy
-  gomb: új link.
-- **Hozzájárulás** akkor, ha a fióknak nincs rögzített hozzájárulása az aktuális
-  szövegverzióra (fiókonként és szövegverziónként egyszer, nem eszközönként):
-  figyelmeztetés + két jelölőnégyzet (hozzájárulás, 16 év), az adatvédelmi tájékoztató
-  linkjével; a `Tovább` mindkét pipa nélkül nem aktív. Alatta, elválasztva, szöveges
-  gombként `Kijelentkezés` és `Fiók törlése`, hogy aki nem fogadja el, ne ragadjon be
-  (Folyamatok 6.6). Meglévő fióknál az adat addig zárolva: megvan, de nem látszik.
-- **Süti-sáv** az első megnyitáskor a képernyő alján. Két egyenrangú gomb, azonos
-  méretben és súlyban: `Elfogadom` · `Csak a szükségesek`. Egyik sem hangsúlyosabb, és a
-  sáv bezárás nélkül nem tűnik el. Amíg nincs választás, a Belépés használható mellette.
-- Új eszközön, meglévő fióknál a link után (ha van érvényes hozzájárulás) rögtön a Tányér
-  jön, a fiók adataival; a Keret nem kérdeződik újra.
-
-### 8.2 Keret
-
-- Első indításkor (új fióknál) a Keret egyetlen képernyőn nyílik, fölötte egy mondat:
+- Első indításkor (ezen az eszközön még nincs keret) a Keret egyetlen képernyőn nyílik, fölötte egy mondat:
   „Írd be a dietetikusod számait. Csak egyszer kell."
 - Mezők párban (alsó–felső), numerikus billentyűzettel; a „Tovább" gomb a következő mezőre
   ugrik, így végig lehet menni rajta a papír sorrendjében.
@@ -294,23 +270,10 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
 - A Mentés gomb alatt a figyelmeztetés egy sorban, másodlagos szövegként: „A Ketara
   számol, nem tanácsot ad. Nem helyettesíti a dietetikust."
 
-### 8.3 Fiók (a Keret alján)
+### 8.2 Mikor kérdez rá a termék?
 
-- A figyelmeztetés alatt, elválasztó után, a Folyamatok 6.4 sorrendjében: e-mail-cím ·
-  szinkron állapota · Sütik (a jelenlegi választás, koppintásra a süti-sáv két gombja alsó
-  lapon) · Adatvédelmi tájékoztató · Adataim letöltése · Kijelentkezés · Kijelentkezés
-  minden eszközről · Fiók törlése · alatta egy sor: „A hozzájárulás visszavonása a fiók
-  törlésével történik."
-- Az első indításkor a Fiók blokk nem látszik: ott a Keret egyetlen dolga a beállítás.
-- **Kijelentkezés** (és Kijelentkezés minden eszközről): előbb szinkronizál, utána
-  megerősítés nélkül kilép; az adat a fiókban megmarad, újra be lehet lépni. Ha nincs
-  kapcsolat, és van el nem küldött változás, egyszer figyelmeztet: „{N} változás még nincs
-  elküldve. Ha most kilépsz, elvesznek." — `Kilépek` / `Mégse`.
-- **Fiók törlése:** alsó lap a következményekkel, `Végleg törlöm` (borostyán keretes, nem
-  kitöltött) és `Mégse` (elsődleges). Törlés után a Belépés képernyő jön.
-- **Mikor kérdez rá a termék?** Csak ott, ahol valami nem vonható vissza vagy elveszne:
-  fiók törlése, tányérban használt saját alapanyag törlése, gyanús Keret-érték, a nem
-  mentett tányér lecserélése („Lecseréled?"), kijelentkezés el nem küldött változással.
+- Csak ott, ahol valami nem vonható vissza vagy elveszne: tányérban használt saját
+  alapanyag törlése, gyanús Keret-érték, a nem mentett tányér lecserélése („Lecseréled?").
   Minden más (sor vagy tányér törlése, csere) visszavonással működik.
 
 ---
@@ -339,15 +302,16 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
 | Melyik telefonon fut? | Platformfüggetlen (2. fejezet) |
 | Lássa-e a makrókat ✓ állapotban is? | Igen (4.4) |
 | Kell-e kattintható prototípus a teszthez? | Igen: `ux/prototipus/ketara-prototipus.html` |
-| Hol vannak a fiókbeállítások? (2026-10-08) | A Keret alján, nem külön képernyőn (8.3) |
+| Hol vannak a fiókbeállítások? (2026-10-08) | ~~A Keret alján~~ — 2026-11-13: nincs fiók (PRD v1.2) |
 | Hogy néz ki számítógépen? (2026-10-08) | Ugyanaz az oszlop, középre igazítva (2. fejezet) |
 | Kövesse-e a prototípus a v1.1-et? (2026-10-24) | Igen, a PR #4-ben frissítve (11. fejezet) |
+| Marad-e fiók, belépés, szinkron? (2026-11-13) | Nem: minden az eszközön (PRD v1.2, 5. és 6.6) |
 
 ## 11. A prototípusról
 
 - Egyetlen HTML-fájl, telefonon a böngészőben megnyitva teljes képernyős; asztali gépen
   telefonkeretben jelenik meg.
-- **Valódi megoldót futtat** (a PRD v1.1 6.3 szabályai: relatív eltérés, döntetlennél a
+- **Valódi megoldót futtat** (a PRD 6.3 szabályai: relatív eltérés, döntetlennél a
   korábbi sorok, sávon belül minden szabad sor ≥ 1 g, ⚠ sorrend arány → kilógás → legkevesebb
   0 g → referencia, ±1 g majd ±2 g kerekítés, a kcal a ⚠ ágban nem dönt, feloldás-előzetes),
   így a tesztelő saját kombinációkat is kipróbálhat.
@@ -359,6 +323,6 @@ végül a mentés helye és a `Kész`, mint 4.5-ben.
   végleges 40–60 tételes lista) és két mentett mintatányért.
 - Az állapotot a böngésző helyben megőrzi; „Prototípus alaphelyzetbe" gomb a
   Tányérjaim alján állítja vissza.
-- Nem része: haptika, rendszerértesítések, valódi adattárolás, és a v0.3 fiókrésze
-  (Belépés, Hozzájárulás, süti-sáv, Fiók blokk). A végfelhasználó a prototípus
+- Nem része: haptika, rendszerértesítések. A fiókrész (Belépés, Hozzájárulás, süti-sáv,
+  Fiók blokk) sosem került bele, és a v1.2 óta a termékben sincs. A végfelhasználó a prototípus
   viselkedését 2026-10-08-án elfogadta; a v1.1 változásait (fent) azóta nem látta.
