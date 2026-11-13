@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.11
+# Ketara — Folyamatok és képernyők v0.13
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-13*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8 szerint)*
 
 ---
 
@@ -552,19 +552,29 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Kész után | Megjegyeztem. Legközelebb ebből indulok. |
 | Foglalt tányérnév | Már van ilyen nevű tányér. |
 | Saját alapanyag törlése, tányérban használt | {Alapanyag} — ezekben a tányérokban szerepel: {tányérok}. Törléskor kikerül belőlük. — Törlöm / Mégse |
-| Csere rögzített soron | A rögzítés lekerült, mert az alapanyag változott. |
+| Csere rögzített soron | A rögzítés lekerült, mert az alapanyag változott. — Visszavonás |
+| Csere nem rögzített soron | Csere: {Alapanyag} → {Alapanyag}. — Visszavonás (felolvasva: „Csere: {Alapanyag} helyett {Alapanyag}.") |
 | Keret, bevezető (első indítás) | Írd be a dietetikusod számait. Csak egyszer kell. |
 | Keret, kcal-sáv fölött | Ha a papíron van. |
 | Keret, élő cél | Egy étkezésre ez jön ki: |
 | Keret gombja | Ez stimmel, kezdjük (első indításkor) · Mentés (később) |
 | Keret, gyanús érték gombjai | Igen, így van · Javítom |
-| Keret, gyanúsan alacsony | Ez alacsonyabb, mint amit dietetikusok általában adnak. Biztosan így van a papíron? |
-| Keret, gyanúsan szűk | Ez a sáv nagyon szűk, kevés tányér fog beleférni. Biztosan így van a papíron? |
+| Keret, gyanúsan alacsony | {A fehérjesáv / A kalóriasáv / A fehérje- és a kalóriasáv} teteje alacsonyabb, mint amit dietetikusok általában adnak. |
+| Keret, gyanúsan szűk | {A szénhidrátsáv / … / A szénhidrát-, a fehérje- és a zsírsáv} nagyon szűk, kevés tányér fog beleférni. |
+| Keret, gyanús érték kérdése (a sorok után, egyszer) | Biztosan így van a papíron? — Igen, így van · Javítom |
 | Keret, lehetetlen (alsó > felső) | Az alsó határ nagyobb a felsőnél. Nézd meg a papírt. |
 | Keret, lehetetlen (arány) | A zsírsáv teteje kisebb, mint amit az arány a fehérjéhez kér. Így egyetlen tányér sem jönne ki. |
+| Keret, nem szám | Csak számot írj be. |
+| Keret, csak egy kcal-határ | Add meg mindkét határt, vagy hagyd üresen mindkettőt. |
+| Keret, étkezésszám | Írj be egy egész számot 1 és 10 között. |
+| Keret, arány ≤ 0 | Írj be egy 0-nál nagyobb számot, például 2-t. |
+| Tányér fejléce, a cél-sáv fölött | Étkezési cél |
 | iOS-tipp (Tányér teteje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
 | A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |
-| Verzió (Keret alja) | Ketara {verzió} · Alapanyaglista: {n}. változat |
+| Betelt a tárhely (korábban már mentett) | Az utolsó változást nem tudtam elmenteni, mert nincs elég hely. A korábban mentettek megmaradnak; törölj egy régi tányért, vagy szabadíts fel helyet a telefonon. |
+| Újabb app-verzió mentett | Egy újabb Ketara-verzió mentett ebben a böngészőben, ezért ez az ablak nem ment. Zárd be, és nyisd meg újra a Ketarát. |
+| A mentett adat nem olvasható | A mentett adataidat ez a verzió nem tudja beolvasni, ezért nem írom felül őket. Amit most változtatsz, bezáráskor elveszik. Egy frissítés után nyisd meg újra a Ketarát. |
+| Verzió (Keret alja) | Ketara {verzió} ({commit}) · Alapanyaglista: {n}. változat |
 | Figyelmeztetés (Keret alja) | A Ketara számol, nem tanácsot ad. Nem helyettesíti a dietetikust. |
 
 
