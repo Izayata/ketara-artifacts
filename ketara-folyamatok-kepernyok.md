@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.13
+# Ketara — Folyamatok és képernyők v0.14
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8 szerint)*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9 szerint)*
 
 ---
 
@@ -554,6 +554,18 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Saját alapanyag törlése, tányérban használt | {Alapanyag} — ezekben a tányérokban szerepel: {tányérok}. Törléskor kikerül belőlük. — Törlöm / Mégse |
 | Csere rögzített soron | A rögzítés lekerült, mert az alapanyag változott. — Visszavonás |
 | Csere nem rögzített soron | Csere: {Alapanyag} → {Alapanyag}. — Visszavonás (felolvasva: „Csere: {Alapanyag} helyett {Alapanyag}.") |
+| Csere-lap címe | Csere: {Alapanyag} |
+| Csere-lap, rögzített soron | A csere leveszi a rögzítést. |
+| Csere-lap, nincs más a kategóriában | Ebben a kategóriában nincs más alapanyag. |
+| Választó, a kategóriák fölött | Kategóriák |
+| Választó gombja, semmi sincs kijelölve | Bezárás |
+| Gramm-mező, nem 1–5000 g | Írj be egy számot 1 és 5000 gramm között. |
+| Gramm-mező, 0 g | Ha nem kell belőle, vedd ki: koppints a nevére, majd Törlés. |
+| Felolvasva: sor | {Alapanyag}, {n} gramm, nyersen{, rögzítve} |
+| Felolvasva: ◯ / 🔒 (lenyomott állapottal) | {Alapanyag} rögzítése |
+| Felolvasva: gramm-mező | {Alapanyag}, gramm, nyersen |
+| Felolvasva: makrósor | Makrók ezen a tányéron — {érték}{, a sáv fölött / alatt} · Zsír–fehérje arány {x,x} az 1-hez{, a minimum alatt} · Zsír–fehérje arány: nincs fehérje |
+| Felolvasva: választó, tányéron lévő | {Alapanyag}, már a tányéron |
 | Keret, bevezető (első indítás) | Írd be a dietetikusod számait. Csak egyszer kell. |
 | Keret, kcal-sáv fölött | Ha a papíron van. |
 | Keret, élő cél | Egy étkezésre ez jön ki: |

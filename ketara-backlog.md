@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.13, UX-terv v0.7, Tech terv v0.5.*
-*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: ketara-app PR #8)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.14, UX-terv v0.7, Tech terv v0.5.*
+*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9)*
 
 ---
 
@@ -43,7 +43,7 @@
   megnyílik a „Ketara" oldal.
 - [ ] **M2 — A motor kész:** E2 + E3 kész; a megoldó a prototípussal egyezik, az alapanyaglista
   ellenőrizve.
-- [ ] **M3 — Első használható tányér:** E4–E7 kész; a PRD 6.4 ✓ példája a képernyőn.
+- [x] **M3 — Első használható tányér:** E4–E7 kész; a PRD 6.4 ✓ példája a képernyőn.
 - [ ] **M4 — Teljes v1-scope:** E8–E11 kész; a 2. folyamat (ismétlődő étkezés) végigmegy,
   repülőgép-módban is indul.
 - [ ] **M5 — Alfa:** E12 kész; tesztelők használják.
@@ -411,55 +411,60 @@ Forrás: PRD 6.1, 6.7; F 3., 6.4; UX 8.*
 *Cél: a termék fő útja a ✓ ágig. Forrás: PRD 6.2, 6.2b, 6.3; F 1., 5.1–5.3, 5.5, 6.1;
 UX 4.1–4.5, 4.7, 5.*
 
-- [ ] **S7.1 — A referencia** (`src/domain/reference.ts`) · *Kész, ha:* a referencia forrásának
+- [x] **S7.1 — A referencia** (`src/domain/reference.ts`) · *Kész, ha:* a referencia forrásának
   sorrendje tesztelve.
-  - [ ] T7.1.1 Sorrend: mentett tányér tárolt grammja → „legutóbb használt" → egyedi felülírás →
+  - [x] T7.1.1 Sorrend: mentett tányér tárolt grammja → „legutóbb használt" → egyedi felülírás →
     kategória-alapérték (PRD 6.3).
-  - [ ] T7.1.2 A „legutóbb használt" frissítése: csak Kész, Tányér mentése, frissítés és Mentés új
+  - [x] T7.1.2 A „legutóbb használt" frissítése: csak Kész, Tányér mentése, frissítés és Mentés új
     néven; 0 g nem írja felül; a sima újraszámolás nem.
-- [ ] **S7.2 — A Tányér képernyő állapotai** · *Kész, ha:* üres, alulhatározott, sávon belüli és
+- [x] **S7.2 — A Tányér képernyő állapotai** · *Kész, ha:* üres, alulhatározott, sávon belüli és
   minden rögzített állapot a Folyamatok 5. szerint jelenik meg.
-  - [ ] T7.2.1 Zónák: fejléc (Tányérjaim · név · cél-sáv), sorok, `+ Alapanyag`, makrósor,
+  - [x] T7.2.1 Zónák: fejléc (Tányérjaim · név · cél-sáv), sorok, `+ Alapanyag`, makrósor,
     a képernyő aljához tapadó eredménypanel (UX 4.1).
-  - [ ] T7.2.2 Üres állapot (F 5.1) és alulhatározott: „— g", „Még egy / két alapanyag kell a
+  - [x] T7.2.2 Üres állapot (F 5.1) és alulhatározott: „— g", „Még egy / két alapanyag kell a
     számoláshoz." (F 5.2).
-  - [ ] T7.2.3 Sor: név, kategória, gramm + „(nyersen)", táblázatos számjegyek; 0 g borostyánnal;
+  - [x] T7.2.3 Sor: név, kategória, gramm + „(nyersen)", táblázatos számjegyek; 0 g borostyánnal;
     képernyőolvasó-szöveg (UX 4.2, 9.).
-  - [ ] T7.2.4 Felvillanás 1 mp-ig, ha egy gramm megváltozott újraszámolás után.
-  - [ ] T7.2.5 Makrósor minden állapotban: CH · Fe · Zs · arány; sávon kívül borostyán + ↑/↓
+  - [x] T7.2.4 Felvillanás 1 mp-ig, ha egy gramm megváltozott újraszámolás után.
+  - [x] T7.2.5 Makrósor minden állapotban: CH · Fe · Zs · arány; sávon kívül borostyán + ↑/↓
     (UX 4.4).
-  - [ ] T7.2.6 ✓ eredménypanel: „Minden érték a sávon belül.", kcal-megjegyzés, ha kell; gombok
+  - [x] T7.2.6 ✓ eredménypanel: „Minden érték a sávon belül.", kcal-megjegyzés, ha kell; gombok
     `Tányér mentése` és `Kész` (a mentés helye az E9-ben teljes).
-  - [ ] T7.2.7 Minden rögzítve: kiértékelés ✓/⚠ címsorral, „Nincs mit kiszámolni — minden adag
+  - [x] T7.2.7 Minden rögzítve: kiértékelés ✓/⚠ címsorral, „Nincs mit kiszámolni — minden adag
     rögzítve." (F 5.5, UX 4.7).
-- [ ] **S7.3 — Alapanyag-választó** (alsó lap) · *Kész, ha:* több alapanyag egy menetben
+- [x] **S7.3 — Alapanyag-választó** (alsó lap) · *Kész, ha:* több alapanyag egy menetben
   felvehető, a 8-as korlát működik.
-  - [ ] T7.3.1 Legutóbb használt (max. 8 chip), a hat kategória helyben kinyíló listával.
-  - [ ] T7.3.2 Keresés (nem kap automatikusan fókuszt); állapotok: üres, találatok, nincs találat
-    („Felviszed sajátként?" → a beírt szöveg a névmezőbe, E10).
-  - [ ] T7.3.3 Többes választás pipával, `Hozzáadás ({n})`; a tányéron lévők halványan, pipával.
-  - [ ] T7.3.4 8 alapanyagnál a többi halvány, és a korlát szövege látszik (PRD 6.2).
-  - [ ] T7.3.5 A választó egy adott kategórián nyitva is indítható, fejléc-sorral (a ⚠-hoz, E8).
-- [ ] **S7.4 — Rögzítés** · *Kész, ha:* ikonnal és grammbeírással is rögzíthető, a megoldó köré
+  - [x] T7.3.1 Legutóbb használt (max. 8 chip), a hat kategória helyben kinyíló listával.
+  - [x] T7.3.2 Keresés (nem kap automatikusan fókuszt); állapotok: üres, találatok, nincs találat
+    („Felviszed sajátként?" → a beírt szöveg a névmezőbe, E10). *A „+ Saját alapanyag" gomb
+    megvan; a saját alapanyag lapja és a szöveg átadása az E10-ben jön.*
+  - [x] T7.3.3 Többes választás pipával, `Hozzáadás ({n})`; a tányéron lévők halványan, pipával.
+  - [x] T7.3.4 8 alapanyagnál a többi halvány, és a korlát szövege látszik (PRD 6.2).
+  - [x] T7.3.5 A választó egy adott kategórián nyitva is indítható, fejléc-sorral (a ⚠-hoz, E8).
+- [x] **S7.4 — Rögzítés** · *Kész, ha:* ikonnal és grammbeírással is rögzíthető, a megoldó köré
   számol.
-  - [ ] T7.4.1 ◯ / 🔒 ikon: koppintás rögzíti a jelenlegi grammot, újabb feloldja; rögzítettnél
+  - [x] T7.4.1 ◯ / 🔒 ikon: koppintás rögzíti a jelenlegi grammot, újabb feloldja; rögzítettnél
     félkövér, akcentusszínű gramm és „rögzítve" (UX 4.2).
-  - [ ] T7.4.2 A gramm beírása soron belül, numerikus billentyűzettel; jóváhagyáskor rögzít.
-- [ ] **S7.5 — Sor-műveletek és csere** · *Kész, ha:* törlés és csere visszavonható, a csere
+  - [x] T7.4.2 A gramm beírása soron belül, numerikus billentyűzettel; jóváhagyáskor rögzít.
+- [x] **S7.5 — Sor-műveletek és csere** · *Kész, ha:* törlés és csere visszavonható, a csere
   leveszi a rögzítést.
-  - [ ] T7.5.1 Sor-műveletek lap a névre koppintva: `Rögzítés` / `Feloldás` · `Csere` · `Törlés`.
-  - [ ] T7.5.2 Törlés visszavonással („Törölve: {Alapanyag}. Visszavonás").
-  - [ ] T7.5.3 Csere-lap: a kategória tagjai a tányéron lévők nélkül; csere helyben, a sor
+  - [x] T7.5.1 Sor-műveletek lap a névre koppintva: `Rögzítés` / `Feloldás` · `Csere` · `Törlés`.
+  - [x] T7.5.2 Törlés visszavonással („Törölve: {Alapanyag}. Visszavonás").
+  - [x] T7.5.3 Csere-lap: a kategória tagjai a tányéron lévők nélkül; csere helyben, a sor
     sorrendje marad; az új alapanyag a saját referenciájáról indul (PRD 6.2b).
-  - [ ] T7.5.4 Rögzített sor cseréje: „A rögzítés lekerült, mert az alapanyag változott." +
+  - [x] T7.5.4 Rögzített sor cseréje: „A rögzítés lekerült, mert az alapanyag változott." +
     Visszavonás.
-  - [ ] T7.5.5 „Másik kategóriából…": a sor törlődik, a választó minden kategóriával nyílik.
-- [ ] **S7.6 — Az aktuális tányér megmarad** (PRD 6.6) · *Kész, ha:* bezárás és újranyitás után
+  - [x] T7.5.5 „Másik kategóriából…": a sor törlődik, a választó minden kategóriával nyílik.
+- [x] **S7.6 — Az aktuális tányér megmarad** (PRD 6.6) · *Kész, ha:* bezárás és újranyitás után
   ugyanaz a tányér vár, a rögzítésekkel.
-  - [ ] T7.6.1 `currentPlate` mentése minden változáskor, visszatöltés induláskor.
-- [ ] **S7.7 — E2E: a ✓ példa** · *Kész, ha:* a Playwright-teszt a PRD 6.4 ✓ példáját a
+  - [x] T7.6.1 `currentPlate` mentése minden változáskor, visszatöltés induláskor.
+- [x] **S7.7 — E2E: a ✓ példa** · *Kész, ha:* a Playwright-teszt a PRD 6.4 ✓ példáját a
   képernyőn látja (137 / 100 / 31 g).
-  - [ ] T7.7.1 Playwright: Keret → tojás, brokkoli, olaj → ✓ és a grammok.
+  - [x] T7.7.1 Playwright: Keret → tojás, brokkoli, olaj → ✓ és a grammok.
+
+*E7 kész: ketara-app PR #9 (7 review-kör). Ismert, nem javított: TD-1 a ketara-app
+`tech-debt.md`-ben (ritka kerekítési ⚠, Kész után 1 g eltolódás). A T2.6.2 (Web Worker)
+nyitva maradt.*
 
 ---
 
