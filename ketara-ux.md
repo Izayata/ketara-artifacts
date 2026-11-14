@@ -1,8 +1,8 @@
-# Ketara — UX-terv v0.8
+# Ketara — UX-terv v0.9
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.15-höz. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.16-hoz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint)*
+*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint)*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
 fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
@@ -190,6 +190,11 @@ Olvasási sorrend, ahogy a Folyamatok 5.4 rögzíti, vizuális hierarchiával:
   sorrend ezért: szöveg → előzetesek → a többi lépés → elsődleges → mentés → `Kész`.
 - Nagy betűméretnél, ha a ⚠ címsor nem fér ki a makrósor alatt, a szövegrész a címsornál
   kezdődik; a makrósor egy görgetéssel feljebb van. ✓ esetén mindig a makrósorral kezdődik.
+- **A mentés helye** (ketara-app PR #11): ✓ és ⚠ esetén is fixen a `Kész` mellett áll,
+  amíg a panel elbírja. Hosszú tányérnévnél vagy nagy betűméretnél kis képernyőn a görgethető
+  szövegrész végére kerül, így a `Kész` mindig egészben látszik, legalább 44 px. A döntés
+  új tartalomnál, valódi méretváltozásnál és betűméret-váltásnál (átméretezés nélkül is) újra
+  megszületik; a fókuszban lévő mentőgomb áthelyezés után is fókuszban marad.
 
 - Az elsődleges gomb mindig az, ami a legközelebb visz a ✓-hoz: rögzítésnél a feloldás,
   rögzítés nélkül, ha egy makró kevés, a `+ {Kategória}` (a választó azon a kategórián
@@ -216,7 +221,8 @@ alul.
 - `Tányér mentése` ⚠ állapotban ugyanez a lap, egy sorral a mező fölött: „Fehérje: 6,6 g-mal a
   sáv fölött." Nem kérdez rá újra (PRD 6.4), csak emlékeztet. Ha van 0 g-os sor, az nem
   kerül a tányérba, és a lap kiírja: „Kimarad a tányérból, mert 0 g: Olaj."
-- Foglalt névnél a mező alatt: „Már van ilyen nevű tányér.", a mentés addig nem aktív.
+- Foglalt névnél a mező alatt: „Már van ilyen nevű tányér.", a mentés addig nem aktív. Üres
+  névnél sem aktív. A mező címkéje: „Név"; a lap kitöltött, kijelölt mezővel nyílik.
 - `Kész` nem nyit lapot: rövid visszajelzés alul („Megjegyeztem. Legközelebb ebből
   indulok."), és a tányér marad, ahol volt, hogy mérni lehessen róla. A következő
   megnyitáskor viszont már üres tányér vár (PRD 6.6).
@@ -264,8 +270,9 @@ alul.
 - Koppintás → a Tányér megnyílik azzal, újraszámolva. Ha a jelenlegi tányéron van nem
   mentett munka, egy sor: „A mostani tányér nincs elmentve. Lecseréled?" (Lecserélem /
   Mégse).
-- Hosszú nyomás vagy „…" menü: `Átnevezés` · `Törlés` (visszavonással: „Törölve: {Név}.
-  Visszavonás").
+- „…" menü: `Átnevezés` · `Törlés` (visszavonással: „Törölve: {Név}. Visszavonás"). A „…"
+  gomb mindig látszik, hosszú nyomás nincs (ketara-app PR #11). Visszavonás után a fókusz a
+  visszaállított tányéron van.
 - Üres állapot: a Folyamatok 6.3 szövege.
 - `+ Új tányér`: üres Tányér (ugyanaz a figyelmeztetés, ha van nem mentett munka).
 
