@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.15
+# Ketara — Folyamatok és képernyők v0.16
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10 szerint)*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11 szerint)*
 
 ---
 
@@ -555,6 +555,11 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Kész gomb | Kész |
 | Kész után | Megjegyeztem. Legközelebb ebből indulok. |
 | Foglalt tányérnév | Már van ilyen nevű tányér. |
+| Mentés lap, a mező címkéje | Név |
+| Tányérjaim, „…" gomb (felolvasva) | {Tányér neve}: további lehetőségek |
+| Tányérjaim, „…" menü | Átnevezés · Törlés |
+| Átnevezés lap, a mező címkéje | Új név |
+| Csere-kérdés lap neve (felolvasva) | Tányér lecserélése |
 | Saját alapanyag törlése, tányérban használt | {Alapanyag} — ezekben a tányérokban szerepel: {tányérok}. Törléskor kikerül belőlük. — Törlöm / Mégse |
 | Csere rögzített soron | A rögzítés lekerült, mert az alapanyag változott. — Visszavonás |
 | Csere nem rögzített soron | Csere: {Alapanyag} → {Alapanyag}. — Visszavonás (felolvasva: „Csere: {Alapanyag} helyett {Alapanyag}.") |

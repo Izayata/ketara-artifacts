@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.15, UX-terv v0.8, Tech terv v0.5.*
-*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.16, UX-terv v0.9, Tech terv v0.5.*
+*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11)*
 
 ---
 
@@ -512,35 +512,41 @@ Forrás: PRD 6.4, 7.; F 1., 5.4, 7.; UX 4.6, 4.7.*
 *Cél: az ismétlődő étkezés (F 2.) végigmegy. Forrás: PRD 6.5, 6.6; F 2., 5.3, 6.3; UX 4.5,
 4.8, 7.*
 
-- [ ] **S9.1 — Kész** · *Kész, ha:* a Kész frissíti a „legutóbb használt" értékeket, a tányér a
+- [x] **S9.1 — Kész** · *Kész, ha:* a Kész frissíti a „legutóbb használt" értékeket, a tányér a
   képernyőn marad, a következő megnyitás üres tányérral indul.
-  - [ ] T9.1.1 Kész ✓ és ⚠ esetén is; 0 g-os sor kivételével frissíti a `lastUsed`-ot;
+  - [x] T9.1.1 Kész ✓ és ⚠ esetén is; 0 g-os sor kivételével frissíti a `lastUsed`-ot;
     „Megjegyeztem. Legközelebb ebből indulok."
-  - [ ] T9.1.2 A `currentPlate` törlése a következő megnyitásra (PRD 6.6).
-- [ ] **S9.2 — Tányér mentése** · *Kész, ha:* a tányér egyedi néven menthető, 0 g-os sor nélkül.
-  - [ ] T9.2.1 Mentés lap kitöltött, kijelölt névjavaslattal („Tojás, brokkoli, olaj").
-  - [ ] T9.2.2 Foglalt név: „Már van ilyen nevű tányér.", a mentés addig nem aktív.
-  - [ ] T9.2.3 ⚠ esetén a lap emlékeztet a címsorra; 0 g-os sor kimarad, és a lap kiírja.
-  - [ ] T9.2.4 Mentés után „Mentve: {Név}", a tányér mentett tányérként folytatódik (fejlécben
+  - [x] T9.1.2 A `currentPlate` törlése a következő megnyitásra (PRD 6.6).
+- [x] **S9.2 — Tányér mentése** · *Kész, ha:* a tányér egyedi néven menthető, 0 g-os sor nélkül.
+  - [x] T9.2.1 Mentés lap kitöltött, kijelölt névjavaslattal („Tojás, brokkoli, olaj").
+  - [x] T9.2.2 Foglalt név: „Már van ilyen nevű tányér.", a mentés addig nem aktív.
+  - [x] T9.2.3 ⚠ esetén a lap emlékeztet a címsorra; 0 g-os sor kimarad, és a lap kiírja.
+  - [x] T9.2.4 Mentés után „Mentve: {Név}", a tányér mentett tányérként folytatódik (fejlécben
     a neve); a `lastUsed` frissül.
-- [ ] **S9.3 — Mentett tányér frissítése** (`src/domain/plates.ts`) · *Kész, ha:* a mentés helye
+- [x] **S9.3 — Mentett tányér frissítése** (`src/domain/plates.ts`) · *Kész, ha:* a mentés helye
   a három esetben helyes (új / eltér / nem tér el); tesztekkel.
-  - [ ] T9.3.1 Eltérés-vizsgálat: a sorok halmaza vagy bármelyik kiírt egész gramm.
-  - [ ] T9.3.2 `{Név} frissítése` (az összetételt is felülírja; „Frissítve. Legközelebb innen
+  - [x] T9.3.1 Eltérés-vizsgálat: a sorok halmaza vagy bármelyik kiírt egész gramm.
+  - [x] T9.3.2 `{Név} frissítése` (az összetételt is felülírja; „Frissítve. Legközelebb innen
     indul.") és `Mentés új néven`; ha nincs eltérés, csak `Kész`.
-- [ ] **S9.4 — Tányérjaim** · *Kész, ha:* a lista, a megnyitás, az átnevezés és a törlés
+- [x] **S9.4 — Tányérjaim** · *Kész, ha:* a lista, a megnyitás, az átnevezés és a törlés
   működik.
-  - [ ] T9.4.1 Lista: név + alapanyagok, legutóbb használt elöl; üres állapot szövege (F 6.3).
-  - [ ] T9.4.2 Megnyitás: alapanyagok betöltve, rögzítés nélkül, újraszámolva; fejléc alatt
+  - [x] T9.4.1 Lista: név + alapanyagok, legutóbb használt elöl; üres állapot szövege (F 6.3).
+  - [x] T9.4.2 Megnyitás: alapanyagok betöltve, rögzítés nélkül, újraszámolva; fejléc alatt
     „{Név} — a mai célra újraszámolva."
-  - [ ] T9.4.3 Nem mentett munka esetén: „A mostani tányér nincs elmentve. Lecseréled?"
+  - [x] T9.4.3 Nem mentett munka esetén: „A mostani tányér nincs elmentve. Lecseréled?"
     (`Lecserélem` / `Mégse`); ugyanez a `+ Új tányér`-nál.
-  - [ ] T9.4.4 „…" menü: `Átnevezés` (egyedi név) · `Törlés` visszavonással.
-  - [ ] T9.4.5 Hiányos tányér (3-nál kevesebb sor) megnyitása: a hiányzó alapanyagokat kéri
+  - [x] T9.4.4 „…" menü: `Átnevezés` (egyedi név) · `Törlés` visszavonással.
+  - [x] T9.4.5 Hiányos tányér (3-nál kevesebb sor) megnyitása: a hiányzó alapanyagokat kéri
     (PRD 6.5).
-- [ ] **S9.5 — E2E: ismétlődő étkezés** · *Kész, ha:* Playwright: tányér összeállítása → mentés
+- [x] **S9.5 — E2E: ismétlődő étkezés** · *Kész, ha:* Playwright: tányér összeállítása → mentés
   → új tányér → Tányérjaim → megnyitás → csere → frissítés.
-  - [ ] T9.5.1 Playwright-teszt.
+  - [x] T9.5.1 Playwright-teszt.
+
+*Megjegyzések (ketara-app PR #11):* a `Kész` a mentett tányér „legutóbb használt" idejét nem
+állítja (PRD 6.5: a Kész nem módosít tányért; a megnyitás számít használatnak). A „nem mentett
+munka" a képernyőn látottból számolódik, nincs külön jelző. Hosszú nyomás nincs; a „…" gomb
+mindig látszik. Mentés, frissítés és Kész után a tányér nem mozdul (TD-1 elleni védelem, lásd
+a ketara-app `tech-debt.md`).
 
 ---
 
