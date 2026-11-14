@@ -1,8 +1,8 @@
-# Ketara — UX-terv v0.7
+# Ketara — UX-terv v0.8
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.13-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.15-höz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-11-13*
+*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint)*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
 fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
@@ -183,6 +183,14 @@ Olvasási sorrend, ahogy a Folyamatok 5.4 rögzíti, vizuális hierarchiával:
    megváltozott mentett tányérnál `{Név} frissítése` és `Mentés új néven`; változatlannál
    nincs mentőgomb. A `Kész` mindig ott van.
 
+- **Hol vannak a gombok** (ketara-app PR #10): csak az elsődleges gomb, a mentés helye és a
+  `Kész` áll fixen a panel alján. A többi lépés (`Rögzítések feloldása`, `+ Alapanyag`,
+  `Törlés`) a görgethető szövegrészben jön, az előzetesek után, amelyekhez tartozik. Így nagy
+  betűméretnél sem vágódik le egyik gomb sem, és az elsődleges mindig látszik. Olvasási
+  sorrend ezért: szöveg → előzetesek → a többi lépés → elsődleges → mentés → `Kész`.
+- Nagy betűméretnél, ha a ⚠ címsor nem fér ki a makrósor alatt, a szövegrész a címsornál
+  kezdődik; a makrósor egy görgetéssel feljebb van. ✓ esetén mindig a makrósorral kezdődik.
+
 - Az elsődleges gomb mindig az, ami a legközelebb visz a ✓-hoz: rögzítésnél a feloldás,
   rögzítés nélkül, ha egy makró kevés, a `+ {Kategória}` (a választó azon a kategórián
   nyílik), ha sok, a `{Alapanyag} cseréje` (a csere-választó azon a soron), zsákutcánál
@@ -195,7 +203,9 @@ Olvasási sorrend, ahogy a Folyamatok 5.4 rögzíti, vizuális hierarchiával:
 A Folyamatok 5.5 szerint kiértékelés, ✓ vagy ⚠ címsorral. ⚠ esetén a sorok a 4.6
 sorrendjében jönnek, alatta „Nincs mit kiszámolni — minden adag rögzítve.", a makrósor
 (4.4), az előzetes(ek) („Ha feloldod: …", „Ha feloldod mindet: …"), a feloldó gomb(ok),
-végül a mentés helye és a `Kész`, mint 4.5-ben.
+végül a mentés helye és a `Kész`, mint 4.5-ben. A gombok helye a 4.6 szerint: a
+`Rögzítések feloldása` az előzetesek után a görgethető részben, az egyedi feloldás fixen
+alul.
 
 ### 4.8 Mentés
 

@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.14
+# Ketara — Folyamatok és képernyők v0.15
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9 szerint)*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10 szerint)*
 
 ---
 
@@ -516,13 +516,17 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | ⚠ rögzítés az ok, alsó él | Rögzítve: {Alapanyag} {n} g (nyersen). Mellette a {makró} legfeljebb {m,m} g lehet. A sáv alja {k} g. |
 | ⚠ feloldás-előzetes, sikeres | Ha feloldod: {Alapanyag}<br>{adagok} (nyersen) → minden érték a sávon belül. |
 | ⚠ feloldás-előzetes, részleges | Ha feloldod: {Alapanyag}<br>{adagok} (nyersen) → {Makró}: {n,n} g-mal a sáv {fölött / alatt}. |
+| ⚠ rögzítés az ok, egyik sem lóg ki egymagában | A rögzített adagok miatt a {makró} nem fér a sávba. |
+| ⚠ rögzítés az ok, csak az arány (nem zsákutca) | A rögzített adagok miatt a zsír–fehérje arány nem jön ki. |
 | ⚠ mindet feloldva, előzetes | Ha feloldod mindet:<br>{adagok} (nyersen) → {minden érték a sávon belül / Makró: n,n g-mal a sáv fölött / alatt}. |
 | ⚠ arány | Zsír–fehérje arány: {x,x} : 1, a minimum {min} : 1. |
 | ⚠ 0 g | 0 g-ra szorult: {Alapanyag}. Ebben a tányérban nem fér el — cseréld vagy vedd ki. |
 | ⚠ kerekítés az ok | Egész grammokra kerekítve nem fér bele a sávba. |
 | ⚠ nincs rögzítés, arány vagy kevés | Kevés a {makró} — adj hozzá a {Kategória} közül. |
 | ⚠ nincs rögzítés, sok | Sok a {makró} — {Alapanyag} cseréje segít. |
-| ⚠ zsákutca | Ezekből az alapanyagokból nem jön ki. |
+| ⚠ zsákutca | Ezekből az alapanyagokból nem jön ki. {Adj hozzá egy újat, vagy cserélj egyet. / tele tányéron: Cserélj egyet, vagy vegyél ki egyet.} |
+| ⚠ nincs rögzítés, kevés, tele tányér (8 sor) | Kevés a {makró}, és több alapanyag nem fér a tányérra — cserélj egyet, vagy vegyél ki egyet. |
+| Felolvasva: előzetes nyila | a „→" helyén vessző: „{adagok} (nyersen), {eredmény}" |
 | ⚠ helyreállító gombok | {Alapanyag} feloldása · + {Kategória} · {Alapanyag} cseréje · + Alapanyag |
 | Több rögzítés, egyik feloldás sem elég | Rögzítések feloldása |
 | Minden rögzítve | Nincs mit kiszámolni — minden adag rögzítve. |
