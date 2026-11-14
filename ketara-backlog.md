@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.14, UX-terv v0.7, Tech terv v0.5.*
-*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.15, UX-terv v0.8, Tech terv v0.5.*
+*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10)*
 
 ---
 
@@ -473,34 +473,37 @@ nyitva maradt.*
 *Cél: ⚠ esetén a termék megmondja, mi csúszik ki, miért, és melyik lépés visz vissza.
 Forrás: PRD 6.4, 7.; F 1., 5.4, 7.; UX 4.6, 4.7.*
 
-- [ ] **S8.1 — A ⚠ sorai** · *Kész, ha:* a ⚠ sorai a rögzített sorrendben, mindegyik egyszer,
+- [x] **S8.1 — A ⚠ sorai** · *Kész, ha:* a ⚠ sorai a rögzített sorrendben, mindegyik egyszer,
   helyes szöveggel jelennek meg; tesztekkel.
-  - [ ] T8.1.1 Sorrend: arány → kilógó makrók (grammban nagyobb elöl) → 0 g → kerekítés → kcal;
+  - [x] T8.1.1 Sorrend: arány → kilógó makrók (grammban nagyobb elöl) → 0 g → kerekítés → kcal;
     az első a címsor (félkövér, borostyán).
-  - [ ] T8.1.2 Ok-mondat, ha a rögzítés az ok: felső és alsó él szövege (F 7.).
-  - [ ] T8.1.3 0 g-ra szorult sor és a kerekítés-ok szövege.
-- [ ] **S8.2 — Feloldás és előzetes** · *Kész, ha:* a ⚠ példa (240 g rögzített tojás) a
+  - [x] T8.1.2 Ok-mondat, ha a rögzítés az ok: felső és alsó él szövege (F 7.).
+  - [x] T8.1.3 0 g-ra szorult sor és a kerekítés-ok szövege.
+- [x] **S8.2 — Feloldás és előzetes** · *Kész, ha:* a ⚠ példa (240 g rögzített tojás) a
   képernyőn a helyes előzetessel és gombbal jelenik meg.
-  - [ ] T8.2.1 Egy rögzítés: „Ha feloldod: {Alapanyag}" keretezett előzetes (sikeres vagy
+  - [x] T8.2.1 Egy rögzítés: „Ha feloldod: {Alapanyag}" keretezett előzetes (sikeres vagy
     részleges), gomb `{Alapanyag} feloldása` (elsődleges).
-  - [ ] T8.2.2 Több rögzítés: a legjobb egyetlen feloldás felajánlása; `Rögzítések feloldása` és
+  - [x] T8.2.2 Több rögzítés: a legjobb egyetlen feloldás felajánlása; `Rögzítések feloldása` és
     „Ha feloldod mindet:" csak akkor, ha egyik egyedi feloldás sem hoz sávba.
-  - [ ] T8.2.3 „Ebből a készletből nem jön ki" eset, ha a feloldás sem elég (PRD 7.).
-- [ ] **S8.3 — Tippek rögzítés nélkül** (`src/domain/hints.ts`) · *Kész, ha:* a négy ág
+  - [x] T8.2.3 „Ebből a készletből nem jön ki" eset, ha a feloldás sem elég (PRD 7.).
+- [x] **S8.3 — Tippek rögzítés nélkül** (`src/domain/hints.ts`) · *Kész, ha:* a négy ág
   (arány, kevés, sok, zsákutca) tesztelve, és a gombok a helyes lapot nyitják.
-  - [ ] T8.3.1 A prototípus `app.html`-jéből a tipp-logika portja a domainbe (Tech 6.1).
-  - [ ] T8.3.2 Arány sérül → `+ Zsiradék`, a választó a Zsiradékon nyílik.
-  - [ ] T8.3.3 Kevés → a hat mintaalapanyag próbafuttatása, a legjobban segítő kategória;
+  - [x] T8.3.1 A prototípus `app.html`-jéből a tipp-logika portja a domainbe (Tech 6.1).
+  - [x] T8.3.2 Arány sérül → `+ Zsiradék`, a választó a Zsiradékon nyílik.
+  - [x] T8.3.3 Kevés → a hat mintaalapanyag próbafuttatása, a legjobban segítő kategória;
     `+ {Kategória}` a választót azon nyitja, „A {makróhoz} ezek segítenek a legtöbbet."
-  - [ ] T8.3.4 Sok → a legtöbbet adó nem rögzített alapanyag; `{Alapanyag} cseréje` a
+  - [x] T8.3.4 Sok → a legtöbbet adó nem rögzített alapanyag; `{Alapanyag} cseréje` a
     csere-lapot azon a soron nyitja.
-  - [ ] T8.3.5 Zsákutca: „Ezekből az alapanyagokból nem jön ki.", elsődleges gomb `+ Alapanyag`.
-- [ ] **S8.4 — A panel elrendezése** · *Kész, ha:* hosszú ⚠ esetén a panel belül görög, a
+  - [x] T8.3.5 Zsákutca: „Ezekből az alapanyagokból nem jön ki." és a megmaradó lépés,
+    elsődleges gomb `+ Alapanyag`. Tele tányérnál (8 sor) külön tipp: cserélj vagy vegyél ki
+    egyet (ketara-app PR #10).
+- [x] **S8.4 — A panel elrendezése** · *Kész, ha:* hosszú ⚠ esetén a panel belül görög, a
   gombsor alul marad; a `Kész` és a mentés helye mindig ott van (UX 4.1, 4.6).
-  - [ ] T8.4.1 Panel görgetés és gombsor-hierarchia.
-- [ ] **S8.5 — E2E: a ⚠ példa** · *Kész, ha:* Playwright: tojás 240 g-ra rögzítve → 48 / 39 g,
+  - [x] T8.4.1 Panel görgetés és gombsor-hierarchia. Csak az elsődleges gomb, a mentés és a
+    `Kész` fix; a többi lépés az előzetesek után görög (UX 4.6, PR #10).
+- [x] **S8.5 — E2E: a ⚠ példa** · *Kész, ha:* Playwright: tojás 240 g-ra rögzítve → 48 / 39 g,
   „Fehérje: 6,6 g-mal a sáv fölött.", feloldás után a ✓ példa.
-  - [ ] T8.5.1 Playwright-teszt.
+  - [x] T8.5.1 Playwright-teszt.
 
 ---
 
