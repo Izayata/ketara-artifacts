@@ -2,7 +2,7 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.17, UX-terv v0.10, Tech terv v0.5.*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.18, UX-terv v0.10, Tech terv v0.6.*
 *Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12)*
 
 ---
@@ -44,7 +44,7 @@
 - [ ] **M2 — A motor kész:** E2 + E3 kész; a megoldó a prototípussal egyezik, az alapanyaglista
   ellenőrizve.
 - [x] **M3 — Első használható tányér:** E4–E7 kész; a PRD 6.4 ✓ példája a képernyőn.
-- [ ] **M4 — Teljes v1-scope:** E8–E11 kész; a 2. folyamat (ismétlődő étkezés) végigmegy,
+- [x] **M4 — Teljes v1-scope:** E8–E11 kész; a 2. folyamat (ismétlődő étkezés) végigmegy,
   repülőgép-módban is indul.
 - [ ] **M5 — Alfa:** E12 kész; tesztelők használják.
 
@@ -591,28 +591,29 @@ címben utazik.*
 *Cél: telepíthető, hálózat nélkül is induló app, az adat védelmével. Forrás: PRD 6.6; UX 2.;
 Tech 7.4–7.5, 8., 10.*
 
-- [ ] **S11.1 — Telepíthetőség** · *Kész, ha:* Androidon és iOS-en a kezdőképernyőre téve
+- [x] **S11.1 — Telepíthetőség** · *Kész, ha:* Androidon és iOS-en a kezdőképernyőre téve
   appként nyílik.
-  - [ ] T11.1.1 `manifest.webmanifest`: „Ketara", `lang: hu`, `standalone`, álló tájolás.
-  - [ ] T11.1.2 Ikonok (192, 512, maskable) és Apple touch icon. 👤 Az ikon kinézetéről te
-    döntesz; addig ideiglenes ikon.
-- [ ] **S11.2 — Offline** · *Kész, ha:* repülőgép-módban is indul és számol (e2e teszt).
-  - [ ] T11.2.1 `vite-plugin-pwa` (Workbox): a build minden fájlja előre gyorsítótárban.
-  - [ ] T11.2.2 Frissítés csak a következő megnyitáskor, újratöltés és kérdés nélkül (Tech 8.2).
-  - [ ] T11.2.3 Playwright: offline újranyitás.
-- [ ] **S11.3 — iOS-tipp** · *Kész, ha:* csak iOS Safariban, nem telepítve jelenik meg, és bezárás
+  - [x] T11.1.1 `manifest.webmanifest`: „Ketara", `lang: hu`, `standalone`, álló tájolás.
+  - [x] T11.1.2 Ikonok (192, 512, maskable) és Apple touch icon. 👤 Az ikon kinézetéről te
+    döntesz; addig ideiglenes ikon. *(2026-11-15: ideiglenes ikon, fehér K a zöld akcentuson;
+    a végleges ikon a tiéd, `public/icon.svg` + `scripts/make-icons.mjs` a ketara-app-ban.)*
+- [x] **S11.2 — Offline** · *Kész, ha:* repülőgép-módban is indul és számol (e2e teszt).
+  - [x] T11.2.1 `vite-plugin-pwa` (Workbox): a build minden fájlja előre gyorsítótárban.
+  - [x] T11.2.2 Frissítés csak a következő megnyitáskor, újratöltés és kérdés nélkül (Tech 8.2).
+  - [x] T11.2.3 Playwright: offline újranyitás.
+- [x] **S11.3 — iOS-tipp** · *Kész, ha:* csak iOS Safariban, nem telepítve jelenik meg, és bezárás
   után soha többé.
-  - [ ] T11.3.1 Felismerés (iOS + Safari + `navigator.standalone !== true`), sáv a Tányér tetején,
+  - [x] T11.3.1 Felismerés (iOS + Safari + `navigator.standalone !== true`), sáv a Tányér tetején,
     semleges színnel, `Értem` gombbal; `ui.iosInstallHintDismissed`.
-- [ ] **S11.4 — Ha nem lehet menteni** · *Kész, ha:* privát böngészésben a sáv látszik, az app
+- [x] **S11.4 — Ha nem lehet menteni** · *Kész, ha:* privát böngészésben a sáv látszik, az app
   működik.
-  - [ ] T11.4.1 Sáv: „Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik."
-- [ ] **S11.5 — Biztonság és külső hívások** · *Kész, ha:* futás közben nincs hálózati kérés
+  - [x] T11.4.1 Sáv: „Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik."
+- [x] **S11.5 — Biztonság és külső hívások** · *Kész, ha:* futás közben nincs hálózati kérés
   külső címre.
-  - [ ] T11.5.1 Atkinson Hyperlegible saját hosztolva (a prototípus Google Fonts-a helyett) —
-    vagy a UX 9. szerinti rendszerbetű; döntés az első képernyőnél. *(A Tech 4. és a UX 9. itt
-    eltér: lásd lent, Nyitott pontok.)*
-  - [ ] T11.5.2 `Content-Security-Policy` meta-tag `default-src 'self'`-fel.
+  - [x] T11.5.1 Atkinson Hyperlegible saját hosztolva (a prototípus Google Fonts-a helyett) —
+    vagy a UX 9. szerinti rendszerbetű; döntés az első képernyőnél. *(Döntés 2026-11-15:
+    **rendszerbetű**, nincs betűfájl, nincs külső betöltés.)*
+  - [x] T11.5.2 `Content-Security-Policy` meta-tag `default-src 'self'`-fel.
 
 ---
 
@@ -644,8 +645,8 @@ Tech 14./9.*
 Ezeket a backlog írásakor vettem észre; egyik sem blokkolja az indulást, de a ticketeknél
 dönteni kell róluk.
 
-1. **Betűtípus:** a Tech terv 4. Atkinson Hyperlegible-t ír saját hosztolva, a UX 9.
-   rendszerbetűt (SF Pro / Roboto). A rendszerbetű egyszerűbb és nem kell letölteni. → T11.5.1.
+1. ~~**Betűtípus:**~~ eldöntve 2026-11-15: rendszerbetű (UX 9.); a Tech terv 2. ennek
+   megfelelően frissült (v0.6). → T11.5.1 kész.
 2. **A prototípus forrása** (`solver.js`, `app.html`) nincs a `ketara-artifacts` repóban, csak a
    projekt mappában (`ux/prototipus/src/`). Az orákulum-teszt (S2.4) és a tipp-logika portja
    (S8.3) ebből dolgozik.
@@ -662,3 +663,5 @@ dönteni kell róluk.
 | 2026-11-13 | Az epicek a Tech terv 14. munkasorrendjét követik, E0 a felhasználó előfeltételeivel | egy sorrend a tervben és a backlogban |
 | 2026-11-13 | A T2.2.8 ellenőrzése: rögzített hibalista (`pnpm mutate:solver`), csak a `tests/solver/unit/` számít, az eredmény a PR-ba kerül | a második átnézés szerint a korábbi megfogalmazás nem volt ellenőrizhető; a felhasználó jóváhagyta |
 | 2026-11-13 | Minden megoldó-modulnak saját egységteszt-fájl kell (S2.2, T2.2.1–T2.2.8) | a felhasználó kérése a ketara-app PR #3 átnézése után: a modulok addig csak a `solvePlate`-en keresztül voltak tesztelve, és két szándékos hiba átment |
+| 2026-11-15 | Betűtípus: rendszerbetű (T11.5.1) | a felhasználó döntése; nincs letöltés, a meglévő elrendezés-tesztek erre hangoltak |
+| 2026-11-15 | Ideiglenes app-ikon (fehér K a zöld akcentuson); a végleges ikon később a felhasználótól | a felhasználó döntése |

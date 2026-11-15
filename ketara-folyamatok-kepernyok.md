@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.17
+# Ketara — Folyamatok és képernyők v0.18
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12 szerint)*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint)*
 
 ---
 
@@ -602,6 +602,8 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Keret, arány ≤ 0 | Írj be egy 0-nál nagyobb számot, például 2-t. |
 | Tányér fejléce, a cél-sáv fölött | Étkezési cél |
 | iOS-tipp (Tányér teteje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
+| iOS-tipp, képernyőolvasónak (a nyíl helyett) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás, majd Főképernyőhöz adás. |
+| iOS-tipp sávjának neve (képernyőolvasó) | Tipp |
 | A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |
 | Betelt a tárhely (korábban már mentett) | Az utolsó változást nem tudtam elmenteni, mert nincs elég hely. A korábban mentettek megmaradnak; törölj egy régi tányért, vagy szabadíts fel helyet a telefonon. |
 | Újabb app-verzió mentett | Egy újabb Ketara-verzió mentett ebben a böngészőben, ezért ez az ablak nem ment. Zárd be, és nyisd meg újra a Ketarát. |
