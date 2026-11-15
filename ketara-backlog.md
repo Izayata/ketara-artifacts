@@ -2,8 +2,8 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.16, UX-terv v0.9, Tech terv v0.5.*
-*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11)*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.17, UX-terv v0.10, Tech terv v0.5.*
+*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12)*
 
 ---
 
@@ -555,23 +555,29 @@ a ketara-app `tech-debt.md`).
 *Cél: ami a gondozott listából hiányzik, felvihető, szerkeszthető, törölhető.
 Forrás: PRD 4.3, 6.5, 7.; F 6.1, 6.2; UX 6.*
 
-- [ ] **S10.1 — Felvitel** · *Kész, ha:* saját alapanyag felvihető, kereshető, és a választóból
+- [x] **S10.1 — Felvitel** · *Kész, ha:* saját alapanyag felvihető, kereshető, és a választóból
   jövet rögtön a tányérra kerül.
-  - [ ] T10.1.1 Lap: név, kategória választógombsor (6 elem, kötelező), CH / fehérje / zsír
+  - [x] T10.1.1 Lap: név, kategória választógombsor (6 elem, kötelező), CH / fehérje / zsír
     100 g-ra, nyersen; id `u-` + `crypto.randomUUID()`.
-  - [ ] T10.1.2 Élő ellenőrzés: CH + Fe + Zs ≤ 100, „100 grammban ennyi nem fér el. Nézd meg a
+  - [x] T10.1.2 Élő ellenőrzés: CH + Fe + Zs ≤ 100, „100 grammban ennyi nem fér el. Nézd meg a
     csomagolást."
-  - [ ] T10.1.3 Egyedi név (a gondozott és a saját tételek között is, kis- és nagybetűtől
+  - [x] T10.1.3 Egyedi név (a gondozott és a saját tételek között is, kis- és nagybetűtől
     függetlenül).
-  - [ ] T10.1.4 „Nincs találat" → a beírt szöveg a névmezőben; mentés után a tányérra kerül.
-  - [ ] T10.1.5 Emlékeztető sor a szénhidrát mező alatt, mindig látszik: „Ha a csomagoláson külön sorban van a rost, add hozzá a szénhidráthoz." (F 6.2).
-- [ ] **S10.2 — Szerkesztés és törlés** · *Kész, ha:* a „…" menüből szerkeszthető és törölhető,
+  - [x] T10.1.4 „Nincs találat" → a beírt szöveg a névmezőben; mentés után a tányérra kerül.
+  - [x] T10.1.5 Emlékeztető sor a szénhidrát mező alatt, mindig látszik: „Ha a csomagoláson külön sorban van a rost, add hozzá a szénhidráthoz." (F 6.2).
+- [x] **S10.2 — Szerkesztés és törlés** · *Kész, ha:* a „…" menüből szerkeszthető és törölhető,
   a tányérokra gyakorolt hatással együtt; tesztekkel.
-  - [ ] T10.2.1 Szerkesztés (ugyanaz a lap, kitöltve): név, kategória, tápérték.
-  - [ ] T10.2.2 Törlés, ha tányér használja: megerősítő lap a tányérok felsorolásával (`Törlöm` /
+  - [x] T10.2.1 Szerkesztés (ugyanaz a lap, kitöltve): név, kategória, tápérték.
+  - [x] T10.2.2 Törlés, ha tányér használja: megerősítő lap a tányérok felsorolásával (`Törlöm` /
     `Mégse`); a sor kikerül a tányérokból, az üressé váló tányér törlődik, a 3 alá eső hiányos
     marad.
-  - [ ] T10.2.3 Törlés az aktuális tányérról és a `lastUsed`-ból is.
+  - [x] T10.2.3 Törlés az aktuális tányérról és a `lastUsed`-ból is.
+
+*Megvalósítva: ketara-app PR #12 (4 review-kör). A spechez képest: tányérban nem használt saját
+alapanyag törlése kérdés nélkül, visszavonással (UX 8.2), és a választó bezárul, hogy a
+visszavonás elérhető legyen; tele tányérnál (8 sor) az új alapanyag csak a listába kerül, és
+ezt egy sor megmondja; üres makrómező hiba (0-t kell írni); a beírt név a `#/sajat?nev=…`
+címben utazik.*
 
 ---
 
