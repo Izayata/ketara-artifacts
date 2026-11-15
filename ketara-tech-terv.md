@@ -1,8 +1,8 @@
-# Ketara — Tech terv (alfa) v0.5
+# Ketara — Tech terv (alfa) v0.6
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Alapja: PRD v1.4, Folyamatok és képernyők v0.13, UX-terv v0.7, prototípus v1.1.*
-*Utolsó frissítés: 2026-11-13 (3. állapot-réteg és 9. saját router a ketara-app PR #7 szerint)*
+*Utolsó frissítés: 2026-11-15 (2. betűtípus: rendszerbetű; 8.1 a megoldó workerje is előre gyorsítótárban, a ketara-app PR #14 szerint)*
 
 ---
 
@@ -102,7 +102,7 @@ tests/                       megoldó- és tartománytesztek, PRD-példák, orá
 | UI | React 19 | a felhasználó döntése |
 | Állapot | `useReducer` + context, egy store | kevés képernyő, kevés adat; nincs Redux |
 | Stílus | sima CSS változókkal (a prototípus tokenjei), CSS Modules | nincs futásidejű CSS-könyvtár |
-| Betűtípus | Atkinson Hyperlegible, **saját hosztolva** | a prototípus a Google Fonts-ról tölti; offline és adatvédelem miatt ez nem maradhat |
+| Betűtípus | **Rendszerbetű** (SF Pro / Roboto, UX 9.); nincs betűfájl | felhasználó, 2026-11-15 (T11.5.1); a prototípus Google Fonts-a offline és adatvédelem miatt nem maradhatott |
 | Tesztek | Vitest, fast-check (tulajdonság-alapú), Playwright (néhány végponttól végpontig teszt) | |
 | Csomagkezelő | pnpm | |
 | Minőség | ESLint, Prettier, `tsc --noEmit` | |
@@ -351,7 +351,7 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 
 ### 8.1 Service worker
 
-`vite-plugin-pwa` (Workbox): a build **minden fájlját** (HTML, JS, CSS, betűtípus, ikonok,
+`vite-plugin-pwa` (Workbox): a build **minden fájlját** (HTML, JS, CSS, ikonok, a megoldó workerje,
 alapanyaglista) előre gyorsítótárba teszi. Az első betöltés után az app hálózat nélkül
 indul és működik (PRD 6.6). Futás közben nincs hálózati kérés.
 

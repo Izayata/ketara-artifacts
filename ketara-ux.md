@@ -1,6 +1,6 @@
 # Ketara — UX-terv v0.10
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.17-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.18-hoz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
 *Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint; 6.: saját alapanyag, PR #12 szerint)*
 
