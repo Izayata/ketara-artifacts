@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.16
+# Ketara — Folyamatok és képernyők v0.17
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11 szerint)*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12 szerint)*
 
 ---
 
@@ -561,6 +561,17 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Átnevezés lap, a mező címkéje | Új név |
 | Csere-kérdés lap neve (felolvasva) | Tányér lecserélése |
 | Saját alapanyag törlése, tányérban használt | {Alapanyag} — ezekben a tányérokban szerepel: {tányérok}. Törléskor kikerül belőlük. — Törlöm / Mégse |
+| Saját alapanyag törlése, tányérban nem használt | (kérdés nélkül) Törölve: {Alapanyag}. Visszavonás |
+| Saját alapanyag lap, címkék | Név · Kategória · 100 grammban, nyersen · Szénhidrát · Fehérje · Zsír · Mentés |
+| Saját alapanyag, üres név | Írj be egy nevet. |
+| Saját alapanyag, foglalt név | Már van ilyen nevű alapanyag. |
+| Saját alapanyag, nincs kategória | Válassz kategóriát. |
+| Saját alapanyag, üres makrómező | Írd be a csomagolásról. Ha nincs benne, írj 0-t. |
+| Saját alapanyag, nem szám | Csak számot írj be. |
+| Választó, saját alapanyag „…" gombja (felolvasva) | {Alapanyag}: további lehetőségek |
+| Választó, saját alapanyag „…" menü | Szerkesztés · Törlés |
+| Saját alapanyag törlése, a kérdés neve (felolvasva) | Alapanyag törlése |
+| Saját alapanyag mentése tele tányérnál | Mentve: {Alapanyag}. A tányérra nem került, mert egy tányéron legfeljebb 8 alapanyag lehet. Ha ezt szeretnéd rajta, vegyél le egyet, és tedd fel a + Alapanyag gombbal. |
 | Csere rögzített soron | A rögzítés lekerült, mert az alapanyag változott. — Visszavonás |
 | Csere nem rögzített soron | Csere: {Alapanyag} → {Alapanyag}. — Visszavonás (felolvasva: „Csere: {Alapanyag} helyett {Alapanyag}.") |
 | Csere-lap címe | Csere: {Alapanyag} |

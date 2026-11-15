@@ -1,8 +1,8 @@
-# Ketara — UX-terv v0.9
+# Ketara — UX-terv v0.10
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.16-hoz. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.17-hez. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint)*
+*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint; 6.: saját alapanyag, PR #12 szerint)*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
 fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
@@ -259,7 +259,18 @@ alul.
   (a CH rosttal együtt értendő, a csomagolás rost nélkül adja meg; PRD 6.5).
 - Az ellenőrzés (CH + Fe + Zs ≤ 100) a mező alatt jelenik meg, amint teljesül vagy sérül,
   nem csak mentéskor.
-- Mentés után az alapanyag rögtön a tányérra kerül, ha a választóból jött.
+- Mentés után az alapanyag rögtön a tányérra kerül, ha a választóból jött, és a Tányérra
+  jutsz vissza. Tele tányérnál (8 sor) csak a listába kerül, és egy sor megmondja, miért.
+- A mező saját hibája akkor jelenik meg, amikor elhagyod a mezőt; a foglalt név és a 100 g-os
+  ellenőrzés gépelés közben. A halvány `Mentés` megnyomása minden hibát megmutat, és az első
+  javítandó mezőre visz (mint a Keretnél). Üres makrómező hiba: a 0-t is be kell írni.
+- A kiválasztott kategória pipát is kap, nem csak színt (9.).
+- Szerkesztés és törlés: a választóban minden saját alapanyag mellett „…" gomb (ketara-app
+  PR #12). `Szerkesztés` → ugyanez a lap, kitöltve. `Törlés`: ha mentett tányér használja,
+  előbb a kérdés (8.2); ha nem, kérdés nélkül, visszavonással. A választó mindkét esetben
+  bezárul, hogy a visszavonás sávja elérhető legyen.
+- Hosszú, egyszavas név (pl. „Kecskesajtkrémsajtos") a chipben és a lapok címében
+  elválasztással tördelődik, 320 px-en 200%-os betűvel is.
 
 ---
 
