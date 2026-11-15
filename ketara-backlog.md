@@ -2,7 +2,7 @@
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.18, UX-terv v0.10, Tech terv v0.6.*
+*Alapja: PRD v1.4, Folyamatok és képernyők v0.19, UX-terv v0.11, Tech terv v0.7.*
 *Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12)*
 
 ---
@@ -601,10 +601,11 @@ Tech 7.4–7.5, 8., 10.*
   - [x] T11.2.1 `vite-plugin-pwa` (Workbox): a build minden fájlja előre gyorsítótárban.
   - [x] T11.2.2 Frissítés csak a következő megnyitáskor, újratöltés és kérdés nélkül (Tech 8.2).
   - [x] T11.2.3 Playwright: offline újranyitás.
-- [x] **S11.3 — iOS-tipp** · *Kész, ha:* csak iOS Safariban, nem telepítve jelenik meg, és bezárás
-  után soha többé.
-  - [x] T11.3.1 Felismerés (iOS + Safari + `navigator.standalone !== true`), sáv a Tányér tetején,
-    semleges színnel, `Értem` gombbal; `ui.iosInstallHintDismissed`.
+- [x] **S11.3 — iOS-tipp** · *Kész, ha:* csak iOS-en, a kezdőképernyőre tenni tudó böngészőben
+  (alkalmazásba épített böngészőben nem), nem telepítve jelenik meg, és bezárás után soha többé.
+  - [x] T11.3.1 Felismerés (iOS + `Safari/` a user agentben, alkalmazásba épített böngésző nélkül
+    + nem standalone; Tech 8.3), sáv a Tányér tetején és az első indítás Keretén, semleges
+    színnel, `Értem` gombbal; `ui.iosInstallHintDismissed` (ketara-app PR #14, #15).
 - [x] **S11.4 — Ha nem lehet menteni** · *Kész, ha:* privát böngészésben a sáv látszik, az app
   működik.
   - [x] T11.4.1 Sáv: „Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik."
@@ -665,3 +666,4 @@ dönteni kell róluk.
 | 2026-11-13 | Minden megoldó-modulnak saját egységteszt-fájl kell (S2.2, T2.2.1–T2.2.8) | a felhasználó kérése a ketara-app PR #3 átnézése után: a modulok addig csak a `solvePlate`-en keresztül voltak tesztelve, és két szándékos hiba átment |
 | 2026-11-15 | Betűtípus: rendszerbetű (T11.5.1) | a felhasználó döntése; nincs letöltés, a meglévő elrendezés-tesztek erre hangoltak |
 | 2026-11-15 | Ideiglenes app-ikon (fehér K a zöld akcentuson); a végleges ikon később a felhasználótól | a felhasználó döntése |
+| 2026-11-15 | Az iOS-tipp minden iOS-böngészőben (kivéve az alkalmazásba építetteket), és az első Kereten is (S11.3) | a felhasználó döntése; ketara-app PR #15 |

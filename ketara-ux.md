@@ -1,8 +1,8 @@
-# Ketara — UX-terv v0.10
+# Ketara — UX-terv v0.11
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.18-hoz. A viselkedést azok
+*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.19-hez. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint; 6.: saját alapanyag, PR #12 szerint)*
+*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint; 6.: saját alapanyag, PR #12 szerint; 2026-11-15: 2., 8.1: az iOS-tipp minden iOS-böngészőben és az első Kereten is, PR #15 szerint)*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
 fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
@@ -11,7 +11,8 @@ kód, hozzájárulás-kapu; és a PR auditját (2026-10-24): navigáció, ⚠ pa
 szabály, fiók blokk, `Hozzáadás (3)`. A v0.5 (2026-11-13) a PRD v1.2-t követi: nincs
 fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszközön marad. A v0.6
 (2026-11-13) a tech terv interjújából az iOS-tippet adja hozzá (2. fejezet). A v0.7
-(2026-11-13) a Saját alapanyag lapra a rost-emlékeztetőt (6. fejezet).
+(2026-11-13) a Saját alapanyag lapra a rost-emlékeztetőt (6. fejezet). A v0.11
+(2026-11-15) az iOS-tippet minden iOS-böngészőre és az első Keretre is kiterjeszti (2., 8.1).
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -49,11 +50,20 @@ Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 - **Nincs fiók, minden az eszközön.** Nincs belépés, nincs szinkron: a megoldó és az
   adatok az eszközön vannak, hálózat nélkül is működik (PRD 6.6). Nincs offline-jelzés,
   mert nincs mihez képest offline lenni.
-- **iOS-tipp a kezdőképernyőről** (v0.6). iPhone-on, Safariban, ha a Ketara nem a
-  kezdőképernyőről fut, a Tányér tetején, a fejléc alatt egy keskeny, semleges színű
-  sáv jelenik meg (nem ⚠-szín, nem modális), egy `Értem` gombbal. Bezárás után soha nem
-  jön vissza. Ok: a Safari egy hét szünet után törölheti a nem telepített oldal adatait
-  (PRD 6.6). Szöveg: Folyamatok 7.
+- **iOS-tipp a kezdőképernyőről** (v0.6, v0.11). iPhone-on és iPaden, **minden olyan
+  böngészőben, amely a kezdőképernyőre tud tenni** (Safari, Chrome, Edge, Firefox…; iOS
+  16.4 óta mind ugyanazt a Megosztás menüt használja), ha a Ketara nem a kezdőképernyőről
+  fut. Alkalmazásba épített böngészőben (Facebook, Instagram, Google app…) **nem**
+  jelenik meg, mert onnan nem lehet a kezdőképernyőre tenni. Egy keskeny, semleges színű
+  sáv (nem ⚠-szín, nem modális), egy `Értem` gombbal, **a fejléc alatt két helyen**:
+  - a **Tányér** tetején;
+  - az **első indítás Keretén** a mezők fölött, még gépelés előtt. Ok: a kezdőképernyőről
+    nyitott app iOS-en saját, üres tárolóval indul, a böngészőben beírt Keret nem jön át.
+    A később megnyitott Kereten nincs.
+
+  Egyszer bezárva mindkét helyről eltűnik, és soha nem jön vissza; bezárás után a fókusz
+  a képernyő címére kerül. Ok: a Safari egy hét szünet után törölheti a nem telepített
+  oldal adatait (PRD 6.6). Szöveg: Folyamatok 7.
 - **Az utolsó tányér megmarad.** Ha a felhasználó bezárja az appot főzés közben, és
   újranyitja, ugyanaz a tányér várja, ugyanazokkal a rögzítésekkel. Ez az **aktuális
   tányér**-t a `Kész` vagy egy új tányér törli (PRD 6.6). A mentett tányér ettől függetlenül rögzítés nélkül nyílik.
@@ -295,6 +305,8 @@ alul.
 
 - Első indításkor (ezen az eszközön még nincs keret) a Keret egyetlen képernyőn nyílik, fölötte egy mondat:
   „Írd be a dietetikusod számait. Csak egyszer kell."
+- Első indításkor iOS-en, ha nem a kezdőképernyőről fut, a fejléc alatt, a mezők fölött az
+  iOS-tipp is látszik (2. fejezet).
 - Mezők párban (alsó–felső), numerikus billentyűzettel; a „Tovább" gomb a következő mezőre
   ugrik, így végig lehet menni rajta a papír sorrendjében.
 - **Az „Egy étkezésre ez jön ki" blokk élőben frissül** gépelés közben, egy tizedessel
@@ -345,6 +357,7 @@ alul.
 | Marad-e fiók, belépés, szinkron? (2026-11-13) | Nem: minden az eszközön (PRD v1.2, 5. és 6.6) |
 | Kérje-e iPhone-on a kezdőképernyőre tételt? (2026-11-13) | Igen, egyszeri, bezárható sávval (2. fejezet) |
 | Kell-e Rost mező a Saját alapanyagra? (2026-11-13) | Nem, csak egy emlékeztető sor a szénhidrát alatt (6. fejezet) |
+| Csak Safariban jelenjen-e meg az iOS-tipp? (2026-11-15) | Nem: minden iOS-böngészőben, kivéve az alkalmazásba építetteket; az első Kereten is (2. és 8.1) |
 
 ## 11. A prototípusról
 
