@@ -231,7 +231,12 @@ E2-ben nincs, mert még nincs felület; ezek az S7.7, S8.5 és S9.5.*
   megoldót); a PR #3 600 ms-os korlátja csak regresszió-őr, nem ez a küszöb.
   - [ ] T2.6.1 Benchmark-teszt a CI-ban; cél: egy teljes újraszámolás 50 ms alatt egy
     középkategóriás telefonon (a CI-gépen ennek megfelelő, szigorúbb küszöb).
-  - [ ] T2.6.2 *Csak ha a cél nem teljesül:* a megoldó Web Workerbe burkolása.
+  - [x] T2.6.2 *Csak ha a cél nem teljesül:* a megoldó Web Workerbe burkolása.
+
+  *T2.6.2 kész: ketara-app PR #13 (TD-2, 5 review-kör). A megoldó és a ⚠-tippek próbái
+  Web Workerben futnak; a sorok azonnal frissülnek, az előző eredmény halványítva látszik,
+  amíg az új megérkezik, a Kész és a mentés addig vár. Az S2.6 és a T2.6.1 nyitva marad: a
+  megoldó maga még mindig lassabb az 50 ms-os célnál, csak már nem a fő szálon fut.*
 
 ---
 
@@ -464,7 +469,7 @@ UX 4.1–4.5, 4.7, 5.*
 
 *E7 kész: ketara-app PR #9 (7 review-kör). Ismert, nem javított: TD-1 a ketara-app
 `tech-debt.md`-ben (ritka kerekítési ⚠, Kész után 1 g eltolódás). A T2.6.2 (Web Worker)
-nyitva maradt.*
+nyitva maradt; 2026-11-15-én elkészült (ketara-app PR #13).*
 
 ---
 
