@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.18
+# Ketara — Folyamatok és képernyők v0.19
 
 *Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint)*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint; 2026-11-15: az iOS-tipp helye az első Kereten is, PR #15)*
 
 ---
 
@@ -601,7 +601,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Keret, étkezésszám | Írj be egy egész számot 1 és 10 között. |
 | Keret, arány ≤ 0 | Írj be egy 0-nál nagyobb számot, például 2-t. |
 | Tányér fejléce, a cél-sáv fölött | Étkezési cél |
-| iOS-tipp (Tányér teteje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
+| iOS-tipp (Tányér teteje és az első indítás Keretje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
 | iOS-tipp, képernyőolvasónak (a nyíl helyett) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás, majd Főképernyőhöz adás. |
 | iOS-tipp sávjának neve (képernyőolvasó) | Tipp |
 | A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |

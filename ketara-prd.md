@@ -3,7 +3,7 @@
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
 *Tech terv: `ketara-tech-terv.md`.*
-*Utolsó frissítés: 2026-11-13*
+*Utolsó frissítés: 2026-11-15 (6.6 és 7.: az iOS-tipp minden iOS-böngészőben és az első Kereten is)*
 
 ---
 
@@ -356,9 +356,12 @@ eszközt.
   alapanyagok elvesznek. Export v1-ben nincs (10. Dísz).
 - **Az adat védelme a böngészőtől:** első indításkor a termék tartós tárolást kér a
   böngészőtől. iPhone-on a Safari egy weboldal adatait 7 nap használat nélkül törölheti,
-  ha az oldal nincs a kezdőképernyőre téve; ezért iOS Safariban, ha a Ketara nem a
-  kezdőképernyőről fut, a Tányér tetején egy **egyszeri, bezárható tipp** kéri, hogy
-  tegye a kezdőképernyőre. Bezárás után nem jön vissza. Androidon és számítógépen nem
+  ha az oldal nincs a kezdőképernyőre téve; ezért iPhone-on és iPaden, minden olyan
+  böngészőben, amely a kezdőképernyőre tud tenni (az alkalmazásba épített böngészőkben,
+  pl. a Facebookéban nem), ha a Ketara nem a kezdőképernyőről fut, a Tányér tetején és az
+  első indítás Keretén egy **egyszeri, bezárható tipp** kéri, hogy tegye a
+  kezdőképernyőre. Az első Kereten azért, mert a kezdőképernyőre tett app üres adatokkal
+  indul, a böngészőben beírt Keret nem jön át. Bezárás után nem jön vissza. Androidon és számítógépen nem
   jelenik meg.
 - **Ha a böngésző nem enged menteni** (pl. privát böngészés), a termék működik, de egy
   sávban kiírja, hogy bezáráskor minden elveszik.
@@ -393,7 +396,7 @@ eszközt.
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
 | Első indítás | Keret → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
 | Nincs hálózat | Minden helyben működik. |
-| iPhone, Safari, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |
+| iPhone vagy iPad, böngészőben, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |
 | A böngésző nem enged menteni | Működik, de kiírja, hogy bezáráskor minden elveszik (6.6). |
 | Másik eszköz vagy másik böngésző | A Ketara üresen indul, a Keret kitöltésével; az adatok nem költöznek át (6.6). |
 | A böngésző adatai törölve | Mint az első indítás: a keret, a tányérok és a saját alapanyagok elvesztek (vállalt kockázat, 6.6). |
@@ -635,8 +638,13 @@ tételhez, tartós tárolás kérése · a gondozott listát a projektgazda áll
 | 2026-11-13 | **Egyszeri iOS-tipp a kezdőképernyőre tételhez**; tartós tárolás kérése | az iOS Safari 7 nap használat nélkül törli a nem telepített oldal adatait; export nincs, így ez a legvalószínűbb adatvesztés |
 | 2026-11-13 | **A kcal mindenhol 4/4/9**; a gondozott lista kcal-értéke ellenőrző adat | egy szabály a gondozott és a saját alapanyagra (tech terv 5.3) |
 | 2026-11-13 | **Szénhidrát rosttal együtt**; a Saját alapanyag lapon egy emlékeztető sor, hogy a csomagoláson külön álló rostot hozzá kell adni (nincs külön Rost mező) | az orvos a rosttal együtti CH-t nézi; a magyar csomagolás rost nélkül adja meg |
+| 2026-11-15 | **Az iOS-tipp minden iOS-böngészőben** (az alkalmazásba építettek kivételével), **és az első Kereten is** | iOS 16.4 óta minden böngésző a kezdőképernyőre tud tenni; a kezdőképernyőre tett app üres adatokkal indul |
 
 ## Javítások
+
+- **v1.4 (2026-11-15):** 6.6 és 7.: az iOS-tipp nem csak Safariban, hanem minden
+  iOS-böngészőben megjelenik (az alkalmazásba építettek kivételével), és az első Kereten
+  is; döntésnapló-sor.
 
 - **v1.3:** a tech terv (`ketara-tech-terv.md`) interjújából: 6.6 kiegészítve az iOS-tippel,
   a tartós tárolással és a mentést nem engedő böngészővel; két új peremeset (7.).

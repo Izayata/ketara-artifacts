@@ -1,8 +1,8 @@
-# Ketara — Tech terv (alfa) v0.6
+# Ketara — Tech terv (alfa) v0.7
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Alapja: PRD v1.4, Folyamatok és képernyők v0.13, UX-terv v0.7, prototípus v1.1.*
-*Utolsó frissítés: 2026-11-15 (2. betűtípus: rendszerbetű; 8.1 a megoldó workerje is előre gyorsítótárban, a ketara-app PR #14 szerint)*
+*Utolsó frissítés: 2026-11-15 (2. betűtípus: rendszerbetű; 8.1 a megoldó workerje is előre gyorsítótárban, a ketara-app PR #14 szerint; 8.3: az iOS-tipp minden iOS-böngészőben és az első Kereten is, PR #15)*
 
 ---
 
@@ -28,7 +28,7 @@ fizetőssé válik, az új döntés; a terv ehhez kilépési utat tart nyitva (1
 | Alapanyaglista | **JSON fájl**; kötelező mezők: id, név, kcal, fehérje, zsír, szénhidrát (+ a PRD által megkövetelt mezők, 5.) | felhasználó |
 | kcal | A kcal-sáv **mindenhol 4/4/9-cel** számol (PRD 6.1 változatlan). A JSON kcal-értéke csak **ellenőrző adat** | felhasználó, 2026-11-13 |
 | A lista összeállítása | A **felhasználó** állítja össze; a terv a formátumot és az ellenőrző szkriptet adja | felhasználó, 2026-11-13 |
-| iOS adatvesztés | **Egyszeri, bezárható tipp** iOS Safariban: tedd a kezdőképernyőre (8.3) | felhasználó, 2026-11-13 |
+| iOS adatvesztés | **Egyszeri, bezárható tipp** minden iOS-böngészőben (az alkalmazásba építettek kivételével): tedd a kezdőképernyőre (8.3) | felhasználó, 2026-11-13; 2026-11-15 |
 | Nyelv | Tervek és felület magyarul; kód, azonosítók, commitok angolul | felhasználó, 2026-11-13 |
 | Helyi tárolás | `localStorage`, verziózott séma, migrációk (7.) | terv |
 | Offline | Telepíthető PWA, service worker (8.) | terv (PRD 6.6 követeli) |
@@ -371,10 +371,21 @@ nélkül törli**, ha az oldal nincs a kezdőképernyőre téve. A kezdőképern
 appnál ez nem történik meg. Export nincs (PRD 6.6), ezért egy egyhetes szünet után a
 Keret, a tányérok és a saját alapanyagok elveszhetnének.
 
-**Működés:** ha az eszköz iOS, a böngésző Safari, és az app **nem** a kezdőképernyőről
-fut (`navigator.standalone !== true`), a Tányér tetején egy bezárható sáv jelenik meg.
-Bezárás után nem jön vissza (`ui.iosInstallHintDismissed`). Androidon és asztalon nem
-jelenik meg. Szöveg (a Folyamatok 7.-be kerül):
+**Működés** (`shouldShowInstallTip` a `src/ui/device.ts`-ben). A sáv akkor jelenik meg, ha
+mind a három igaz:
+- **iOS:** a user agentben iPhone, iPad vagy iPod van, vagy `MacIntel` érintőképernyővel
+  (iPad asztali módban).
+- **Böngésző, amely a kezdőképernyőre tud tenni:** a user agentben `Safari/` van, és nincs
+  benne alkalmazásba épített böngésző jele (Facebook, Instagram, LinkedIn, Line, WeChat,
+  Snapchat, TikTok, X, Pinterest, Google app). iOS 16.4 óta a Chrome, az Edge, a Firefox és
+  a többi böngésző is a kezdőképernyőre tud tenni ugyanazzal a Megosztás menüvel.
+- **Nem telepített:** sem `navigator.standalone`, sem `display-mode: standalone`.
+
+Hol: a Tányér tetején, és az **első indítás Keretén** a mezők fölött (közös
+`InstallTip` komponens). Az első Keret azért kell, mert a kezdőképernyőről nyitott app
+iOS-en saját, üres tárolóval indul. Bezárás után egyik helyen sem jön vissza
+(`ui.iosInstallHintDismissed`). Androidon és asztalon nem jelenik meg. Szöveg
+(Folyamatok 7.):
 
 > Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat.
 > Megosztás → Főképernyőhöz adás.
@@ -499,6 +510,7 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | kcal mindenhol 4/4/9, a JSON kcal ellenőrző adat | egy szabály a gondozott és a saját alapanyagra; a PRD 6.1 változatlan |
 | 2026-11-13 | A listát a felhasználó állítja össze | a felhasználó döntése; a terv formátumot és ellenőrzést ad |
 | 2026-11-13 | Egyszeri iOS-tipp a kezdőképernyőről | az iOS 7 napos törlése a legvalószínűbb adatvesztés, és export nincs |
+| 2026-11-15 | Az iOS-tipp minden iOS-böngészőben (kivéve az alkalmazásba építetteket), és az első Kereten is | iOS 16.4 óta minden böngésző a kezdőképernyőre tud tenni; a telepített app üres tárolóval indul; a felhasználó döntése (ketara-app PR #15) |
 | 2026-11-13 | Terv magyarul, kód angolul | a felhasználó jóváhagyta |
 | 2026-11-13 | Szénhidrát rosttal együtt: USDA „by difference" változatlanul | az orvos a rosttal együtti CH-t nézi (a korábbi „rost nélkül" döntést aznap felülírta) |
 | 2026-11-13 | Egyelőre nincs saját domain | a felhasználó döntése; költözéskor a tesztelők adatai a régi címen maradnak (12.) |
