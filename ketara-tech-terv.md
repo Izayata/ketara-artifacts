@@ -317,7 +317,8 @@ type StoredState = {
 
 **v2 (backlog E14, 7.6):** `schemaVersion: 2`; a `ui` kiegészül a `tourDone: boolean` és a
 `tipsSeen: TipId[]` mezővel. A v1 → v2 migráció mindenkinél `tourDone: false`, `tipsSeen: []`
-értéket ad. A sérült-adat szabály (fent) rájuk is áll: a nem logikai `tourDone` `true` lesz
+értéket ad; az üres kezdőállapot (új felhasználó) is `tourDone: false`, `tipsSeen: []`. A
+sérült-adat szabály (fent) rájuk is áll: a nem logikai `tourDone` `true` lesz
 (inkább maradjon el a túra, mint hogy újra és újra induljon), a `tipsSeen`-ből kiesik minden
 ismeretlen vagy nem szöveges elem, és az ismétlődések is.
 
@@ -363,11 +364,14 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   állapotban is érintetlen marad, csak a túra alatt nem látszik; a túra után ugyanúgy ott van.
   A túra nem hívja a „legutóbb használt" frissítését, és nem ment tányért.
 - **Indulás:** `keret !== null && !ui.tourDone` → a Tányéron indul, és **az indulással egy
-  írásban** `tourDone: true` kerül a tárolóba. A Keret első mentése után ez magától teljesül; a
+  írásban** `tourDone: true` kerül a tárolóba. Ha az app másik útvonalon nyílik (pl.
+  `#/tanyerjaim`, `#/keret`), a túra akkor indul, amikor a felhasználó először a Tányérra ér. A Keret első mentése után ez magától teljesül; a
   v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. A `Bevezető újra` csak
   memóriában indítja újra (a `tourDone` már `true`).
 - **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): a memóriabeli túra-állapot eldobódik, a
-  Tányér a felhasználó saját tányérját mutatja. Tárolói írás nincs.
+  Tányér a felhasználó saját tányérját mutatja. Tárolói írás nincs. `Kezdjük` és `Kihagyom`
+  esetén a túra a saját history-rétegét is leveszi (az `openLayer` visszaadott záró
+  függvényével), hogy a következő vissza ne egy halott rétegen akadjon el.
 - **Bezárás a túra közben:** mivel a `tourDone` már `true`, újranyitáskor nem indul túra, és a
   felhasználó tányérja ott van, ahol hagyta. Ez a kihagyással egyenértékű.
 - **Két fül (7.3):** a másik fül a `storage` eseményből vagy betöltéskor `tourDone: true`-t
@@ -383,13 +387,17 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   - A rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
     legalább 3 g-mal a fehérjesáv teteje fölé visz.
   - A jelölt akkor jó, ha (a) rögzítés nélkül ✓, és (b) a fehérjeforrás e grammal rögzítve
-    olyan ⚠-t ad, amelynek **megjelenő** szövegében nincs arány-sor, az első sor
-    (`warningLines()[0]`) a fehérje „fölött" sora, és a `pinCause` a rögzített alapanyagot
-    egymagában nevezi meg okként. (A feloldás előzetese ilyenkor maga az (a) tányér, ezért
+    olyan ⚠-t ad, amelynek **megjelenő** szövegében csak makró-sorok vannak (nincs arány-, 0 g-
+    és kerekítés-sor), az első sor (`warningLines()[0]`) a fehérje „fölött" sora, és a
+    `pinCause` a rögzített alapanyagot egymagában nevezi meg okként. (A feloldás előzetese ilyenkor maga az (a) tányér, ezért
     külön feltétel nem kell.)
   - Szűk zsírsávnál a megoldó az arány miatt olajat ad, és a zsír lóghat ki jobban, mint a
-    fehérje; ekkor a (b) nem teljesül. Nagyobb gramm ezen nem segít (a zsír kétszer olyan gyorsan
-    nő), ezért ilyenkor a következő jelölt jön, végül a rövid túra.
+    fehérje; ekkor a (b) nem teljesül. Nagyobb gramm ezen nem segít (a szükséges zsír a fehérje
+    {min}-szeresével nő, a Keret arány-mezője szerint), ezért ilyenkor a következő jelölt jön,
+    végül a rövid túra.
+  - **Rövid túra:** mindig az **első** jelölt három alapanyagával, rögzítés nélkül fut, ugyanazokkal
+    a referenciákkal; a 2. lépés azt magyarázza, ami a képernyőn van (✓ vagy ⚠). Így a választás
+    minden Kerethez determinisztikus.
 - **Tippek:** `src/domain/tips.ts` dönti el a Tányér, a választó és a ⚠ állapotából, melyik
   tipp esedékes (egyszerre egy, a PRD 6.8 sorrendjében, futó túra alatt egyik sem); a
   `tipsSeen` tárolja a látottakat.
@@ -399,7 +407,8 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   - A kiemelés a célelem ős-láncán a **testvéreket** teszi `inert`-té, nem egész részfákat
     (egy `inert` ős a célelemet is megölné); a választóban így a „Bevezető" sor élő marad, a
     kereső és a kategóriák nem.
-  - A túra induláskor egy history-réteget tesz le (`openLayer`). Ha a rendszer-visszalépés ezt
+  - A túra induláskor egy history-réteget tesz le (`openLayer`), **a Tányérra lépés után**,
+    mert a `navigate()` minden nyitott réteget levesz (pl. a `Bevezető újra` a Keretről). Ha a rendszer-visszalépés ezt
     veszi le, a túra véget ér, mint a `Kihagyom`. A túra alatt nyitott lap a saját rétegét a
     túráé fölé teszi, így a vissza előbb a lapot zárja.
 
@@ -575,5 +584,5 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | A mutációs ellenőrzés rögzített hibalistával (`pnpm mutate:solver`) történik, nem CI-eszközzel | gyors, átlátható, és a CI-t nem lassítja; a felhasználó jóváhagyta |
 | 2026-11-13 | Modulonkénti egységtesztek kötelezők (6.4/2) | a felhasználó kérése a ketara-app PR #3 átnézése után |
 | 2026-11-13 | Saját hash-router és külön `src/state/` réteg | ketara-app PR #7; kevesebb függőség, a reducer Node-ban tesztelhető |
-| 2026-11-21 | Interaktív bevezető: séma v2 (`tourDone`, `tipsSeen`), a mintatányér és a futó túra csak memóriában, `tourDone: true` már induláskor, jelöltek a `config.json`-ban | a felhasználó döntései (backlog E14); a meglévő felhasználóknál a migráció indítja egyszer a túrát; az induláskori írás miatt a megszakított túra nem jön vissza, és két fül sem indít kettőt (review 1. kör) |
 | 2026-11-13 | Időbélyeg a „legutóbb használt" értékeken és a tányérokon; újabb verziójú adatot régi app nem ír felül | a felhasználó jóváhagyta (ketara-app PR #5) |
+| 2026-11-21 | Interaktív bevezető: séma v2 (`tourDone`, `tipsSeen`), a mintatányér és a futó túra csak memóriában, `tourDone: true` már induláskor, jelöltek a `config.json`-ban | a felhasználó döntései (backlog E14); a meglévő felhasználóknál a migráció indítja egyszer a túrát; az induláskori írás miatt a megszakított túra nem jön vissza, és két fül sem indít kettőt (review 1. kör) |

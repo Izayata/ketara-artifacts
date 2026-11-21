@@ -37,7 +37,7 @@
 | E11 | PWA, offline, iOS-tipp, biztonság | E7 | 8 |
 | E12 | Alfa-kiadás és teszt | E6–E11; S12.3: E14 | 9 |
 | E13 | Alfa-javítások (az S12.2-ből jön létre) | E12 | 9 |
-| E14 | Interaktív bevezető: vezetett első tányér és helyi tippek | E7–E10 | 9 előtt (a külső tesztelők előtt) |
+| E14 | Interaktív bevezető: vezetett első tányér és helyi tippek | E7–E11 | 9 előtt (a külső tesztelők előtt) |
 
 **Mérföldkövek**
 
@@ -648,8 +648,8 @@ Tech 14./9.*
 
 *Cél: aki először nyitja meg az appot, egy mintatányéron kipróbálja a lényeget (választó,
 grammok, rögzítés, ⚠, feloldás), a ritkább funkciókról pedig akkor kap egy-egy tippet, amikor
-először előjönnek. Forrás: PRD 6.8; F 3., 7.; UX 8.3; Tech 7.2, 7.6. Függ: E7–E10 (a túra és a
-tippek ezek elemeire mutatnak). A külső tesztelők (S12.3) erre várnak; a saját egyhetes alfa
+először előjönnek. Forrás: PRD 6.8; F 3., 7.; UX 8.3; Tech 7.2, 7.6. Függ: E7–E11 (a túra és a
+tippek ezek elemeire mutatnak; az iOS-tipp és a mentés-hiba sáva az E11-ből jön). A külső tesztelők (S12.3) erre várnak; a saját egyhetes alfa
 (S12.2) közben mehet.*
 
 *Döntések (2026-11-21, interjú): vezetett első tányér + helyi tippek; mintatányér a felhasználó
@@ -684,12 +684,13 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     `pnpm validate-data` ellenőrzi, hogy minden id létezik és nincs kivezetve.
   - [ ] T14.2.2 `src/domain/tour.ts` (Tech 7.6; tiszta, szinkron, a Tányér referenciáival): az
     első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a fehérjeforrás a kiszámolt grammal
-    rögzítve olyan ⚠-t ad, amelynek megjelenő szövegében nincs arány-sor, az első sor a fehérje
-    „fölött" sora, és a `pinCause` a rögzített alapanyagot egymagában nevezi meg. A rögzítendő
+    rögzítve olyan ⚠-t ad, amelynek megjelenő szövegében csak makró-sorok vannak (nincs arány-,
+    0 g- és kerekítés-sor), az első sor a fehérje „fölött" sora, és a `pinCause` a rögzített alapanyagot egymagában nevezi meg. A rögzítendő
     gramm: a legkisebb 10-zel osztható érték, amellyel az alapanyag egyedül legalább 3 g-mal a
     fehérjesáv teteje fölé visz. A workerben egy új üzenettípus futtatja.
   - [ ] T14.2.3 Ha egyik jelölt sem felel meg: **rövid túra** (1., 2. és 6. lépés, 1–3-ig
-    számozva), a 2. lépés buboréka azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
+    számozva) mindig az **első** jelölt három alapanyagával, rögzítés nélkül; a 2. lépés
+    buboréka azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
   - [ ] T14.2.4 Tesztek: a PRD 6.4 példakerete (étkezésenként CH 5–10, Fe 20–25, Zs 45–70;
     a jelölt a tojás, a rögzítés grammja a fenti szabályból); kézi eset szűk zsírsávval
     (pl. Fe 20–25, Zs 45–52), amelynél a zsír vezetne → következő jelölt vagy rövid túra;

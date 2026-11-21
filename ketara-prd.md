@@ -390,11 +390,12 @@ ritkább funkció először előjön.
   felhasználó saját sávjaival számolva. Ha a felhasználó Keretével ebből a készletből nem
   mutatható meg a ✓ és a rögzítésből jövő ⚠, a termék a következő jelöltet próbálja; ha
   egyik sem jó, **rövid túra** jön a rögzítés és a feloldás bemutatása nélkül (1., 2. és 6.
-  lépés).
+  lépés), az első jelölt alapanyagaival, rögzítés nélkül.
 - **Hat lépés, mindegyiket a felhasználó csinálja meg;** a túra csak a mozdulata után lép
   tovább: (1) a három alapanyag kiválasztása, (2) a grammok, a ✓ és a makrósor, (3) a
   fehérjeforrás grammjának beírása (rögzítés), olyan értékkel, amely biztosan kilépteti a
-  fehérjesávból, és a ⚠ címsora a fehérjéről szól, (4) a ⚠ panel: címsor, ok, előzetes, (5) feloldás → ✓, (6) záró szöveg.
+  fehérjesávból, és a ⚠ címsora a fehérjéről szól, (4) a ⚠ panel: címsor, ok, előzetes,
+  (5) feloldás → ✓, (6) záró szöveg.
 - **A mintatányér nem a felhasználó adata:** a végén eltűnik, nem frissíti a „legutóbb
   használt" mennyiségeket, nem kerül a Tányérjaim közé. Ha a túra indulásakor volt aktuális
   tányér, az érintetlen marad: a túra alatt nem látszik, utána ugyanúgy ott van, a
@@ -446,7 +447,7 @@ A „Bevezető újra" csak a túrát indítja újra; a már látott tippeket nem
 | Két nyitott fül, az egyikben fut a túra | A másik fül nem indít túrát, a felhasználó tányérját mutatja. |
 | A Keret a túra közben megváltozik (másik fülről) | A túra véget ér, kihagyottnak számít; a Keretről újraindítható. |
 | `Bevezető újra` nem mentett Keret-módosítással | A gomb csak mentett Kerettel aktív; amíg a mezők eltérnek a mentettől, halvány. |
-| A mintatányér a felhasználó Keretével nem mutatja meg a ✓-t és a ⚠-t | A következő jelölt jön; ha egyik sem jó, rövid túra rögzítés és ⚠ nélkül (6.8). |
+| A mintatányér a felhasználó Keretével nem mutatja meg a ✓-t és a ⚠-t | A következő jelölt jön; ha egyik sem jó, rövid túra az első jelölttel, a rögzítés és a feloldás bemutatása nélkül (6.8). |
 | Nincs hálózat | Minden helyben működik. |
 | iPhone vagy iPad, böngészőben, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |
 | A böngésző nem enged menteni | Működik, de kiírja, hogy bezáráskor minden elveszik (6.6). |

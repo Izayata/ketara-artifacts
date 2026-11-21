@@ -115,7 +115,7 @@ régi tányérokon. Külön ellenőrzés nem kell.
 ```mermaid
 flowchart TD
     A0[Első megnyitás] --> A6{Van már keret<br/>ezen az eszközön?}
-    A6 -- igen --> J0["Tányér — az eszközön tárolt adatokkal"]
+    A6 -- "igen, a bevezető már elindult egyszer" --> J0["Tányér — az eszközön tárolt adatokkal"]
     A6 -- "igen, de a bevezető még nem indult" --> J
     A6 -- nem --> B["Keret: egy képernyő<br/>(sávok, étkezésszám, arány)"]
     B --> H["Egy étkezésre ez jön ki:<br/>élőben, gépelés közben"]
@@ -128,7 +128,7 @@ flowchart TD
     G -- "Javítom" --> B
     F3 -- nem --> J
     J["Vezetett első tányér (túra, 6 lépés)<br/>mintatányéron, a saját Kerettel"]
-    J -- "Kezdjük vagy Kihagyom" --> K[Tányér, üres]
+    J -- "Kezdjük vagy Kihagyom" --> K["Tányér: üres, vagy a felhasználó saját tányérja"]
 ```
 
 Nincs belépés, hozzájárulás és süti-sáv (PRD 5., 6.6). Másik eszközön vagy a böngésző
@@ -157,10 +157,10 @@ képernyővel; mindig csak a következő elem koppintható, és minden lépésen
 
 A mintatányér a gondozott lista jelöltjei közül az első, amelyen a felhasználó Keretével a
 ✓ és a rögzítésből jövő ⚠ is megmutatható; ha egyik sem ilyen, **rövid túra** jön (1., 2., 6.
-lépés). A félbehagyott saját tányér a túra alatt nem látszik, de érintetlen, és utána ott van.
-A túra a Keret aljáról (`Bevezető újra`, csak mentett Kerettel) bármikor újraindítható; ha egyszer
-elindult, magától nem jön vissza, akkor sem, ha az app közben bezárult. Aki a bevezető előtt kezdte használni az
-appot, annál a következő megnyitáskor egyszer magától indul.
+lépés) az első jelölttel, rögzítés nélkül. A félbehagyott saját tányér a túra alatt nem látszik, de érintetlen, és utána ott van.
+A túra a Keret aljáról (`Bevezető újra`, csak mentett Kerettel) bármikor újraindítható; ha
+egyszer elindult, magától nem jön vissza, akkor sem, ha az app közben bezárult. Aki a bevezető
+előtt kezdte használni az appot, annál a következő megnyitáskor egyszer magától indul.
 
 ---
 
@@ -636,7 +636,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Túra 2., rövid túra, ⚠ esetén | Kiszámoltam a legközelebbi tányért a te sávjaidhoz. A ⚠ megmondja, mi lóg ki, és mi segít. Minden gramm nyers súly. — Tovább |
 | Túra 3. | Ha egy alapanyagból pontosan annyit akarsz, amennyit te mondasz, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n} g (nyersen). |
 | Túra 3., ha még ✓ | Ez még belefér. Írj be többet: {n} g (nyersen). |
-| Túra 3., ha más ⚠ jön | Most nem a fehérje lóg ki. Írd be ezt: {n} g (nyersen). |
+| Túra 3., ha más ⚠ jön | Ezzel nem a fehérje lett a fő gond. Írd be pontosan ezt: {n} g (nyersen). |
 | Túra 4. | A beírt gramm rögzít: a lakat mutatja, ezt a Ketara nem mozdítja. Ezzel a rögzítéssel nem jön ki: a panel megmondja, mi lóg ki, miért, és mi lenne, ha feloldanád. — Tovább |
 | Túra 5. | Oldd fel: koppints a gombra: {Alapanyag} feloldása. |
 | Túra 6. | Újra minden a sávon belül. Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
@@ -645,7 +645,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Tipp 1 — sor-műveletek | Koppints a névre: csere vagy törlés. — Értem |
 | Tipp 2 — mentés | Ha gyakran eszed, mentsd el. Legközelebb a mai célra újraszámolva nyílik. — Értem |
 | Tipp 3 — mentett tányér | A mentett tányér mindig a mai célra számolódik újra. — Értem |
-| Tipp 4 — saját alapanyag | A csomagolás 100 g-ra vonatkozó adatai kellenek: szénhidrát, fehérje, zsír. — Értem |
+| Tipp 4 — saját alapanyag | A csomagolás 100 g-ra (nyersen) vonatkozó adatai kellenek: szénhidrát, fehérje, zsír. — Értem |
 | Tipp 5 — ⚠ rögzítés nélkül | Ez a lépés segít a legtöbbet. — Értem |
 | Tipp 6 — több rögzítés | Elég, ha egyet feloldasz. Ha az sem segít, oldd fel mindet. — Értem |
 | Tipp buborékának neve (képernyőolvasó) | Tipp |
