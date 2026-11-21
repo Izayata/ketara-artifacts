@@ -389,23 +389,28 @@ ritkább funkció először előjön.
 - **Mintatányér a saját Kerettel:** tojás, brokkoli, olaj (a lista gondozója cserélheti), a
   felhasználó saját sávjaival számolva. Ha a felhasználó Keretével ebből a készletből nem
   mutatható meg a ✓ és a rögzítésből jövő ⚠, a termék a következő jelöltet próbálja; ha
-  egyik sem jó, **rövid túra** jön rögzítés és ⚠ nélkül.
+  egyik sem jó, **rövid túra** jön a rögzítés és a feloldás bemutatása nélkül (1., 2. és 6.
+  lépés).
 - **Hat lépés, mindegyiket a felhasználó csinálja meg;** a túra csak a mozdulata után lép
   tovább: (1) a három alapanyag kiválasztása, (2) a grammok, a ✓ és a makrósor, (3) a
   fehérjeforrás grammjának beírása (rögzítés), olyan értékkel, amely biztosan kilépteti a
-  fehérjesávból, (4) a ⚠ panel: címsor, ok, előzetes, (5) feloldás → ✓, (6) záró szöveg.
+  fehérjesávból, és a ⚠ címsora a fehérjéről szól, (4) a ⚠ panel: címsor, ok, előzetes, (5) feloldás → ✓, (6) záró szöveg.
 - **A mintatányér nem a felhasználó adata:** a végén eltűnik, nem frissíti a „legutóbb
   használt" mennyiségeket, nem kerül a Tányérjaim közé. Ha a túra indulásakor volt aktuális
-  tányér, a túra félreteszi, és a végén vagy kihagyáskor visszaadja, a rögzítésekkel együtt.
-- **Kihagyás és újranézés:** minden lépésen `Kihagyom`. Kihagyva vagy végigjárva magától nem
-  jön vissza; a Keret alján a `Bevezető újra` gomb bármikor újraindítja.
+  tányér, az érintetlen marad: a túra alatt nem látszik, utána ugyanúgy ott van, a
+  rögzítésekkel együtt.
+- **Kihagyás és újranézés:** minden lépésen `Kihagyom` (a záró lépésen nincs, ott a `Kezdjük`
+  zár). Ha egyszer elindult, magától nem jön
+  vissza (akkor sem, ha az app közben bezárult); a Keret alján a `Bevezető újra` gomb
+  bármikor újraindítja, ha a Keret el van mentve.
 - **Kiemelés:** a túra alatt a képernyő elsötétül, csak a következő lépés eleme koppintható.
 
 **Helyi tippek:** egy-egy bezárható buborék, mindegyik **egyszer**, amikor a helyzet először
 előjön; a túra alatt egyik sem, egyszerre legfeljebb egy. Nem sötétít, nem állít meg.
 1. Sor-műveletek: az első saját ✓ tányérnál — a névre koppintva csere vagy törlés.
-2. Tányér mentése: ✓ új tányérnál, amíg nincs mentett tányér — mentve legközelebb a mai
-   célra újraszámolva nyílik.
+2. Tányér mentése: az első `Kész` előtt — ✓ új tányérnál, az 1. tipp után, amíg nincs
+   mentett tányér és a `Kész` még nem volt megnyomva — mentve legközelebb a mai célra
+   újraszámolva nyílik. Az első `Kész` vagy mentés után már nem jön.
 3. Mentett tányér: az első Tányérjaimból megnyitottnál — a mai célra újraszámolódik.
 4. Saját alapanyag: a választóban az első „nincs ilyen" keresésnél — a csomagolás 100 g-os
    adatai kellenek.
@@ -436,8 +441,11 @@ A „Bevezető újra" csak a túrát indítja újra; a már látott tippeket nem
 | Gyanúsan alacsony vagy szűk keret (6.1 helykitöltő küszöbei) | A termék nem hajtja végre szó nélkül. Egyszer visszakérdez; igen után elfogadja. |
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
 | Első indítás | Keret → vezetett első tányér (6.8) → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
-| Meglévő felhasználó a bevezető megjelenése után | A következő megnyitáskor egyszer elindul a túra, kihagyható; a félbehagyott tányér félrekerül, és a végén visszajön (6.8). |
-| Az app a túra közben bezárul | Újranyitáskor a félretett tányér visszaáll, a túra kihagyottnak számít; a Keretről újraindítható. |
+| Meglévő felhasználó a bevezető megjelenése után | A következő megnyitáskor egyszer elindul a túra, kihagyható; a félbehagyott tányér a túra alatt nem látszik, utána ugyanúgy ott van (6.8). |
+| Az app a túra közben bezárul | Újranyitáskor a felhasználó saját tányérja nyílik, a túra kihagyottnak számít; a Keretről újraindítható. |
+| Két nyitott fül, az egyikben fut a túra | A másik fül nem indít túrát, a felhasználó tányérját mutatja. |
+| A Keret a túra közben megváltozik (másik fülről) | A túra véget ér, kihagyottnak számít; a Keretről újraindítható. |
+| `Bevezető újra` nem mentett Keret-módosítással | A gomb csak mentett Kerettel aktív; amíg a mezők eltérnek a mentettől, halvány. |
 | A mintatányér a felhasználó Keretével nem mutatja meg a ✓-t és a ⚠-t | A következő jelölt jön; ha egyik sem jó, rövid túra rögzítés és ⚠ nélkül (6.8). |
 | Nincs hálózat | Minden helyben működik. |
 | iPhone vagy iPad, böngészőben, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |

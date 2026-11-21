@@ -3,7 +3,7 @@
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
 *Alapja: PRD v1.5, Folyamatok és képernyők v0.20, UX-terv v0.12, Tech terv v0.8.*
-*Utolsó frissítés: 2026-11-21 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12; 2026-11-15: E11 kész: PR #14, #15; 2026-11-21: új E14 — Interaktív bevezető)*
+*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12; 2026-11-15: E11 kész: PR #14, #15; 2026-11-21: új E14 — Interaktív bevezető)*
 
 ---
 
@@ -660,40 +660,54 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
 - [ ] **S14.1 — A túra állapota és tárolása** · *Kész, ha:* a túra a megfelelő pillanatban
   indul, kihagyva vagy végigjárva nem jön vissza magától, és a felhasználó tányérja érintetlen
   marad; tesztekkel.
-  - [ ] T14.1.1 Séma v2 (Tech 7.2): `ui.tourDone`, `ui.tipsSeen`, `tourStash`; migráció v1 → v2,
-    amely **mindenkinél** `tourDone: false`-t állít (így a meglévő felhasználóknál is egyszer
-    elindul). Migrációs teszt valódi v1-es mintával.
+  - [ ] T14.1.1 Séma v2 (Tech 7.2): `ui.tourDone`, `ui.tipsSeen`; migráció v1 → v2, amely
+    **mindenkinél** `tourDone: false`-t állít (így a meglévő felhasználóknál is egyszer
+    elindul). Migrációs teszt valódi v1-es mintával. Sérült adat (`sanitize.ts`): a nem logikai
+    `tourDone` `true` lesz; a `tipsSeen`-ből kiesnek az ismeretlen azonosítók és az ismétlődések.
   - [ ] T14.1.2 Indulás: új felhasználónál a Keret első mentése után (a gyanús-érték kérdésnél
     az `Igen, így van` után); meglévőnél, ha van Keret és `tourDone: false`, a következő
-    megnyitáskor a Tányéron. A Keret nélküli állapot (első indítás) nem indít túrát.
-  - [ ] T14.1.3 Félretétel: ha induláskor van aktuális tányér, a `tourStash`-be kerül, és a túra
-    végén vagy kihagyáskor visszaáll, rögzítésekkel együtt. A mintatányér nem frissíti a
-    „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim közé.
-  - [ ] T14.1.4 Megszakítás: ha az app a túra közben bezárul, a következő megnyitáskor a
-    félretett tányér visszaáll, a túra kihagyottnak számít (`tourDone: true`), túra nem indul.
-  - [ ] T14.1.5 Két fül (Tech 7.3): ha a másik fülön fut a túra, ez a fül nem indít újat.
+    megnyitáskor a Tányéron. A Keret nélküli állapot (első indítás) nem indít túrát. Az
+    induláskor egy írásban `tourDone: true` kerül a tárolóba (Tech 7.6).
+  - [ ] T14.1.3 A mintatányér csak memóriában: a felhasználó aktuális tányérja a tárolóban és
+    az állapotban érintetlen, a túra alatt csak nem látszik, utána ugyanúgy ott van (rögzítésekkel).
+    A mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim közé.
+  - [ ] T14.1.4 Megszakítás: újratöltés a 3. lépés közepén → a felhasználó saját tányérja nyílik,
+    túra nem indul (teszt).
+  - [ ] T14.1.5 Két fül (Tech 7.3): az A fül túrája közben megnyitott B fül nem indít túrát, és a
+    felhasználó tányérját mutatja (teszt). Ha a Keret a túra közben a másik fülön megváltozik, a
+    túra véget ér, mint a `Kihagyom`.
 - [ ] **S14.2 — A mintatányér** · *Kész, ha:* bármely érvényes Kerethez determinisztikusan
   kiválasztható a mintatányér és a rögzítendő gramm, vagy tudható, hogy a rövid túra jön;
   egység- és tulajdonság-alapú tesztekkel.
   - [ ] T14.2.1 `config.json`: `tour.candidates` — mintatányér-jelöltek sorrendben (az első:
     `tojas`, `brokkoli`, `olaj`), mindegyikben egy rögzítendő fehérjeforrással. A
     `pnpm validate-data` ellenőrzi, hogy minden id létezik és nincs kivezetve.
-  - [ ] T14.2.2 `src/domain/tour.ts`: az első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a
-    fehérjeforrás rögzítve a kiszámolt grammal ⚠-t ad fehérje-túllépéssel, a feloldás
-    előzetese ✓. A rögzítendő gramm: a legkisebb 10-zel osztható érték, amellyel az alapanyag
-    egyedül legalább 3 g-mal a fehérjesáv teteje fölé visz.
-  - [ ] T14.2.3 Ha egyik jelölt sem felel meg: **rövid túra** (1., 2. és 6. lépés), a 2. lépés
-    buboréka azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
-  - [ ] T14.2.4 Tesztek: a PRD 6.4 példakerete (137/100/31, rögzítés → ⚠); fast-check
-    véletlen érvényes Keretekkel: a választás vagy teljesíti (a)–(b)-t, vagy rövid túrát ad.
+  - [ ] T14.2.2 `src/domain/tour.ts` (Tech 7.6; tiszta, szinkron, a Tányér referenciáival): az
+    első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a fehérjeforrás a kiszámolt grammal
+    rögzítve olyan ⚠-t ad, amelynek megjelenő szövegében nincs arány-sor, az első sor a fehérje
+    „fölött" sora, és a `pinCause` a rögzített alapanyagot egymagában nevezi meg. A rögzítendő
+    gramm: a legkisebb 10-zel osztható érték, amellyel az alapanyag egyedül legalább 3 g-mal a
+    fehérjesáv teteje fölé visz. A workerben egy új üzenettípus futtatja.
+  - [ ] T14.2.3 Ha egyik jelölt sem felel meg: **rövid túra** (1., 2. és 6. lépés, 1–3-ig
+    számozva), a 2. lépés buboréka azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
+  - [ ] T14.2.4 Tesztek: a PRD 6.4 példakerete (étkezésenként CH 5–10, Fe 20–25, Zs 45–70;
+    a jelölt a tojás, a rögzítés grammja a fenti szabályból); kézi eset szűk zsírsávval
+    (pl. Fe 20–25, Zs 45–52), amelynél a zsír vezetne → következő jelölt vagy rövid túra;
+    fast-check véletlen érvényes Keretekkel: elfogadott jelöltnél a címsor mindig a fehérje
+    „fölött" sora, különben rövid túra.
 - [ ] **S14.3 — Kiemelés és buborék** · *Kész, ha:* a túra kiemelése és a tippek buboréka
   320 px-en 200%-os betűvel, képernyőolvasóval és rendszer-visszalépéssel is használható.
-  - [ ] T14.3.1 Kiemelés (UX 8.3): a képernyő elsötétül, csak a következő célelem világos és
-    koppintható; a többi `inert`. A buborék a célelem fölött vagy alatt, soha nem takarja.
+  - [ ] T14.3.1 Kiemelés (UX 8.3, Tech 7.6 UI-réteg): a képernyő elsötétül, csak a következő
+    célelem világos és koppintható; a célelem ős-láncán a testvérek `inert`-ek. A túra rétege
+    `data-modal-keep`, a nyitott lap fölött. A buborék a célelem fölött vagy alatt; ha nincs
+    helye (billentyűzet, 320 px 200%-kal), a látható terület tetejére dokkol, és a célelem
+    a látható részbe gördül.
   - [ ] T14.3.2 Fókusz és felolvasás: lépésváltáskor a fókusz a buborék szövegére kerül; a
-    buborék neve „Bevezető, {n}. lépés a 6-ból". `Kihagyom` mindig elérhető.
-  - [ ] T14.3.3 Rendszer-visszalépés: nyitott lapnál a lapot zárja, és a túra az előző lépés
-    elejére áll; lap nélkül a túrát zárja, mint a `Kihagyom`.
+    buborék neve „Bevezető, {n}. lépés a {m}-ból" (rövid túrán m = 3). `Kihagyom` minden
+    lépésen elérhető, a záró lépés kivételével.
+  - [ ] T14.3.3 Rendszer-visszalépés (Tech 7.6): a túra induláskor saját history-réteget tesz
+    le (`openLayer`). Nyitott lapnál a vissza a lapot zárja, és a túra az előző lépés elejére
+    áll; lap nélkül a túra rétegét veszi le, ami a túrát zárja, mint a `Kihagyom`.
   - [ ] T14.3.4 Mozgás: `prefers-reduced-motion` mellett nincs áttűnés. Az iOS-tipp és a
     mentés-hiba sávja a túra alatt rejtve, utána a helyükön.
   - [ ] T14.3.5 Tipp-buborék: nem modális, nem sötétít, `Értem` gombbal; a célelem mellett,
@@ -703,33 +717,42 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
   - [ ] T14.4.1 1. lépés: `+ Alapanyag` → a választó tetején egy „Bevezető" sor a három
     tétellel; csak ezek és a `Hozzáadás (3)` koppinthatók.
   - [ ] T14.4.2 2. lépés: grammok, ✓, makrósor; buborék `Tovább` gombbal.
-  - [ ] T14.4.3 3. lépés: a fehérjeforrás grammjába a kiszámolt érték beírása (rögzít). Kisebb,
-    még ✓-t adó értéknél a buborék nagyobbat kér; nagyobb érték is jó, ha ⚠-t ad.
+  - [ ] T14.4.3 3. lépés: a fehérjeforrás grammjába a kiszámolt érték beírása (rögzít). A túra
+    akkor lép tovább, ha bármely beírt értékkel olyan ⚠ jön, amely a T14.2.2 (b) feltételét
+    teljesíti. ✓ esetén a buborék többet kér; más ⚠ esetén (pl. a zsír vezet) a megadott
+    számot kéri újra (F 7.).
   - [ ] T14.4.4 4. lépés: a ⚠ panel magyarázata (címsor, ok, előzetes); `Tovább`.
   - [ ] T14.4.5 5. lépés: `{Alapanyag} feloldása` → ✓.
-  - [ ] T14.4.6 6. lépés: záró buborék, `Kezdjük` → a mintatányér eltűnik, üres Tányér vagy a
-    félretett tányér; `tourDone: true`.
+  - [ ] T14.4.6 6. lépés: záró buborék, `Kezdjük` → a mintatányér eltűnik, és a felhasználó
+    saját tányérja látszik (első indításkor üres Tányér).
   - [ ] T14.4.7 A Keret alján `Bevezető újra` szöveges gomb: a Tányérra lép és elindítja a
-    túrát (kérdés nélkül, mert a tányér félre van téve). A tippeket nem állítja vissza.
+    túrát (kérdés nélkül: a felhasználó tányérja nem változik). Csak mentett Kerettel aktív:
+    amíg a mezők eltérnek a mentettől, halvány és nem koppintható. A tippeket nem állítja vissza.
   - [ ] T14.4.8 Playwright: teljes túra; kihagyás az 1. és a 4. lépésnél; újraindítás meglévő
-    tányérral (a tányér visszajön); meglévő felhasználó v1-es adattal (egyszer indul); rövid
-    túra. A meglévő e2e seedek `tourDone: true`-t kapnak, mint az `iosInstallHintDismissed`.
+    tányérral (a tányér utána ott van); meglévő felhasználó v1-es adattal (egyszer indul); rövid
+    túra; újratöltés túra közben (T14.1.4).
+  - [ ] T14.4.9 A meglévő e2e-k átállítása: a seedek (`e2e/home.spec.ts`, `custom.spec.ts`,
+    `pwa.spec.ts`) `schemaVersion: 2`-re, `ui.tourDone: true`-val és minden tipp-azonosítóval a
+    `tipsSeen`-ben (a v1-es seedben a migráció visszaállítaná a `tourDone`-t). A seed nélküli
+    első indítás tesztje (T6.3.3) és a Tech 6.4 e2e-je `Kihagyom`-mal lép át a túrán; egy teszt
+    végigmegy rajta. Egy kifejezetten v1-es seed marad a „meglévő felhasználó" tesztnek.
 - [ ] **S14.5 — Helyi tippek** (UX 8.4) · *Kész, ha:* a hat tipp mindegyike az első alkalomkor,
   egyszer jelenik meg, a túra alatt soha, és egyszerre legfeljebb egy; tesztekkel.
   - [ ] T14.5.1 Tipp-motor: `ui.tipsSeen` (tipp-azonosítók); egyszerre egy, ha több esedékes,
     a lista sorrendjében az első; látottnak számít `Értem`-re vagy ha a felhasználó a
     célelemet használja.
   - [ ] T14.5.2 Tipp 1 — sor-műveletek: az első saját ✓ tányérnál az első sor nevén.
-  - [ ] T14.5.3 Tipp 2 — mentés: ✓ új tányéron a `Tányér mentése` gombon, amíg nincs mentett
-    tányér (ha már van, látottnak számít).
+  - [ ] T14.5.3 Tipp 2 — mentés: ✓ új, nem `Kész`-elt tányéron a `Tányér mentése` gombon,
+    amíg nincs mentett tányér és a `Kész` még soha nem volt megnyomva, az 1. tipp után. Az
+    első `Kész` vagy az első mentés látottnak jelöli (akkor is, ha meg sem jelent).
   - [ ] T14.5.4 Tipp 3 — mentett tányér: az első Tányérjaimból megnyitott tányérnál a fejléc
     alatti sornál.
   - [ ] T14.5.5 Tipp 4 — saját alapanyag: a választóban az első „Nincs ilyen a listában"
-    esetnél a `Felviszed sajátként?` gomb mellett.
+    esetnél a `+ Saját alapanyag` gomb mellett.
   - [ ] T14.5.6 Tipp 5 — ⚠ rögzítés nélkül: az első ilyennél az elsődleges gombon.
   - [ ] T14.5.7 Tipp 6 — több rögzítés: az első ⚠-nál legalább két rögzítéssel.
-  - [ ] T14.5.8 Tesztek: egység a motorra (sorrend, egyszer, túra alatt nem); e2e az 1., 2. és
-    4. tippre.
+  - [ ] T14.5.8 Tesztek: egység a motorra (sorrend, egyszer, túra alatt nem, a 2. tipp
+    `Kész`-szabálya); e2e mind a hat tippre (a seedek a `tipsSeen`-nel olcsóvá teszik).
 - [ ] **S14.6 — Szövegek** · *Kész, ha:* a túra és a tippek szövegei a `src/texts/hu.ts`-ben
   vannak, a Folyamatok 7. táblázatával egyezően.
   - [ ] T14.6.1 A túra, a rövid túra, a `Bevezető újra` és a hat tipp szövegei (F 7.).

@@ -316,9 +316,10 @@ type StoredState = {
 ```
 
 **v2 (backlog E14, 7.6):** `schemaVersion: 2`; a `ui` kiegészül a `tourDone: boolean` és a
-`tipsSeen: TipId[]` mezővel, és új mező a `tourStash: CurrentPlate | null` (a túra alatt
-félretett aktuális tányér). A v1 → v2 migráció mindenkinél `tourDone: false`, `tipsSeen: []`,
-`tourStash: null` értéket ad.
+`tipsSeen: TipId[]` mezővel. A v1 → v2 migráció mindenkinél `tourDone: false`, `tipsSeen: []`
+értéket ad. A sérült-adat szabály (fent) rájuk is áll: a nem logikai `tourDone` `true` lesz
+(inkább maradjon el a túra, mint hogy újra és újra induljon), a `tipsSeen`-ből kiesik minden
+ismeretlen vagy nem szöveges elem, és az ismétlődések is.
 
 - **Időbélyegek:** a „legutóbb használt" értékek és a tányérok azt is tárolják, mikor
   használták őket utoljára (`at`, `usedAt`, epoch ms). A választó „Legutóbb használt"
@@ -357,28 +358,50 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 
 ### 7.6 A bevezető állapota (PRD 6.8)
 
-- **A mintatányér csak a memóriában él.** A túra saját, ideiglenes tányér-állapottal fut,
-  amely nem íródik a `currentPlate`-be, és nem hívja a „legutóbb használt" frissítését. A
-  `tourStash` csak a túra kezdetén íródik, ha volt aktuális tányér.
-- **Indulás:** `keret !== null && !ui.tourDone` és nincs futó túra másik fülön → a Tányéron
-  indul. A Keret első mentése után ez magától teljesül; a v1 → v2 migráció miatt a meglévő
-  felhasználóknál is egyszer.
-- **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): `tourDone: true`, és ha a `tourStash` nem
-  üres, visszamásolódik a `currentPlate`-be, majd törlődik. Egy írás, egyben (7.2).
-- **Bezárás a túra közben:** a következő betöltéskor `tourStash !== null` és nincs futó túra
-  → visszaállítás és `tourDone: true`, mint a kihagyásnál.
-- **Két fül (7.3):** a futó túrát egy `sessionStorage`-jelző mutatja az adott fülön; a
-  `storage` esemény a másik fülnek `tourDone`-t vagy a stash változását jelzi, és az nem indít
-  túrát, amíg a `tourStash` nem üres.
-- **Mintatányér-választás:** `src/domain/tour.ts`, tiszta függvény a Keretből és a
-  `config.json` jelöltjeiből; a megoldót ugyanúgy a workerben hívja, mint a Tányér. A
-  rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
-  legalább 3 g-mal a fehérjesáv teteje fölé visz; a jelölt csak akkor jó, ha rögzítés nélkül
-  ✓, rögzítve fehérje-⚠, és a feloldás előzetese ✓. Különben a következő jelölt, végül a
-  rövid túra.
+- **A mintatányér csak a memóriában él.** A túra saját, ideiglenes tányér-állapottal fut
+  (a futó túra állapota sincs tárolva). A felhasználó `currentPlate`-je a tárolóban és az
+  állapotban is érintetlen marad, csak a túra alatt nem látszik; a túra után ugyanúgy ott van.
+  A túra nem hívja a „legutóbb használt" frissítését, és nem ment tányért.
+- **Indulás:** `keret !== null && !ui.tourDone` → a Tányéron indul, és **az indulással egy
+  írásban** `tourDone: true` kerül a tárolóba. A Keret első mentése után ez magától teljesül; a
+  v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. A `Bevezető újra` csak
+  memóriában indítja újra (a `tourDone` már `true`).
+- **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): a memóriabeli túra-állapot eldobódik, a
+  Tányér a felhasználó saját tányérját mutatja. Tárolói írás nincs.
+- **Bezárás a túra közben:** mivel a `tourDone` már `true`, újranyitáskor nem indul túra, és a
+  felhasználó tányérja ott van, ahol hagyta. Ez a kihagyással egyenértékű.
+- **Két fül (7.3):** a másik fül a `storage` eseményből vagy betöltéskor `tourDone: true`-t
+  lát, ezért nem indít második túrát, és a felhasználó tányérját mutatja. A túra fülén a másik
+  fül tányér-változásai a túra után látszanak (a `currentPlate` újratöltése a szokásos módon).
+- **A Keret a túra közben megváltozik** (másik fülről, `storage` esemény): a túra véget ér,
+  mint a `Kihagyom`, mert a mintatányér, a jelölt és a beírandó gramm a régi Kerethez készült.
+- **Mintatányér-választás:** `src/domain/tour.ts`, tiszta, szinkron függvény (közvetlenül a
+  `solvePlate`-et hívja) a Keretből, a `config.json` jelöltjeiből és ugyanazokból a
+  referenciákból, amelyekkel a Tányér számol (`refFor`, a „legutóbb használt" értékekkel).
+  A Tányérhoz hasonlóan a workerben fut, egy új üzenettípuson keresztül. Csak gondozott
+  alapanyag lehet jelölt, saját nem.
+  - A rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
+    legalább 3 g-mal a fehérjesáv teteje fölé visz.
+  - A jelölt akkor jó, ha (a) rögzítés nélkül ✓, és (b) a fehérjeforrás e grammal rögzítve
+    olyan ⚠-t ad, amelynek **megjelenő** szövegében nincs arány-sor, az első sor
+    (`warningLines()[0]`) a fehérje „fölött" sora, és a `pinCause` a rögzített alapanyagot
+    egymagában nevezi meg okként. (A feloldás előzetese ilyenkor maga az (a) tányér, ezért
+    külön feltétel nem kell.)
+  - Szűk zsírsávnál a megoldó az arány miatt olajat ad, és a zsír lóghat ki jobban, mint a
+    fehérje; ekkor a (b) nem teljesül. Nagyobb gramm ezen nem segít (a zsír kétszer olyan gyorsan
+    nő), ezért ilyenkor a következő jelölt jön, végül a rövid túra.
 - **Tippek:** `src/domain/tips.ts` dönti el a Tányér, a választó és a ⚠ állapotából, melyik
   tipp esedékes (egyszerre egy, a PRD 6.8 sorrendjében, futó túra alatt egyik sem); a
   `tipsSeen` tárolja a látottakat.
+- **UI-réteg** (UX 8.3):
+  - A túra rétege a `<body>` közvetlen gyereke `data-modal-keep` jelöléssel, így a nyitott lap
+    (`modal.ts`) nem teszi inertté; z-sorrendben a lap fölött van.
+  - A kiemelés a célelem ős-láncán a **testvéreket** teszi `inert`-té, nem egész részfákat
+    (egy `inert` ős a célelemet is megölné); a választóban így a „Bevezető" sor élő marad, a
+    kereső és a kategóriák nem.
+  - A túra induláskor egy history-réteget tesz le (`openLayer`). Ha a rendszer-visszalépés ezt
+    veszi le, a túra véget ér, mint a `Kihagyom`. A túra alatt nyitott lap a saját rétegét a
+    túráé fölé teszi, így a vissza előbb a lapot zárja.
 
 ## 8. Offline és telepíthetőség (PWA)
 
@@ -552,5 +575,5 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | A mutációs ellenőrzés rögzített hibalistával (`pnpm mutate:solver`) történik, nem CI-eszközzel | gyors, átlátható, és a CI-t nem lassítja; a felhasználó jóváhagyta |
 | 2026-11-13 | Modulonkénti egységtesztek kötelezők (6.4/2) | a felhasználó kérése a ketara-app PR #3 átnézése után |
 | 2026-11-13 | Saját hash-router és külön `src/state/` réteg | ketara-app PR #7; kevesebb függőség, a reducer Node-ban tesztelhető |
-| 2026-11-21 | Interaktív bevezető: séma v2 (`tourDone`, `tipsSeen`, `tourStash`), a mintatányér csak memóriában, jelöltek a `config.json`-ban | a felhasználó döntései (backlog E14); a meglévő felhasználóknál a migráció indítja egyszer a túrát |
+| 2026-11-21 | Interaktív bevezető: séma v2 (`tourDone`, `tipsSeen`), a mintatányér és a futó túra csak memóriában, `tourDone: true` már induláskor, jelöltek a `config.json`-ban | a felhasználó döntései (backlog E14); a meglévő felhasználóknál a migráció indítja egyszer a túrát; az induláskori írás miatt a megszakított túra nem jön vissza, és két fül sem indít kettőt (review 1. kör) |
 | 2026-11-13 | Időbélyeg a „legutóbb használt" értékeken és a tányérokon; újabb verziójú adatot régi app nem ír felül | a felhasználó jóváhagyta (ketara-app PR #5) |

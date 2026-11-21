@@ -116,6 +116,7 @@ régi tányérokon. Külön ellenőrzés nem kell.
 flowchart TD
     A0[Első megnyitás] --> A6{Van már keret<br/>ezen az eszközön?}
     A6 -- igen --> J0["Tányér — az eszközön tárolt adatokkal"]
+    A6 -- "igen, de a bevezető még nem indult" --> J
     A6 -- nem --> B["Keret: egy képernyő<br/>(sávok, étkezésszám, arány)"]
     B --> H["Egy étkezésre ez jön ki:<br/>élőben, gépelés közben"]
     H --> I["Ez stimmel, kezdjük"]
@@ -149,15 +150,16 @@ képernyővel; mindig csak a következő elem koppintható, és minden lépésen
 |---|---|---|
 | 1 | `+ Alapanyag`, kipipálja a három tételt, `Hozzáadás (3)` | felszólít, és megnevezi a hármat |
 | 2 | elolvassa, `Tovább` | a grammok nyers súlyok; a makrósor; a ✓ |
-| 3 | a fehérjeforrás grammjába beírja a megadott értéket | a beírás rögzít, a lakat mutatja |
-| 4 | elolvassa, `Tovább` | a ⚠ panel: mi lóg ki, miért, mi lenne feloldva |
-| 5 | `{Alapanyag} feloldása` | feloldva újra ✓ |
-| 6 | `Kezdjük` | a mintatányér eltűnik, jöhet a saját |
+| 3 | a fehérjeforrás grammjába beírja a megadott értéket | megnevezi az alapanyagot és a számot |
+| 4 | elolvassa, `Tovább` | a beírás rögzít, a lakat mutatja; a ⚠ panel: mi lóg ki, miért, mi lenne feloldva |
+| 5 | `{Alapanyag} feloldása` | felszólít a feloldásra |
+| 6 | `Kezdjük` | újra ✓; a mintatányér eltűnik, jöhet a saját |
 
 A mintatányér a gondozott lista jelöltjei közül az első, amelyen a felhasználó Keretével a
 ✓ és a rögzítésből jövő ⚠ is megmutatható; ha egyik sem ilyen, **rövid túra** jön (1., 2., 6.
-lépés). A félbehagyott saját tányér a túra alatt félre van téve, utána visszajön. A túra a Keret
-aljáról (`Bevezető újra`) bármikor újraindítható. Aki a bevezető előtt kezdte használni az
+lépés). A félbehagyott saját tányér a túra alatt nem látszik, de érintetlen, és utána ott van.
+A túra a Keret aljáról (`Bevezető újra`, csak mentett Kerettel) bármikor újraindítható; ha egyszer
+elindult, magától nem jön vissza, akkor sem, ha az app közben bezárult. Aki a bevezető előtt kezdte használni az
 appot, annál a következő megnyitáskor egyszer magától indul.
 
 ---
@@ -625,18 +627,20 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | iOS-tipp (Tányér teteje és az első indítás Keretje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
 | iOS-tipp, képernyőolvasónak (a nyíl helyett) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás, majd Főképernyőhöz adás. |
 | iOS-tipp sávjának neve (képernyőolvasó) | Tipp |
-| Túra, minden lépésen | Kihagyom |
+| Túra, minden lépésen (a záró kivételével) | Kihagyom |
 | Túra, buborék neve (képernyőolvasó) | Bevezető, {n}. lépés a {m}-ból |
 | Túra 1. (Tányér) | Rakjunk össze egy mintatányért. Koppints a + Alapanyag gombra. |
-| Túra 1. (választó) | Pipáld ki ezt a hármat: {A}, {B}, {C}. Aztán Hozzáadás. |
+| Túra 1. (választó) | Pipáld ki ezt a hármat: {a}, {b}, {c}. Aztán koppints a Hozzáadás gombra. |
 | Túra 1., a választó sorának címe | Bevezető |
 | Túra 2. | Kiszámoltam az adagokat a te sávjaidhoz. Minden gramm nyers súly. Alul a makrók: szénhidrát, fehérje, zsír és az arány. — Tovább |
 | Túra 2., rövid túra, ⚠ esetén | Kiszámoltam a legközelebbi tányért a te sávjaidhoz. A ⚠ megmondja, mi lóg ki, és mi segít. Minden gramm nyers súly. — Tovább |
-| Túra 3. | Ha ennyit akarsz enni valamiből, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n}. |
-| Túra 3., kisebb érték után | Ez még belefér. Írj be nagyobbat: {n}. |
+| Túra 3. | Ha egy alapanyagból pontosan annyit akarsz, amennyit te mondasz, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n} g (nyersen). |
+| Túra 3., ha még ✓ | Ez még belefér. Írj be többet: {n} g (nyersen). |
+| Túra 3., ha más ⚠ jön | Most nem a fehérje lóg ki. Írd be ezt: {n} g (nyersen). |
 | Túra 4. | A beírt gramm rögzít: a lakat mutatja, ezt a Ketara nem mozdítja. Ezzel a rögzítéssel nem jön ki: a panel megmondja, mi lóg ki, miért, és mi lenne, ha feloldanád. — Tovább |
-| Túra 5. | Oldd fel: koppints a {Alapanyag} feloldása gombra. |
-| Túra 6. | Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
+| Túra 5. | Oldd fel: koppints a gombra: {Alapanyag} feloldása. |
+| Túra 6. | Újra minden a sávon belül. Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
+| Túra 6., rövid túra | Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
 | Keret, a túra újraindítása | Bevezető újra |
 | Tipp 1 — sor-műveletek | Koppints a névre: csere vagy törlés. — Értem |
 | Tipp 2 — mentés | Ha gyakran eszed, mentsd el. Legközelebb a mai célra újraszámolva nyílik. — Értem |

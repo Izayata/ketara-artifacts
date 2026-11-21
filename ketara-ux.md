@@ -319,8 +319,9 @@ alul.
 - A Mentés gomb alatt a figyelmeztetés egy sorban, másodlagos szövegként: „A Ketara
   számol, nem tanácsot ad. Nem helyettesíti a dietetikust."
 - Később megnyitott Kereten (nem első indításkor) a figyelmeztetés alatt, a verziósor fölött
-  egy szöveges gomb: `Bevezető újra` (8.3). Nem kérdez rá: a túra a félbehagyott tányért
-  félreteszi, és a végén visszaadja.
+  egy szöveges gomb: `Bevezető újra` (8.3). Nem kérdez rá: a félbehagyott tányér a túra alatt
+  nem látszik, de érintetlen, és utána ott van. Csak mentett Kerettel aktív: amíg a mezők
+  eltérnek a mentettől, halvány és nem koppintható.
 
 ### 8.2 Mikor kérdez rá a termék?
 
@@ -338,11 +339,13 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
   a következő lépés eleme világos, kerek sarkú kerettel kiemelve, és csak az koppintható. A
   többi elem képernyőolvasónak is elérhetetlen (`inert`).
 - **Buborék:** semleges háttér (nem ⚠-szín), a célelem fölött vagy alatt, ahol több hely van;
-  a célelemet soha nem takarja. Tartalma: rövid szöveg, alatta balra a `Kihagyom` (szöveges
-  gomb), jobbra, ha a lépés olvasós, a `Tovább` (elsődleges). Cselekvős lépésen (1., 3., 5.)
-  nincs `Tovább`: a túra a mozdulatra lép.
-- **Lépésszám** csak képernyőolvasónak („Bevezető, 2. lépés a 6-ból"); vizuálisan nincs
-  pontsor, hogy a buborék kicsi maradjon.
+  a célelemet nem takarja. Ha egyik oldalon sincs helye (nyitott billentyűzet a 3. lépésben,
+  320 px 200%-os betűvel), a látható terület (`visualViewport`) tetejére dokkol, és a célelem a
+  látható részbe gördül. Tartalma: rövid szöveg, alatta balra a `Kihagyom` (szöveges gomb),
+  jobbra, ha a lépés olvasós, a `Tovább` (elsődleges). Cselekvős lépésen (1., 3., 5.) nincs
+  `Tovább`: a túra a mozdulatra lép. A záró lépésen csak a `Kezdjük` van, `Kihagyom` nincs.
+- **Lépésszám** csak képernyőolvasónak („Bevezető, 2. lépés a 6-ból"; a rövid túrán 1–3,
+  „… a 3-ból"); vizuálisan nincs pontsor, hogy a buborék kicsi maradjon.
 - **Fókusz:** lépésváltáskor a buborék szövegére kerül. A rendszer-visszalépés nyitott lapnál
   a lapot zárja (a túra az előző lépés elejére áll), lap nélkül a túrát zárja, mint a
   `Kihagyom`.
@@ -350,8 +353,10 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
   hogy ne kelljen kategóriát nyitni vagy görgetni; a kereső és a kategóriák a túra alatt
   halványak.
 - **A 3. lépés** a fehérjeforrás grammjának helyben szerkesztését használja (4.2): a buborék
-  megnevezi a beírandó számot. Kisebb, még ✓-t adó érték után a buborék nagyobbat kér; nagyobb
-  érték is jó, ha ⚠-t ad.
+  megnevezi a beírandó számot. A túra akkor lép tovább, ha a beírt értékkel (bármekkora is)
+  olyan ⚠ jön, amelynek címsora a fehérje túllépése, és az oka a rögzített alapanyag
+  egymagában (Tech 7.6). Ha ✓ marad, a buborék többet kér; ha más ⚠ jön (pl. a zsír vezet), a
+  megadott számot kéri újra. A mező saját hibaszövegei (pl. 0 g) a szokásos módon jelennek meg.
 - **Mentés és Kész a túra alatt** nem koppintható: a mintatányér nem kerül sehova.
 - **Az iOS-tipp és a „nem tudok menteni" sáv** a túra alatt rejtve, utána a helyükön.
 - **Mozgás:** a kiemelés 200 ms alatt úszik át a következő elemre; `prefers-reduced-motion`
