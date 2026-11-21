@@ -1,8 +1,8 @@
-# Ketara — Tech terv (alfa) v0.7
+# Ketara — Tech terv (alfa) v0.8
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.13, UX-terv v0.7, prototípus v1.1.*
-*Utolsó frissítés: 2026-11-15 (2. betűtípus: rendszerbetű; 8.1 a megoldó workerje is előre gyorsítótárban, a ketara-app PR #14 szerint; 8.3: az iOS-tipp minden iOS-böngészőben és az első Kereten is, PR #15)*
+*Alapja: PRD v1.5, Folyamatok és képernyők v0.20, UX-terv v0.12, prototípus v1.1.*
+*Utolsó frissítés: 2026-11-15 (2. betűtípus: rendszerbetű; 8.1 a megoldó workerje is előre gyorsítótárban, a ketara-app PR #14 szerint; 8.3: az iOS-tipp minden iOS-böngészőben és az első Kereten is, PR #15; 2026-11-21: 5.4, 7.2, 7.6, 14.: interaktív bevezető, backlog E14)*
 
 ---
 
@@ -196,7 +196,10 @@ Ami nem alapanyag, de a gondozó vagy a dietetikus állítja:
   (Zöldség), `fat` (Zsiradék), `fruit` (Gyümölcs), `dairy` (Tejtermék), mindegyik
   magyar névvel és alapértékkel (100 / 10 / 100 / 30 / 50 / 50 g, PRD 6.3);
 - a Keret gyanús-érték küszöbei (1200 kcal, 50 g fehérje, 10%, PRD 6.1);
-- a zsír–fehérje arány alapértéke (2 : 1) és a tányéronkénti maximum (8).
+- a zsír–fehérje arány alapértéke (2 : 1) és a tányéronkénti maximum (8);
+- a bevezető mintatányér-jelöltjei (`tour.candidates`, 7.6): sorrendben, mindegyik három
+  alapanyag-id és a rögzítendő fehérjeforrás id-ja; az első `tojas`, `brokkoli`, `olaj`. Az
+  ellenőrző szkript (5.5) megnézi, hogy minden id létezik, és nincs kivezetve.
 
 A PRD 6.1 szerint a küszöbök „alkalmazásfrissítés nélkül" cserélhetők. Statikus oldalon
 ez **egy JSON-módosítás és egy automatikus deploy** (11.): a felhasználónak nem kell
@@ -312,6 +315,11 @@ type StoredState = {
 };
 ```
 
+**v2 (backlog E14, 7.6):** `schemaVersion: 2`; a `ui` kiegészül a `tourDone: boolean` és a
+`tipsSeen: TipId[]` mezővel, és új mező a `tourStash: CurrentPlate | null` (a túra alatt
+félretett aktuális tányér). A v1 → v2 migráció mindenkinél `tourDone: false`, `tipsSeen: []`,
+`tourStash: null` értéket ad.
+
 - **Időbélyegek:** a „legutóbb használt" értékek és a tányérok azt is tárolják, mikor
   használták őket utoljára (`at`, `usedAt`, epoch ms). A választó „Legutóbb használt"
   chipjei és a Tányérjaim lista ez alapján rendeződik (UX 5., 7.).
@@ -346,6 +354,31 @@ Bezáráskor minden elveszik." (Új szöveg, a Folyamatok 7.-be kerül.)
 
 Első indításkor az app kéri: `navigator.storage.persist()`. Androidon és asztalon ez
 megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en nem elég (8.3).
+
+### 7.6 A bevezető állapota (PRD 6.8)
+
+- **A mintatányér csak a memóriában él.** A túra saját, ideiglenes tányér-állapottal fut,
+  amely nem íródik a `currentPlate`-be, és nem hívja a „legutóbb használt" frissítését. A
+  `tourStash` csak a túra kezdetén íródik, ha volt aktuális tányér.
+- **Indulás:** `keret !== null && !ui.tourDone` és nincs futó túra másik fülön → a Tányéron
+  indul. A Keret első mentése után ez magától teljesül; a v1 → v2 migráció miatt a meglévő
+  felhasználóknál is egyszer.
+- **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): `tourDone: true`, és ha a `tourStash` nem
+  üres, visszamásolódik a `currentPlate`-be, majd törlődik. Egy írás, egyben (7.2).
+- **Bezárás a túra közben:** a következő betöltéskor `tourStash !== null` és nincs futó túra
+  → visszaállítás és `tourDone: true`, mint a kihagyásnál.
+- **Két fül (7.3):** a futó túrát egy `sessionStorage`-jelző mutatja az adott fülön; a
+  `storage` esemény a másik fülnek `tourDone`-t vagy a stash változását jelzi, és az nem indít
+  túrát, amíg a `tourStash` nem üres.
+- **Mintatányér-választás:** `src/domain/tour.ts`, tiszta függvény a Keretből és a
+  `config.json` jelöltjeiből; a megoldót ugyanúgy a workerben hívja, mint a Tányér. A
+  rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
+  legalább 3 g-mal a fehérjesáv teteje fölé visz; a jelölt csak akkor jó, ha rögzítés nélkül
+  ✓, rögzítve fehérje-⚠, és a feloldás előzetese ✓. Különben a következő jelölt, végül a
+  rövid túra.
+- **Tippek:** `src/domain/tips.ts` dönti el a Tányér, a választó és a ⚠ állapotából, melyik
+  tipp esedékes (egyszerre egy, a PRD 6.8 sorrendjében, futó túra alatt egyik sem); a
+  `tipsSeen` tárolja a látottakat.
 
 ## 8. Offline és telepíthetőség (PWA)
 
@@ -489,6 +522,7 @@ változik. A fizetés maga (és ami hozzá kell: fiók, szerver) új PRD-dönté
 | 7 | Kész, mentés, Tányérjaim, frissítés, saját alapanyag | a 2. folyamat (ismétlődő étkezés) végigmegy |
 | 8 | PWA, offline, iOS-tipp, saját betűtípus, CSP | repülőgép-módban is indul |
 | 9 | Alfa-teszt a felhasználóval, majd néhány tesztelővel (PRD 9.) | — |
+| 9a | Interaktív bevezető (backlog E14) a külső tesztelők előtt | üres böngészőben a Keret → túra → üres Tányér út végigmegy |
 
 A 2. lépéstől a végleges alapanyaglista párhuzamosan készülhet; az app a prototípus
 listájával is tesztelhető, amíg az nincs kész.
@@ -518,4 +552,5 @@ listájával is tesztelhető, amíg az nincs kész.
 | 2026-11-13 | A mutációs ellenőrzés rögzített hibalistával (`pnpm mutate:solver`) történik, nem CI-eszközzel | gyors, átlátható, és a CI-t nem lassítja; a felhasználó jóváhagyta |
 | 2026-11-13 | Modulonkénti egységtesztek kötelezők (6.4/2) | a felhasználó kérése a ketara-app PR #3 átnézése után |
 | 2026-11-13 | Saját hash-router és külön `src/state/` réteg | ketara-app PR #7; kevesebb függőség, a reducer Node-ban tesztelhető |
+| 2026-11-21 | Interaktív bevezető: séma v2 (`tourDone`, `tipsSeen`, `tourStash`), a mintatányér csak memóriában, jelöltek a `config.json`-ban | a felhasználó döntései (backlog E14); a meglévő felhasználóknál a migráció indítja egyszer a túrát |
 | 2026-11-13 | Időbélyeg a „legutóbb használt" értékeken és a tányérokon; újabb verziójú adatot régi app nem ír felül | a felhasználó jóváhagyta (ketara-app PR #5) |
