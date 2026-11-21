@@ -13,6 +13,8 @@ fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszk�
 (2026-11-13) a tech terv interjújából az iOS-tippet adja hozzá (2. fejezet). A v0.7
 (2026-11-13) a Saját alapanyag lapra a rost-emlékeztetőt (6. fejezet). A v0.11
 (2026-11-15) az iOS-tippet minden iOS-böngészőre és az első Keretre is kiterjeszti (2., 8.1).
+A v0.12 (2026-11-21) az interaktív bevezetőt adja hozzá: vezetett első tányér és helyi tippek
+(8.1, 8.3, 8.4; PRD 6.8, backlog E14).
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -347,7 +349,8 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
 - **Lépésszám** csak képernyőolvasónak („Bevezető, 2. lépés a 6-ból"; a rövid túrán 1–3,
   „… a 3-ból"); vizuálisan nincs pontsor, hogy a buborék kicsi maradjon.
 - **Fókusz:** lépésváltáskor a buborék szövegére kerül. A rendszer-visszalépés nyitott lapnál
-  a lapot zárja (a túra az előző lépés elejére áll), lap nélkül a túrát zárja, mint a
+  (csak az 1. lépésben, a választó) a lapot zárja, a kipipált tételek nem kerülnek fel, és a
+  túra az 1. lépés elejére áll (a `+ Alapanyag`-ra mutat); lap nélkül a túrát zárja, mint a
   `Kihagyom`.
 - **Az 1. lépés a választóban:** a lap tetején egy „Bevezető" sor mutatja a három tételt,
   hogy ne kelljen kategóriát nyitni vagy görgetni; a kereső és a kategóriák a túra alatt

@@ -400,10 +400,10 @@ ritkább funkció először előjön.
   használt" mennyiségeket, nem kerül a Tányérjaim közé. Ha a túra indulásakor volt aktuális
   tányér, az érintetlen marad: a túra alatt nem látszik, utána ugyanúgy ott van, a
   rögzítésekkel együtt.
-- **Kihagyás és újranézés:** minden lépésen `Kihagyom` (a záró lépésen nincs, ott a `Kezdjük`
-  zár). Ha egyszer elindult, magától nem jön
-  vissza (akkor sem, ha az app közben bezárult); a Keret alján a `Bevezető újra` gomb
-  bármikor újraindítja, ha a Keret el van mentve.
+- **Kihagyás és újranézés:** minden lépésen `Kihagyom` (a záró lépésen nincs, ott a
+  `Kezdjük` zár). Ha egyszer elindult, magától nem jön vissza (akkor sem, ha az app közben
+  bezárult); a Keret alján a `Bevezető újra` gomb bármikor újraindítja, ha a Keret el van
+  mentve.
 - **Kiemelés:** a túra alatt a képernyő elsötétül, csak a következő lépés eleme koppintható.
 
 **Helyi tippek:** egy-egy bezárható buborék, mindegyik **egyszer**, amikor a helyzet először

@@ -359,19 +359,30 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 
 ### 7.6 A bevezető állapota (PRD 6.8)
 
-- **A mintatányér csak a memóriában él.** A túra saját, ideiglenes tányér-állapottal fut
-  (a futó túra állapota sincs tárolva). A felhasználó `currentPlate`-je a tárolóban és az
+- **A mintatányér csak a memóriában él.** Az app-állapot (`src/state/`) egy új, **nem
+  tárolt** `tour` mezőt kap a `currentPlate` mellett: `{ step, plate: CurrentPlate, candidate,
+  pinGrams, short } | null`. Amíg a `tour` nem `null`, a Tányér tányér-műveletei (`addRows`,
+  `pin`, `unpin` és a gramm beírása) a reducerben a `tour.plate`-et módosítják, nem a
+  `currentPlate`-et; a Kész és a mentés a túra alatt nem érhető el. A tárolóba író réteg
+  (`persist`) a `tour` mezőt nem látja, így a felhasználó `currentPlate`-je a tárolóban és az
   állapotban is érintetlen marad, csak a túra alatt nem látszik; a túra után ugyanúgy ott van.
   A túra nem hívja a „legutóbb használt" frissítését, és nem ment tányért.
+- **Számolás:** a Tányér a nézetét ugyanúgy a `computePlateView`-val, a workerben kapja, csak a
+  bemenetben a `currentPlate` helyén a `tour.plate` áll, amíg a túra fut. Egyszerre egy tányér
+  látszik, ezért a worker „csak a legutolsó kérés" sora (`plateComputer.ts`) itt elég.
+- **Referenciák rögzítése:** a túra induláskor a mintatányér soraihoz kiszámolja a referenciákat
+  (`refFor`, a „legutóbb használt" értékekkel) és a `tour.plate.refs`-be teszi, ahogy a mentett
+  tányér is a saját grammjait. Így egy másik fülről érkező „legutóbb használt"-változás nem
+  mozdítja el a grammokat a túra közben.
 - **Indulás:** `keret !== null && !ui.tourDone` → a Tányéron indul, és **az indulással egy
-  írásban** `tourDone: true` kerül a tárolóba. Ha az app másik útvonalon nyílik (pl.
-  `#/tanyerjaim`, `#/keret`), a túra akkor indul, amikor a felhasználó először a Tányérra ér. A Keret első mentése után ez magától teljesül; a
-  v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. A `Bevezető újra` csak
-  memóriában indítja újra (a `tourDone` már `true`).
-- **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): a memóriabeli túra-állapot eldobódik, a
-  Tányér a felhasználó saját tányérját mutatja. Tárolói írás nincs. `Kezdjük` és `Kihagyom`
-  esetén a túra a saját history-rétegét is leveszi (az `openLayer` visszaadott záró
-  függvényével), hogy a következő vissza ne egy halott rétegen akadjon el.
+  írásban** `tourDone: true` kerül a tárolóba. A Keret első mentése után ez magától teljesül;
+  a v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. Ha az app másik útvonalon nyílik
+  (pl. `#/tanyerjaim`, `#/keret`), a túra akkor indul, amikor a felhasználó először a Tányérra
+  ér. A `Bevezető újra` csak memóriában indítja újra (a `tourDone` már `true`).
+- **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): a `tour` `null` lesz, a Tányér a felhasználó
+  saját tányérját mutatja. Tárolói írás nincs. `Kezdjük` és `Kihagyom` esetén a túra a saját
+  history-rétegét is leveszi (az `openLayer` visszaadott záró függvényével), hogy a következő
+  vissza ne egy halott rétegen akadjon el.
 - **Bezárás a túra közben:** mivel a `tourDone` már `true`, újranyitáskor nem indul túra, és a
   felhasználó tányérja ott van, ahol hagyta. Ez a kihagyással egyenértékű.
 - **Két fül (7.3):** a másik fül a `storage` eseményből vagy betöltéskor `tourDone: true`-t
@@ -379,25 +390,28 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   fül tányér-változásai a túra után látszanak (a `currentPlate` újratöltése a szokásos módon).
 - **A Keret a túra közben megváltozik** (másik fülről, `storage` esemény): a túra véget ér,
   mint a `Kihagyom`, mert a mintatányér, a jelölt és a beírandó gramm a régi Kerethez készült.
-- **Mintatányér-választás:** `src/domain/tour.ts`, tiszta, szinkron függvény (közvetlenül a
-  `solvePlate`-et hívja) a Keretből, a `config.json` jelöltjeiből és ugyanazokból a
-  referenciákból, amelyekkel a Tányér számol (`refFor`, a „legutóbb használt" értékekkel).
-  A Tányérhoz hasonlóan a workerben fut, egy új üzenettípuson keresztül. Csak gondozott
-  alapanyag lehet jelölt, saját nem.
+- **Mintatányér-választás:** `src/domain/tour.ts`, tiszta, szinkron függvény a Keretből, a
+  `config.json` jelöltjeiből és a rögzített referenciákból (fent). Minden próbát a
+  **`computePlateView`**-val számol, ugyanazzal, amit a képernyő mutat, így a feltételek a
+  megjelenő szövegre vonatkoznak. A túra indulásakor egyszer fut, a workerben, egy **külön
+  üzenettípuson és külön várakozó helyen** (nem a tányér „csak a legutolsó" során), így egy
+  közben érkező tányér-kérés nem dobja el. Csak gondozott alapanyag lehet jelölt, saját nem.
   - A rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
     legalább 3 g-mal a fehérjesáv teteje fölé visz.
   - A jelölt akkor jó, ha (a) rögzítés nélkül ✓, és (b) a fehérjeforrás e grammal rögzítve
-    olyan ⚠-t ad, amelynek **megjelenő** szövegében csak makró-sorok vannak (nincs arány-, 0 g-
-    és kerekítés-sor), az első sor (`warningLines()[0]`) a fehérje „fölött" sora, és a
-    `pinCause` a rögzített alapanyagot egymagában nevezi meg okként. (A feloldás előzetese ilyenkor maga az (a) tányér, ezért
-    külön feltétel nem kell.)
+    olyan ⚠-t ad, amelynek ⚠-sorai között nincs arány-, 0 g- és kerekítés-sor, az első sor
+    (`warningLines()[0]`) a fehérje „fölött" sora, és a `pinCause` a rögzített alapanyagot
+    egymagában nevezi meg okként. **A kcal-sor nem zár ki jelöltet:** a kcal-sáv puha
+    (PRD 6.1), a sora a ⚠-sorrend végén áll, és a 4. lépés buboréka a címsort és az okot
+    magyarázza. (A feloldás előzetese ilyenkor maga az (a) tányér, ezért külön feltétel nem
+    kell.)
   - Szűk zsírsávnál a megoldó az arány miatt olajat ad, és a zsír lóghat ki jobban, mint a
-    fehérje; ekkor a (b) nem teljesül. Nagyobb gramm ezen nem segít (a szükséges zsír a fehérje
-    {min}-szeresével nő, a Keret arány-mezője szerint), ezért ilyenkor a következő jelölt jön,
-    végül a rövid túra.
-  - **Rövid túra:** mindig az **első** jelölt három alapanyagával, rögzítés nélkül fut, ugyanazokkal
-    a referenciákkal; a 2. lépés azt magyarázza, ami a képernyőn van (✓ vagy ⚠). Így a választás
-    minden Kerethez determinisztikus.
+    fehérje; ekkor a (b) nem teljesül. Nagyobb gramm ezen nem segít (a szükséges zsír a
+    fehérje {min}-szeresével nő, a Keret arány-mezője szerint), ezért ilyenkor a következő
+    jelölt jön, végül a rövid túra.
+  - **Rövid túra:** mindig az **első** jelölt három alapanyagával, rögzítés nélkül fut,
+    ugyanazokkal a referenciákkal; a 2. lépés azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
+    Így a választás minden Kerethez determinisztikus.
 - **Tippek:** `src/domain/tips.ts` dönti el a Tányér, a választó és a ⚠ állapotából, melyik
   tipp esedékes (egyszerre egy, a PRD 6.8 sorrendjében, futó túra alatt egyik sem); a
   `tipsSeen` tárolja a látottakat.
@@ -408,9 +422,9 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
     (egy `inert` ős a célelemet is megölné); a választóban így a „Bevezető" sor élő marad, a
     kereső és a kategóriák nem.
   - A túra induláskor egy history-réteget tesz le (`openLayer`), **a Tányérra lépés után**,
-    mert a `navigate()` minden nyitott réteget levesz (pl. a `Bevezető újra` a Keretről). Ha a rendszer-visszalépés ezt
-    veszi le, a túra véget ér, mint a `Kihagyom`. A túra alatt nyitott lap a saját rétegét a
-    túráé fölé teszi, így a vissza előbb a lapot zárja.
+    mert a `navigate()` minden nyitott réteget levesz (pl. a `Bevezető újra` a Keretről). Ha a
+    rendszer-visszalépés ezt veszi le, a túra véget ér, mint a `Kihagyom`. A túra alatt nyitott
+    lap a saját rétegét a túráé fölé teszi, így a vissza előbb a lapot zárja.
 
 ## 8. Offline és telepíthetőség (PWA)
 

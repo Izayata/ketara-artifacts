@@ -155,12 +155,13 @@ képernyővel; mindig csak a következő elem koppintható, és minden lépésen
 | 5 | `{Alapanyag} feloldása` | felszólít a feloldásra |
 | 6 | `Kezdjük` | újra ✓; a mintatányér eltűnik, jöhet a saját |
 
-A mintatányér a gondozott lista jelöltjei közül az első, amelyen a felhasználó Keretével a
-✓ és a rögzítésből jövő ⚠ is megmutatható; ha egyik sem ilyen, **rövid túra** jön (1., 2., 6.
-lépés) az első jelölttel, rögzítés nélkül. A félbehagyott saját tányér a túra alatt nem látszik, de érintetlen, és utána ott van.
-A túra a Keret aljáról (`Bevezető újra`, csak mentett Kerettel) bármikor újraindítható; ha
-egyszer elindult, magától nem jön vissza, akkor sem, ha az app közben bezárult. Aki a bevezető
-előtt kezdte használni az appot, annál a következő megnyitáskor egyszer magától indul.
+A mintatányér a gondozott lista jelöltjei közül az első, amelyen a felhasználó Keretével a ✓ és
+a rögzítésből jövő ⚠ is megmutatható; ha egyik sem ilyen, **rövid túra** jön (1., 2., 6. lépés)
+az első jelölttel, rögzítés nélkül. A félbehagyott saját tányér a túra alatt nem látszik, de
+érintetlen, és utána ott van. A túra a Keret aljáról (`Bevezető újra`, csak mentett Kerettel)
+bármikor újraindítható; ha egyszer elindult, magától nem jön vissza, akkor sem, ha az app
+közben bezárult. Aki a bevezető előtt kezdte használni az appot, annál a következő megnyitáskor
+egyszer magától indul.
 
 ---
 
@@ -636,9 +637,9 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Túra 2., rövid túra, ⚠ esetén | Kiszámoltam a legközelebbi tányért a te sávjaidhoz. A ⚠ megmondja, mi lóg ki, és mi segít. Minden gramm nyers súly. — Tovább |
 | Túra 3. | Ha egy alapanyagból pontosan annyit akarsz, amennyit te mondasz, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n} g (nyersen). |
 | Túra 3., ha még ✓ | Ez még belefér. Írj be többet: {n} g (nyersen). |
-| Túra 3., ha más ⚠ jön | Ezzel nem a fehérje lett a fő gond. Írd be pontosan ezt: {n} g (nyersen). |
+| Túra 3., ha más ⚠ jön | Ezzel más jön ki, mint amit meg akarok mutatni. Írd be pontosan ezt: {n} g (nyersen). |
 | Túra 4. | A beírt gramm rögzít: a lakat mutatja, ezt a Ketara nem mozdítja. Ezzel a rögzítéssel nem jön ki: a panel megmondja, mi lóg ki, miért, és mi lenne, ha feloldanád. — Tovább |
-| Túra 5. | Oldd fel: koppints a gombra: {Alapanyag} feloldása. |
+| Túra 5. | Oldd fel a rögzítést ezzel a gombbal: {Alapanyag} feloldása. |
 | Túra 6. | Újra minden a sávon belül. Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
 | Túra 6., rövid túra | Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
 | Keret, a túra újraindítása | Bevezető újra |

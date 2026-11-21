@@ -648,9 +648,9 @@ Tech 14./9.*
 
 *Cél: aki először nyitja meg az appot, egy mintatányéron kipróbálja a lényeget (választó,
 grammok, rögzítés, ⚠, feloldás), a ritkább funkciókról pedig akkor kap egy-egy tippet, amikor
-először előjönnek. Forrás: PRD 6.8; F 3., 7.; UX 8.3; Tech 7.2, 7.6. Függ: E7–E11 (a túra és a
-tippek ezek elemeire mutatnak; az iOS-tipp és a mentés-hiba sáva az E11-ből jön). A külső tesztelők (S12.3) erre várnak; a saját egyhetes alfa
-(S12.2) közben mehet.*
+először előjönnek. Forrás: PRD 6.8; F 3., 7.; UX 8.3; Tech 7.2, 7.6. Függ: E7–E11 (a túra és
+a tippek ezek elemeire mutatnak; az iOS-tipp és a mentés-hiba sáva az E11-ből jön). A külső
+tesztelők (S12.3) erre várnak; a saját egyhetes alfa (S12.2) közben mehet.*
 
 *Döntések (2026-11-21, interjú): vezetett első tányér + helyi tippek; mintatányér a felhasználó
 saját Keretével, a végén eldobva; hat lépés, mindegyiket a felhasználó csinálja meg; minden
@@ -666,11 +666,18 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     `tourDone` `true` lesz; a `tipsSeen`-ből kiesnek az ismeretlen azonosítók és az ismétlődések.
   - [ ] T14.1.2 Indulás: új felhasználónál a Keret első mentése után (a gyanús-érték kérdésnél
     az `Igen, így van` után); meglévőnél, ha van Keret és `tourDone: false`, a következő
-    megnyitáskor a Tányéron. A Keret nélküli állapot (első indítás) nem indít túrát. Az
-    induláskor egy írásban `tourDone: true` kerül a tárolóba (Tech 7.6).
-  - [ ] T14.1.3 A mintatányér csak memóriában: a felhasználó aktuális tányérja a tárolóban és
-    az állapotban érintetlen, a túra alatt csak nem látszik, utána ugyanúgy ott van (rögzítésekkel).
-    A mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim közé.
+    megnyitáskor a Tányéron. Ha az app másik útvonalon nyílik (`#/tanyerjaim`, `#/keret`),
+    a túra akkor indul, amikor a felhasználó először a Tányérra ér. A Keret nélküli állapot
+    (első indítás) nem indít túrát. Az induláskor egy írásban `tourDone: true` kerül a
+    tárolóba (Tech 7.6). Tesztek: első mentés után; v1-es adattal a Tányéron; v1-es adattal
+    `#/tanyerjaim`-on nyitva (nincs túra, amíg a Tányérra nem lép).
+  - [ ] T14.1.3 A mintatányér csak memóriában (Tech 7.6): új, nem tárolt `tour` mező az
+    app-állapotban; amíg fut, a tányér-műveletek a reducerben a `tour.plate`-et módosítják, a
+    nézet a `computePlateView`-ból jön a `tour.plate`-tel. A felhasználó aktuális tányérja a
+    tárolóban és az állapotban érintetlen, utána ugyanúgy ott van (rögzítésekkel). A
+    referenciák induláskor a `tour.plate.refs`-be rögzülnek. A mintatányér nem frissíti a
+    „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim közé. Reducer-tesztek: minden
+    tányér-művelet túra alatt a `currentPlate` érintése nélkül.
   - [ ] T14.1.4 Megszakítás: újratöltés a 3. lépés közepén → a felhasználó saját tányérja nyílik,
     túra nem indul (teszt).
   - [ ] T14.1.5 Két fül (Tech 7.3): az A fül túrája közben megnyitott B fül nem indít túrát, és a
@@ -682,20 +689,25 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
   - [ ] T14.2.1 `config.json`: `tour.candidates` — mintatányér-jelöltek sorrendben (az első:
     `tojas`, `brokkoli`, `olaj`), mindegyikben egy rögzítendő fehérjeforrással. A
     `pnpm validate-data` ellenőrzi, hogy minden id létezik és nincs kivezetve.
-  - [ ] T14.2.2 `src/domain/tour.ts` (Tech 7.6; tiszta, szinkron, a Tányér referenciáival): az
-    első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a fehérjeforrás a kiszámolt grammal
-    rögzítve olyan ⚠-t ad, amelynek megjelenő szövegében csak makró-sorok vannak (nincs arány-,
-    0 g- és kerekítés-sor), az első sor a fehérje „fölött" sora, és a `pinCause` a rögzített alapanyagot egymagában nevezi meg. A rögzítendő
-    gramm: a legkisebb 10-zel osztható érték, amellyel az alapanyag egyedül legalább 3 g-mal a
-    fehérjesáv teteje fölé visz. A workerben egy új üzenettípus futtatja.
+  - [ ] T14.2.2 `src/domain/tour.ts` (Tech 7.6; tiszta, szinkron, a `computePlateView`-val és
+    a rögzített referenciákkal): az első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a
+    fehérjeforrás a kiszámolt grammal rögzítve olyan ⚠-t ad, amelynek ⚠-sorai között nincs
+    arány-, 0 g- és kerekítés-sor (a kcal-sor megengedett), az első sor a fehérje „fölött"
+    sora, és a `pinCause` a rögzített alapanyagot egymagában nevezi meg. A rögzítendő gramm:
+    a legkisebb 10-zel osztható érték, amellyel az alapanyag egyedül legalább 3 g-mal a
+    fehérjesáv teteje fölé visz. A workerben külön üzenettípus és külön várakozó hely futtatja.
   - [ ] T14.2.3 Ha egyik jelölt sem felel meg: **rövid túra** (1., 2. és 6. lépés, 1–3-ig
     számozva) mindig az **első** jelölt három alapanyagával, rögzítés nélkül; a 2. lépés
     buboréka azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
-  - [ ] T14.2.4 Tesztek: a PRD 6.4 példakerete (étkezésenként CH 5–10, Fe 20–25, Zs 45–70;
-    a jelölt a tojás, a rögzítés grammja a fenti szabályból); kézi eset szűk zsírsávval
-    (pl. Fe 20–25, Zs 45–52), amelynél a zsír vezetne → következő jelölt vagy rövid túra;
-    fast-check véletlen érvényes Keretekkel: elfogadott jelöltnél a címsor mindig a fehérje
-    „fölött" sora, különben rövid túra.
+  - [ ] T14.2.4 Tesztek, kézi esetek: a PRD 6.4 példakerete (étkezésenként CH 5–10, Fe 20–25,
+    Zs 45–70; a jelölt a tojás, a rögzítés grammja a fenti szabályból); szűk zsírsáv (pl.
+    Fe 20–25, Zs 45–52), amelynél a zsír vezetne → következő jelölt vagy rövid túra; 0 g-hoz
+    közeli CH-alsó határ, amelynél a rögzítés „0 g-ra szorult" sort adna → elutasítva; kcal-sáv,
+    amelynél a ⚠-ban kcal-sor is van → elfogadva. Fast-check véletlen érvényes Keretekkel,
+    a választótól független ellenőrzésekkel: a választás determinisztikus (kétszer futtatva
+    ugyanaz); elfogadott jelöltnél a rögzítendő gramm 10-zel osztható, és a fehérjeforrás
+    fehérjéje egyedül legalább 3 g-mal a sáv teteje fölött van, 10 g-mal kevesebbel viszont
+    nem; rövid túránál a tányér az első jelölt.
 - [ ] **S14.3 — Kiemelés és buborék** · *Kész, ha:* a túra kiemelése és a tippek buboréka
   320 px-en 200%-os betűvel, képernyőolvasóval és rendszer-visszalépéssel is használható.
   - [ ] T14.3.1 Kiemelés (UX 8.3, Tech 7.6 UI-réteg): a képernyő elsötétül, csak a következő
@@ -707,8 +719,10 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     buborék neve „Bevezető, {n}. lépés a {m}-ból" (rövid túrán m = 3). `Kihagyom` minden
     lépésen elérhető, a záró lépés kivételével.
   - [ ] T14.3.3 Rendszer-visszalépés (Tech 7.6): a túra induláskor saját history-réteget tesz
-    le (`openLayer`). Nyitott lapnál a vissza a lapot zárja, és a túra az előző lépés elejére
-    áll; lap nélkül a túra rétegét veszi le, ami a túrát zárja, mint a `Kihagyom`.
+    le (`openLayer`). Nyitott lapnál (csak az 1. lépésben, a választó) a vissza a lapot zárja,
+    a már kipipált tételek nem kerülnek fel, és a túra az 1. lépés elejére áll (a
+    `+ Alapanyag`-ra mutat); lap nélkül a túra rétegét veszi le, ami a túrát zárja, mint a
+    `Kihagyom`.
   - [ ] T14.3.4 Mozgás: `prefers-reduced-motion` mellett nincs áttűnés. Az iOS-tipp és a
     mentés-hiba sávja a túra alatt rejtve, utána a helyükön.
   - [ ] T14.3.5 Tipp-buborék: nem modális, nem sötétít, `Értem` gombbal; a célelem mellett,
