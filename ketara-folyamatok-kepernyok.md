@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.19
+# Ketara — Folyamatok és képernyők v0.20
 
-*Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint; 2026-11-15: az iOS-tipp helye az első Kereten is, PR #15)*
+*Kísérőanyag a PRD v1.5-höz. Minden döntés onnan származik.*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint; 2026-11-15: az iOS-tipp helye az első Kereten is, PR #15; 2026-11-21: 3. és 7.: interaktív bevezető, PRD 6.8)*
 
 ---
 
@@ -125,7 +125,9 @@ flowchart TD
     F3 -- igen --> G["Egyszer visszakérdez, nem javít magától"]
     G -- "Igen, így van" --> J
     G -- "Javítom" --> B
-    F3 -- nem --> J[Tányér, üres]
+    F3 -- nem --> J
+    J["Vezetett első tányér (túra, 6 lépés)<br/>mintatányéron, a saját Kerettel"]
+    J -- "Kezdjük vagy Kihagyom" --> K[Tányér, üres]
 ```
 
 Nincs belépés, hozzájárulás és süti-sáv (PRD 5., 6.6). Másik eszközön vagy a böngésző
@@ -140,6 +142,24 @@ A `H` lépés a legfontosabb az egész beállításban: **mutasd meg neki a kisz
 célt, mielőtt továbbenged.** Négy éve fejből tudja, mennyi jön ki egy étkezésre. Ha a mi
 számunk más, azonnal látja, és rögtön kiderül, hogy félreértettük a papírt.
 
+**Vezetett első tányér** (PRD 6.8, UX 8.3). A Keret után a Tányéron indul, elsötétített
+képernyővel; mindig csak a következő elem koppintható, és minden lépésen ott a `Kihagyom`.
+
+| # | A felhasználó | A buborék |
+|---|---|---|
+| 1 | `+ Alapanyag`, kipipálja a három tételt, `Hozzáadás (3)` | felszólít, és megnevezi a hármat |
+| 2 | elolvassa, `Tovább` | a grammok nyers súlyok; a makrósor; a ✓ |
+| 3 | a fehérjeforrás grammjába beírja a megadott értéket | a beírás rögzít, a lakat mutatja |
+| 4 | elolvassa, `Tovább` | a ⚠ panel: mi lóg ki, miért, mi lenne feloldva |
+| 5 | `{Alapanyag} feloldása` | feloldva újra ✓ |
+| 6 | `Kezdjük` | a mintatányér eltűnik, jöhet a saját |
+
+A mintatányér a gondozott lista jelöltjei közül az első, amelyen a felhasználó Keretével a
+✓ és a rögzítésből jövő ⚠ is megmutatható; ha egyik sem ilyen, **rövid túra** jön (1., 2., 6.
+lépés). A félbehagyott saját tányér a túra alatt félre van téve, utána visszajön. A túra a Keret
+aljáról (`Bevezető újra`) bármikor újraindítható. Aki a bevezető előtt kezdte használni az
+appot, annál a következő megnyitáskor egyszer magától indul.
+
 ---
 
 ## 4. Képernyőlista
@@ -152,7 +172,8 @@ számunk más, azonnal látja, és rögtön kiderül, hogy félreértettük a pa
 | 4 | **Tányérjaim** | Kiindulópontok: mentett alapanyag-kombinációk, megnyitáskor újraszámolva. |
 | 5 | **Keret** | A dietetikus számai, a belőlük számolt étkezési cél, alul a figyelmeztetés. |
 
-Öt képernyő. Ha ennél több lesz, valamit rosszul csinálunk.
+Öt képernyő. Ha ennél több lesz, valamit rosszul csinálunk. Az interaktív bevezető (3.) nem új
+képernyő, hanem a Tányér és a választó fölötti réteg.
 
 ---
 
@@ -604,6 +625,26 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | iOS-tipp (Tányér teteje és az első indítás Keretje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
 | iOS-tipp, képernyőolvasónak (a nyíl helyett) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás, majd Főképernyőhöz adás. |
 | iOS-tipp sávjának neve (képernyőolvasó) | Tipp |
+| Túra, minden lépésen | Kihagyom |
+| Túra, buborék neve (képernyőolvasó) | Bevezető, {n}. lépés a {m}-ból |
+| Túra 1. (Tányér) | Rakjunk össze egy mintatányért. Koppints a + Alapanyag gombra. |
+| Túra 1. (választó) | Pipáld ki ezt a hármat: {A}, {B}, {C}. Aztán Hozzáadás. |
+| Túra 1., a választó sorának címe | Bevezető |
+| Túra 2. | Kiszámoltam az adagokat a te sávjaidhoz. Minden gramm nyers súly. Alul a makrók: szénhidrát, fehérje, zsír és az arány. — Tovább |
+| Túra 2., rövid túra, ⚠ esetén | Kiszámoltam a legközelebbi tányért a te sávjaidhoz. A ⚠ megmondja, mi lóg ki, és mi segít. Minden gramm nyers súly. — Tovább |
+| Túra 3. | Ha ennyit akarsz enni valamiből, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n}. |
+| Túra 3., kisebb érték után | Ez még belefér. Írj be nagyobbat: {n}. |
+| Túra 4. | A beírt gramm rögzít: a lakat mutatja, ezt a Ketara nem mozdítja. Ezzel a rögzítéssel nem jön ki: a panel megmondja, mi lóg ki, miért, és mi lenne, ha feloldanád. — Tovább |
+| Túra 5. | Oldd fel: koppints a {Alapanyag} feloldása gombra. |
+| Túra 6. | Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
+| Keret, a túra újraindítása | Bevezető újra |
+| Tipp 1 — sor-műveletek | Koppints a névre: csere vagy törlés. — Értem |
+| Tipp 2 — mentés | Ha gyakran eszed, mentsd el. Legközelebb a mai célra újraszámolva nyílik. — Értem |
+| Tipp 3 — mentett tányér | A mentett tányér mindig a mai célra számolódik újra. — Értem |
+| Tipp 4 — saját alapanyag | A csomagolás 100 g-ra vonatkozó adatai kellenek: szénhidrát, fehérje, zsír. — Értem |
+| Tipp 5 — ⚠ rögzítés nélkül | Ez a lépés segít a legtöbbet. — Értem |
+| Tipp 6 — több rögzítés | Elég, ha egyet feloldasz. Ha az sem segít, oldd fel mindet. — Értem |
+| Tipp buborékának neve (képernyőolvasó) | Tipp |
 | A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |
 | Betelt a tárhely (korábban már mentett) | Az utolsó változást nem tudtam elmenteni, mert nincs elég hely. A korábban mentettek megmaradnak; törölj egy régi tányért, vagy szabadíts fel helyet a telefonon. |
 | Újabb app-verzió mentett | Egy újabb Ketara-verzió mentett ebben a böngészőben, ezért ez az ablak nem ment. Zárd be, és nyisd meg újra a Ketarát. |

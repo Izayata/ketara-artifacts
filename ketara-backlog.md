@@ -1,9 +1,9 @@
-# Ketara — Fejlesztési backlog (alfa) v0.2
+# Ketara — Fejlesztési backlog (alfa) v0.3
 
 *Élő dokumentum. A pipák a haladást mutatják; egy ticket akkor kész, ha a kódja a
 `main`-en van, és a CI zöld.*
-*Alapja: PRD v1.4, Folyamatok és képernyők v0.19, UX-terv v0.11, Tech terv v0.7.*
-*Utolsó frissítés: 2026-11-14 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12)*
+*Alapja: PRD v1.5, Folyamatok és képernyők v0.20, UX-terv v0.12, Tech terv v0.8.*
+*Utolsó frissítés: 2026-11-21 (E5 kész: ketara-app PR #7; E6 kész: PR #8; E7 kész és M3: PR #9; E8 kész: PR #10; E9 kész: PR #11; E10 kész: PR #12; 2026-11-15: E11 kész: PR #14, #15; 2026-11-21: új E14 — Interaktív bevezető)*
 
 ---
 
@@ -35,7 +35,9 @@
 | E9 | Kész, mentés, Tányérjaim | E7 | 7 |
 | E10 | Saját alapanyag | E7 | 7 |
 | E11 | PWA, offline, iOS-tipp, biztonság | E7 | 8 |
-| E12 | Alfa-kiadás és teszt | E6–E11 | 9 |
+| E12 | Alfa-kiadás és teszt | E6–E11; S12.3: E14 | 9 |
+| E13 | Alfa-javítások (az S12.2-ből jön létre) | E12 | 9 |
+| E14 | Interaktív bevezető: vezetett első tányér és helyi tippek | E7–E10 | 9 előtt (a külső tesztelők előtt) |
 
 **Mérföldkövek**
 
@@ -46,7 +48,7 @@
 - [x] **M3 — Első használható tányér:** E4–E7 kész; a PRD 6.4 ✓ példája a képernyőn.
 - [x] **M4 — Teljes v1-scope:** E8–E11 kész; a 2. folyamat (ismétlődő étkezés) végigmegy,
   repülőgép-módban is indul.
-- [ ] **M5 — Alfa:** E12 kész; tesztelők használják.
+- [ ] **M5 — Alfa:** E12 és E14 kész; tesztelők használják.
 
 A végleges alapanyaglista (S3.4) az M2 után **párhuzamosan** készülhet; addig az app a
 prototípus listájával tesztelhető.
@@ -634,10 +636,104 @@ Tech 14./9.*
   - [ ] T12.2.1 👤 Egy hét valódi használat; észrevételek gyűjtése.
   - [ ] T12.2.2 A talált hibák ticketként ebbe a backlogba (új „E13 — Alfa-javítások" epic).
 - [ ] **S12.3 — Alfa külső tesztelőkkel 👤** (PRD 9.) · *Kész, ha:* a tesztelők kipróbálták, és
-  megvan a válasz a PRD 8.1/3 kérdésére (van-e igény a körön túl). Függ: S0.2 (domain), S0.4.
+  megvan a válasz a PRD 8.1/3 kérdésére (van-e igény a körön túl). Függ: S0.2 (domain), S0.4,
+  E14 (bevezető).
   - [ ] T12.3.1 👤 Rövid útmutató a tesztelőknek (link, telepítés, mire figyeljenek).
   - [ ] T12.3.2 👤 Tesztelés és visszajelzések összegyűjtése a PRD 9. feltételezései mentén.
   - [ ] T12.3.3 A PRD 8.1/3 és 9. frissítése az eredménnyel.
+
+---
+
+## E14 — Interaktív bevezető
+
+*Cél: aki először nyitja meg az appot, egy mintatányéron kipróbálja a lényeget (választó,
+grammok, rögzítés, ⚠, feloldás), a ritkább funkciókról pedig akkor kap egy-egy tippet, amikor
+először előjönnek. Forrás: PRD 6.8; F 3., 7.; UX 8.3; Tech 7.2, 7.6. Függ: E7–E10 (a túra és a
+tippek ezek elemeire mutatnak). A külső tesztelők (S12.3) erre várnak; a saját egyhetes alfa
+(S12.2) közben mehet.*
+
+*Döntések (2026-11-21, interjú): vezetett első tányér + helyi tippek; mintatányér a felhasználó
+saját Keretével, a végén eldobva; hat lépés, mindegyiket a felhasználó csinálja meg; minden
+buborékon `Kihagyom`, újraindítás a Keret aljáról; a meglévő felhasználóknál frissítés után
+egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem takaró buborék.*
+
+- [ ] **S14.1 — A túra állapota és tárolása** · *Kész, ha:* a túra a megfelelő pillanatban
+  indul, kihagyva vagy végigjárva nem jön vissza magától, és a felhasználó tányérja érintetlen
+  marad; tesztekkel.
+  - [ ] T14.1.1 Séma v2 (Tech 7.2): `ui.tourDone`, `ui.tipsSeen`, `tourStash`; migráció v1 → v2,
+    amely **mindenkinél** `tourDone: false`-t állít (így a meglévő felhasználóknál is egyszer
+    elindul). Migrációs teszt valódi v1-es mintával.
+  - [ ] T14.1.2 Indulás: új felhasználónál a Keret első mentése után (a gyanús-érték kérdésnél
+    az `Igen, így van` után); meglévőnél, ha van Keret és `tourDone: false`, a következő
+    megnyitáskor a Tányéron. A Keret nélküli állapot (első indítás) nem indít túrát.
+  - [ ] T14.1.3 Félretétel: ha induláskor van aktuális tányér, a `tourStash`-be kerül, és a túra
+    végén vagy kihagyáskor visszaáll, rögzítésekkel együtt. A mintatányér nem frissíti a
+    „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim közé.
+  - [ ] T14.1.4 Megszakítás: ha az app a túra közben bezárul, a következő megnyitáskor a
+    félretett tányér visszaáll, a túra kihagyottnak számít (`tourDone: true`), túra nem indul.
+  - [ ] T14.1.5 Két fül (Tech 7.3): ha a másik fülön fut a túra, ez a fül nem indít újat.
+- [ ] **S14.2 — A mintatányér** · *Kész, ha:* bármely érvényes Kerethez determinisztikusan
+  kiválasztható a mintatányér és a rögzítendő gramm, vagy tudható, hogy a rövid túra jön;
+  egység- és tulajdonság-alapú tesztekkel.
+  - [ ] T14.2.1 `config.json`: `tour.candidates` — mintatányér-jelöltek sorrendben (az első:
+    `tojas`, `brokkoli`, `olaj`), mindegyikben egy rögzítendő fehérjeforrással. A
+    `pnpm validate-data` ellenőrzi, hogy minden id létezik és nincs kivezetve.
+  - [ ] T14.2.2 `src/domain/tour.ts`: az első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a
+    fehérjeforrás rögzítve a kiszámolt grammal ⚠-t ad fehérje-túllépéssel, a feloldás
+    előzetese ✓. A rögzítendő gramm: a legkisebb 10-zel osztható érték, amellyel az alapanyag
+    egyedül legalább 3 g-mal a fehérjesáv teteje fölé visz.
+  - [ ] T14.2.3 Ha egyik jelölt sem felel meg: **rövid túra** (1., 2. és 6. lépés), a 2. lépés
+    buboréka azt magyarázza, ami a képernyőn van (✓ vagy ⚠).
+  - [ ] T14.2.4 Tesztek: a PRD 6.4 példakerete (137/100/31, rögzítés → ⚠); fast-check
+    véletlen érvényes Keretekkel: a választás vagy teljesíti (a)–(b)-t, vagy rövid túrát ad.
+- [ ] **S14.3 — Kiemelés és buborék** · *Kész, ha:* a túra kiemelése és a tippek buboréka
+  320 px-en 200%-os betűvel, képernyőolvasóval és rendszer-visszalépéssel is használható.
+  - [ ] T14.3.1 Kiemelés (UX 8.3): a képernyő elsötétül, csak a következő célelem világos és
+    koppintható; a többi `inert`. A buborék a célelem fölött vagy alatt, soha nem takarja.
+  - [ ] T14.3.2 Fókusz és felolvasás: lépésváltáskor a fókusz a buborék szövegére kerül; a
+    buborék neve „Bevezető, {n}. lépés a 6-ból". `Kihagyom` mindig elérhető.
+  - [ ] T14.3.3 Rendszer-visszalépés: nyitott lapnál a lapot zárja, és a túra az előző lépés
+    elejére áll; lap nélkül a túrát zárja, mint a `Kihagyom`.
+  - [ ] T14.3.4 Mozgás: `prefers-reduced-motion` mellett nincs áttűnés. Az iOS-tipp és a
+    mentés-hiba sávja a túra alatt rejtve, utána a helyükön.
+  - [ ] T14.3.5 Tipp-buborék: nem modális, nem sötétít, `Értem` gombbal; a célelem mellett,
+    a gombokat nem takarja; képernyőolvasónak „Tipp" nevű régió (mint az iOS-tippé).
+- [ ] **S14.4 — A hat lépés** (F 3., UX 8.3) · *Kész, ha:* üres böngészőben a Keret → túra →
+  üres Tányér út, a kihagyás és a Keretről újraindítás végigmegy (e2e, Pixel 7 és iPhone 14).
+  - [ ] T14.4.1 1. lépés: `+ Alapanyag` → a választó tetején egy „Bevezető" sor a három
+    tétellel; csak ezek és a `Hozzáadás (3)` koppinthatók.
+  - [ ] T14.4.2 2. lépés: grammok, ✓, makrósor; buborék `Tovább` gombbal.
+  - [ ] T14.4.3 3. lépés: a fehérjeforrás grammjába a kiszámolt érték beírása (rögzít). Kisebb,
+    még ✓-t adó értéknél a buborék nagyobbat kér; nagyobb érték is jó, ha ⚠-t ad.
+  - [ ] T14.4.4 4. lépés: a ⚠ panel magyarázata (címsor, ok, előzetes); `Tovább`.
+  - [ ] T14.4.5 5. lépés: `{Alapanyag} feloldása` → ✓.
+  - [ ] T14.4.6 6. lépés: záró buborék, `Kezdjük` → a mintatányér eltűnik, üres Tányér vagy a
+    félretett tányér; `tourDone: true`.
+  - [ ] T14.4.7 A Keret alján `Bevezető újra` szöveges gomb: a Tányérra lép és elindítja a
+    túrát (kérdés nélkül, mert a tányér félre van téve). A tippeket nem állítja vissza.
+  - [ ] T14.4.8 Playwright: teljes túra; kihagyás az 1. és a 4. lépésnél; újraindítás meglévő
+    tányérral (a tányér visszajön); meglévő felhasználó v1-es adattal (egyszer indul); rövid
+    túra. A meglévő e2e seedek `tourDone: true`-t kapnak, mint az `iosInstallHintDismissed`.
+- [ ] **S14.5 — Helyi tippek** (UX 8.4) · *Kész, ha:* a hat tipp mindegyike az első alkalomkor,
+  egyszer jelenik meg, a túra alatt soha, és egyszerre legfeljebb egy; tesztekkel.
+  - [ ] T14.5.1 Tipp-motor: `ui.tipsSeen` (tipp-azonosítók); egyszerre egy, ha több esedékes,
+    a lista sorrendjében az első; látottnak számít `Értem`-re vagy ha a felhasználó a
+    célelemet használja.
+  - [ ] T14.5.2 Tipp 1 — sor-műveletek: az első saját ✓ tányérnál az első sor nevén.
+  - [ ] T14.5.3 Tipp 2 — mentés: ✓ új tányéron a `Tányér mentése` gombon, amíg nincs mentett
+    tányér (ha már van, látottnak számít).
+  - [ ] T14.5.4 Tipp 3 — mentett tányér: az első Tányérjaimból megnyitott tányérnál a fejléc
+    alatti sornál.
+  - [ ] T14.5.5 Tipp 4 — saját alapanyag: a választóban az első „Nincs ilyen a listában"
+    esetnél a `Felviszed sajátként?` gomb mellett.
+  - [ ] T14.5.6 Tipp 5 — ⚠ rögzítés nélkül: az első ilyennél az elsődleges gombon.
+  - [ ] T14.5.7 Tipp 6 — több rögzítés: az első ⚠-nál legalább két rögzítéssel.
+  - [ ] T14.5.8 Tesztek: egység a motorra (sorrend, egyszer, túra alatt nem); e2e az 1., 2. és
+    4. tippre.
+- [ ] **S14.6 — Szövegek** · *Kész, ha:* a túra és a tippek szövegei a `src/texts/hu.ts`-ben
+  vannak, a Folyamatok 7. táblázatával egyezően.
+  - [ ] T14.6.1 A túra, a rövid túra, a `Bevezető újra` és a hat tipp szövegei (F 7.).
+  - [ ] T14.6.2 👤 A szövegek átnézése a saját telefonodon, a túra végigjárásával.
 
 ---
 
@@ -667,3 +763,5 @@ dönteni kell róluk.
 | 2026-11-15 | Betűtípus: rendszerbetű (T11.5.1) | a felhasználó döntése; nincs letöltés, a meglévő elrendezés-tesztek erre hangoltak |
 | 2026-11-15 | Ideiglenes app-ikon (fehér K a zöld akcentuson); a végleges ikon később a felhasználótól | a felhasználó döntése |
 | 2026-11-15 | Az iOS-tipp minden iOS-böngészőben (kivéve az alkalmazásba építetteket), és az első Kereten is (S11.3) | a felhasználó döntése; ketara-app PR #15 |
+| 2026-11-21 | Új E14 — Interaktív bevezető: vezetett első tányér mintatányéron a saját Kerettel, hat lépés, `Kihagyom` + `Bevezető újra` a Kereten, meglévő felhasználóknál egyszer magától indul, hat helyi tipp | a felhasználó döntései az interjúban; az app ma semmit nem magyaráz el az első Keret mondatán túl |
+| 2026-11-21 | Az E14 a külső tesztelők (S12.3) előtt készül el; az E13 szám az alfa-javításoké marad | a bevezető a tesztelőknek szól, és a visszajelzésük róla is szól |
