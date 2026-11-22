@@ -417,7 +417,7 @@ előjön; a túra alatt egyik sem, egyszerre legfeljebb egy. Nem sötétít, nem
 4. Saját alapanyag: a választóban az első „nincs ilyen" keresésnél — a csomagolás 100 g-os
    adatai kellenek.
 5. ⚠ rögzítés nélkül: az első ilyennél — az elsődleges gomb segít a legtöbbet.
-6. Több rögzítés: az első ⚠-nál legalább két rögzítéssel, a feloldó gomb mellett — elég
+6. Több rögzítés: az első ⚠-nál legalább két rögzítéssel, az elsődleges feloldó gombon — elég
    egyet feloldani; ha az sem segít, mindet.
 
 Aki a bevezető megjelenése előtt már használta az appot (van mentett tányérja vagy „legutóbb

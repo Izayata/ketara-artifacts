@@ -283,8 +283,9 @@ legrosszabb esetet (8 alapanyag, több rögzítés, ⚠). Ha a cél nem teljesü
 5. **Tartomány:** referencia-forrás sorrendje, „legutóbb használt" frissítése (Kész,
    mentés; 0 g nem írja felül), Keret-ellenőrzés, saját alapanyag törlése tányérokból,
    mentett tányér eltérés-vizsgálata.
-6. **Végponttól végpontig** (Playwright, mobil nézet): első indítás → Keret → 3 alapanyag
-   → ✓ → Kész → újranyitás; ⚠ rögzítéssel és feloldással; offline újranyitás.
+6. **Végponttól végpontig** (Playwright, mobil nézet): első indítás → Keret → a bevezető
+   túra (egy teszt végigmegy rajta, a többi `Kihagyom`-mal lép át, backlog T14.4.9) → 3
+   alapanyag → ✓ → Kész → újranyitás; ⚠ rögzítéssel és feloldással; offline újranyitás.
 
 ## 7. Tárolás az eszközön
 
@@ -364,17 +365,28 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 - **A mintatányér csak a memóriában él.** Az app-állapot (`src/state/`) egy új, **nem
   tárolt** `tour` mezőt kap a `currentPlate` mellett: `{ step, plate: CurrentPlate, candidate,
   pinGrams, short } | null`. A tárolóba író réteg (`persist`) a `tour` mezőt nem látja.
-  - **Egy burkoló a reducer előtt** (`tourReducer`): amíg a `tour` nem `null`, **minden**
-    tányér-művelet (ma: `addRows`, `removeRow`, `pin`, `unpin`, a gramm beírása, a csere; és
-    ami később jön) úgy fut le a meglévő `appReducer`-en, hogy a bemenetben a
+  - **Egy burkoló a reducer előtt** (`tourReducer`): amíg a `tour` nem `null`, a
+    műveleteket három csoportba sorolja (új művelet felvételekor a csoportját is meg kell adni;
+    egy kimerítő `switch` a típusellenőrzővel kikényszeríti).
+  - **A mintatányéron futók:** `addRows`, `removeRow`, `pin` (a gramm beírása is ez),
+    `unpin`, `unpinAll`, `swap`. Ezek úgy futnak le a meglévő `appReducer`-en, hogy a bemenetben a
     `data.currentPlate` helyén a `tour.plate` áll. Az eredmény `currentPlate`-je lesz az új
     `tour.plate`, a `refs` visszakerül rá (a `withRows` eldobná), a kimenő `data` pedig a
     bemenő marad: a felhasználó `currentPlate`-je, a „legutóbb használt" értékek és a tányérok
-    nem változnak, tárolói írás nincs. A burkoló a `tour` mezőt minden ágon visszateszi, így a
-    `changeWithNotice` és a többi új `AppState`-et építő ág sem ejti el.
-  - A többi művelet (Kész, mentés, Tányérjaim, saját alapanyag, visszavonás) a túra alatt nem
-    érhető el; ha mégis érkezik, a burkoló nem hajtja végre. A Keret változása a túrát zárja
-    (lent).
+    nem változnak, tárolói írás nincs. A belső eredmény `notice`-a (és benne a visszavonás
+    pillanatképe, amely a mintatányért tartalmazná) eldobódik; a burkoló a bemenő `notice`-t
+    és `noticeSeq`-et adja vissza, így a felhasználó nyitott visszavonása sem záródik le
+    csendben, és a mintatányér halasztott írással sem kerülhet a tárolóba. A burkoló a `tour`
+    mezőt minden ágon visszateszi.
+  - **Átengedettek** (a szokásos `appReducer`-en futnak a valódi adaton, a `tour` megmarad):
+    `external` (a másik fül adata; ha benne a Keret eltér a túra indulásakoritól, utána a `tour`
+    `null` lesz, lent), `commitNotice`, `dismissIosHint`, valamint a túra saját műveletei
+    (`tourStart` a `tourDone: true` írással, `tourStep`, `tourEnd`). A `saveKeret` is
+    átmegy, és a túrát zárja.
+  - **Tiltottak** (a túra alatt a felület nem kínálja őket; ha mégis érkeznek, a burkoló
+    változatlanul adja vissza az állapotot): `newPlate`, `openPlate`, `done`, `savePlate`,
+    `updatePlate`, `renamePlate`, `deletePlate`, `addCustomIngredient`,
+    `updateCustomIngredient`, `deleteCustomIngredient`, `undo`.
   - Így a felhasználó `currentPlate`-je a tárolóban és az állapotban is érintetlen marad, csak a
     túra alatt nem látszik; a túra után ugyanúgy ott van.
 - **Számolás:** a Tányér a nézetét ugyanúgy a `computePlateView`-val, a workerben kapja, csak a
@@ -409,8 +421,9 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   közben érkező tányér-kérés nem dobja el. Csak gondozott alapanyag lehet jelölt, saját nem.
   Amíg a válasz nem jön meg (jellemzően a választó megnyitása előtt), az 1. lépés buboréka
   rendesen látszik, és a `+ Alapanyag` koppintható; a választó „Bevezető" sora csak a válasz
-  után jelenik meg, addig a lap a szokásos választót mutatja halványan. Ha a worker hibát ad,
-  a túra csendben véget ér, mint a `Kihagyom` (a `tourDone` már `true`).
+  után jelenik meg, addig a lap a szokásos választót mutatja halványan. Ha nincs worker (pl.
+  komponens-tesztben), vagy a worker hibát ad, a választás a fő szálon fut, ugyanúgy, ahogy a
+  tányér is a fő szálra esik vissza (`plateComputer.ts`); a túra nem vész el.
   - A rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
     legalább 3 g-mal a fehérjesáv teteje fölé visz.
   - A jelölt akkor jó, ha (a) rögzítés nélkül ✓, és (b) a fehérjeforrás e grammal rögzítve

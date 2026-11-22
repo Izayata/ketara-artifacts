@@ -674,14 +674,20 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     tárolóba (Tech 7.6). Tesztek: első mentés után; v1-es adattal a Tányéron; v1-es adattal
     `#/tanyerjaim`-on nyitva (nincs túra, amíg a Tányérra nem lép).
   - [ ] T14.1.3 A mintatányér csak memóriában (Tech 7.6): új, nem tárolt `tour` mező az
-    app-állapotban és egy `tourReducer` burkoló, amely túra alatt **minden** tányér-műveletet
-    (`addRows`, `removeRow`, `pin`, `unpin`, gramm, csere) a `tour.plate`-en futtat, a `refs`-et
-    visszateszi, a `tour` mezőt minden ágon megőrzi, a többi műveletet nem hajtja végre. A
+    app-állapotban és egy `tourReducer` burkoló kimerítő, három csoportos listával: a
+    tányér-műveleteket (`addRows`, `removeRow`, `pin`, `unpin`, `unpinAll`, `swap`) a
+    `tour.plate`-en futtatja, a `refs`-et visszateszi, a belső `notice`-t eldobja; az
+    `external`, `commitNotice`, `dismissIosHint`, `saveKeret` és a túra saját műveletei
+    átmennek (az `external` Keret-változással és a `saveKeret` a túrát zárja); a többit
+    (Kész, mentés, Tányérjaim-műveletek, saját alapanyag, `undo`) nem hajtja végre. A `tour`
+    mezőt minden ágon megőrzi. A
     nézet a `computePlateView`-ból jön a `tour.plate`-tel. A felhasználó aktuális tányérja a
     tárolóban és az állapotban érintetlen, utána ugyanúgy ott van (rögzítésekkel). A
     mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim
-    közé. Reducer-tesztek minden tányér-műveletre (a pipa levétele is): túra alatt a `data`
-    változatlan, a `tour.plate` változik, a `refs` megmarad.
+    közé. Reducer-tesztek minden műveletre a három csoport szerint: a tányér-műveleteknél
+    (a pipa levétele is) a `data`, a `notice` és a `noticeSeq` változatlan, a `tour.plate`
+    változik, a `refs` megmarad; az `external` átjut (más Keret esetén a túra zárul); a
+    tiltottak az állapotot nem változtatják.
   - [ ] T14.1.4 Megszakítás: újratöltés a 3. lépés közepén → a felhasználó saját tányérja nyílik,
     túra nem indul (teszt).
   - [ ] T14.1.5 Két fül (Tech 7.3): az A fül túrája közben megnyitott B fül nem indít túrát, és a
@@ -711,7 +717,8 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     a választótól független ellenőrzésekkel: a választás determinisztikus (kétszer futtatva
     ugyanaz); elfogadott jelöltnél a rögzítendő gramm 10-zel osztható, és a fehérjeforrás
     fehérjéje egyedül legalább 3 g-mal a sáv teteje fölött van, 10 g-mal kevesebbel viszont
-    nem; rövid túránál a tányér az első jelölt.
+    nem; rövid túránál a tányér az első jelölt. A fő szálas tartalék (worker nélkül,
+    worker-hibánál) ugyanazt választja, mint a worker.
 - [ ] **S14.3 — Kiemelés és buborék** · *Kész, ha:* a túra kiemelése és a tippek buboréka
   320 px-en 200%-os betűvel, képernyőolvasóval és rendszer-visszalépéssel is használható.
   - [ ] T14.3.1 Kiemelés (UX 8.3, Tech 7.6 UI-réteg): a képernyő elsötétül, csak a következő
@@ -772,8 +779,8 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
   - [ ] T14.5.5 Tipp 4 — saját alapanyag: a választóban az első „Nincs ilyen a listában"
     esetnél a `+ Saját alapanyag` gomb mellett.
   - [ ] T14.5.6 Tipp 5 — ⚠ rögzítés nélkül: az első ilyennél az elsődleges gombon.
-  - [ ] T14.5.7 Tipp 6 — több rögzítés: az első ⚠-nál legalább két rögzítéssel, a
-    `Rögzítések feloldása` gomb mellett, ha van; különben az elsődleges (egy feloldó) gombon.
+  - [ ] T14.5.7 Tipp 6 — több rögzítés: az első ⚠-nál legalább két rögzítéssel, az
+    elsődleges feloldó gombon (`{Alapanyag} feloldása`), amely mindig a panel alján látszik.
   - [ ] T14.5.8 Tesztek: egység a motorra (sorrend, egyszer, túra alatt nem, a 2. tipp
     feltétele); e2e mind a hat tippre (a seedek a `tipsSeen`-nel olcsóvá teszik).
 - [ ] **S14.6 — Szövegek** · *Kész, ha:* a túra és a tippek szövegei a `src/texts/hu.ts`-ben

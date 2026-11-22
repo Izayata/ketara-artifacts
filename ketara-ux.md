@@ -350,9 +350,8 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
   „… a 3-ból"); vizuálisan nincs pontsor, hogy a buborék kicsi maradjon.
 - **Fókusz:** lépésváltáskor a buborék szövegére kerül. A rendszer-visszalépés nyitott lapnál
   (csak az 1. lépésben, a választó) a lapot zárja, a már kipipált tételek lekerülnek a
-  mintatányérról, és a
-  túra az 1. lépés elejére áll (a `+ Alapanyag`-ra mutat); lap nélkül a túrát zárja, mint a
-  `Kihagyom`.
+  mintatányérról, és a túra az 1. lépés elejére áll (a `+ Alapanyag`-ra mutat); lap nélkül a
+  túrát zárja, mint a `Kihagyom`.
 - **Az 1. lépés a választóban:** a lap tetején egy „Bevezető" sor mutatja a három tételt,
   hogy ne kelljen kategóriát nyitni vagy görgetni; a kereső és a kategóriák a túra alatt
   halványak. A `Hozzáadás` gomb csak mind a három pipa után (`Hozzáadás (3)`) koppintható.
