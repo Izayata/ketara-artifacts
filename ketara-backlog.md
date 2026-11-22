@@ -671,8 +671,11 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     megnyitáskor a Tányéron. Ha az app másik útvonalon nyílik (`#/tanyerjaim`, `#/keret`),
     a túra akkor indul, amikor a felhasználó először a Tányérra ér. A Keret nélküli állapot
     (első indítás) nem indít túrát. Az induláskor egy írásban `tourDone: true` kerül a
-    tárolóba (Tech 7.6). Tesztek: első mentés után; v1-es adattal a Tányéron; v1-es adattal
-    `#/tanyerjaim`-on nyitva (nincs túra, amíg a Tányérra nem lép).
+    tárolóba (Tech 7.6). Nyitott visszavonás-sáv alatt nem indul; a sáv lezárulása után indul,
+    ha a felhasználó a Tányéron van. Tesztek: első mentés után; v1-es adattal a Tányéron;
+    v1-es adattal `#/tanyerjaim`-on nyitva (nincs túra, amíg a Tányérra nem lép); v1-es
+    adattal a Tányérjaimban tányér törlése, majd 5 mp-en belül a Tányérra lépés → a túra csak
+    a sáv lezárulása után indul, és a `Visszavonás` után sem indul újra.
   - [ ] T14.1.3 A mintatányér csak memóriában (Tech 7.6): új, nem tárolt `tour` mező az
     app-állapotban és egy `tourReducer` burkoló kimerítő, három csoportos listával: a
     tányér-műveleteket (`addRows`, `removeRow`, `pin`, `unpin`, `unpinAll`, `swap`) a
@@ -685,8 +688,9 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     van (rögzítésekkel). A mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem
     kerül a Tányérjaim közé. Reducer-tesztek minden műveletre a három csoport szerint: a
     tányér-műveleteknél (a pipa levétele is) a `data`, a `notice` és a `noticeSeq` változatlan,
-    a `tour.plate` változik, a `refs` megmarad; az `external` átjut (más Keret esetén a túra
-    zárul); a tiltottak az állapotot nem változtatják.
+    a `tour.plate` változik, a `refs` megmarad; az `external` átjut (értékben más Keret esetén
+    a túra zárul, ugyanaz a Keret új objektumként érkezve nem zárja); a tiltottak az állapotot
+    nem változtatják.
   - [ ] T14.1.4 Megszakítás: újratöltés a 3. lépés közepén → a felhasználó saját tányérja nyílik,
     túra nem indul (teszt).
   - [ ] T14.1.5 Két fül (Tech 7.3): az A fül túrája közben megnyitott B fül nem indít túrát, és a

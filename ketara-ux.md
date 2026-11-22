@@ -365,6 +365,8 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
   szokásos módon jelennek meg.
 - **Mentés és Kész a túra alatt** nem koppintható: a mintatányér nem kerül sehova.
 - **Az iOS-tipp és a „nem tudok menteni" sáv** a túra alatt rejtve, utána a helyükön.
+- **Nyitott visszavonás-sáv** („Törölve: … Visszavonás") mellett a túra nem indul el; megvárja,
+  amíg a sáv eltűnik, hogy a visszavonás elérhető maradjon (Tech 7.6).
 - **Mozgás:** a kiemelés 200 ms alatt úszik át a következő elemre; `prefers-reduced-motion`
   mellett ugrik.
 - **320 px, 200%-os betű:** a buborék szövege tördelődik, a gombok egymás alá kerülnek;

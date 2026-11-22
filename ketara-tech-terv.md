@@ -382,8 +382,9 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   - **Átengedettek** (a valódi adaton futnak):
     - `commitNotice` és `dismissIosHint`: a szokásos `appReducer`-en, a `tour` megmarad.
     - `external` (a másik fül adata): a szokásos `appReducer`-en; ha az új Keret **értékben**
-      (minden mezője összevetve) eltér a túra indulásakoritól, utána a `tour` `null` lesz
-      (lent), különben megmarad.
+      (minden mezője összevetve) eltér a művelet előtti `state.data.keret`-től, utána a `tour`
+      `null` lesz (lent), különben megmarad. (A túra alatt a Keret csak így változhat, mert a
+      `saveKeret` a túrát zárja; ezért a túra indulásakori Keretet nem kell külön tárolni.)
     - `saveKeret`: a szokásos `appReducer`-en, utána a `tour` `null` lesz.
     - A túra saját műveleteit (`tourStart` a `tourDone: true` írással, `tourStep`, `tourEnd`)
       maga a burkoló kezeli, nem az `appReducer`; a `tourEnd` a `tour`-t `null`-ra állítja.
@@ -401,11 +402,16 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   A burkoló (fent) minden művelet után visszateszi őket, mert a reducer minden tányér-változásnál
   `refs` nélkül építi újra a tányért. Így egy másik fülről érkező „legutóbb használt"-változás
   nem mozdítja el a grammokat a túra közben.
-- **Indulás:** `keret !== null && !ui.tourDone` → a Tányéron indul, és **az indulással egy
-  írásban** `tourDone: true` kerül a tárolóba. A Keret első mentése után ez magától teljesül;
-  a v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. Ha az app másik útvonalon nyílik
-  (pl. `#/tanyerjaim`, `#/keret`), a túra akkor indul, amikor a felhasználó először a Tányérra
-  ér. A `Bevezető újra` csak memóriában indítja újra (a `tourDone` már `true`).
+- **Indulás:** `keret !== null && !ui.tourDone && !notice?.undo` → a Tányéron indul, és **az
+  indulással egy írásban** `tourDone: true` kerül a tárolóba. A Keret első mentése után ez
+  magától teljesül; a v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. Ha az app
+  másik útvonalon nyílik (pl. `#/tanyerjaim`, `#/keret`), a túra akkor indul, amikor a
+  felhasználó először a Tányérra ér. **Nyitott visszavonás-sáv alatt nem indul** (pl. a
+  Tányérjaimban törölt tányér után, az ~5 mp-es ablakban): a halasztott írás miatt a
+  `tourDone: true` ilyenkor nem kerülne ki, a visszavonás visszahozná a `false`-t, és a sáv a
+  fátyol alá kerülne. A túra akkor indul, amikor a sáv lezárult (`commitNotice` vagy `undo`),
+  és a felhasználó még a Tányéron van. A `Bevezető újra` csak memóriában indítja újra (a
+  `tourDone` már `true`); nyitott visszavonás-sáv alatt ez is megvárja a lezárulást.
 - **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): a `tour` `null` lesz, a Tányér a felhasználó
   saját tányérját mutatja. Tárolói írás nincs. `Kezdjük` és `Kihagyom` esetén a túra a saját
   history-rétegét is leveszi (az `openLayer` visszaadott záró függvényével), hogy a következő
