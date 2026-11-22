@@ -373,7 +373,9 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
 ### 8.4 Helyi tippek
 
 - Egy kis buborék a célelem mellett, kis nyíllal rá. **Nem sötétít, nem modális**, a képernyő
-  közben teljesen használható; a gombokat nem takarja.
+  közben teljesen használható; a gombokat nem takarja. Lapon belüli célelemnél (4. tipp: a
+  választó) a buborék a lapon belül jelenik meg, így az `Értem` nyitott lap mellett is
+  koppintható (Tech 7.6).
 - Egy `Értem` gombbal zárható. Látottnak számít akkor is, ha a felhasználó a célelemet
   használja (pl. a névre koppint az 1. tippnél).
 - Egyszerre legfeljebb egy; ha több is esedékes, a PRD 6.8 sorrendjében az első, a következő

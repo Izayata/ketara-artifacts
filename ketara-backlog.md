@@ -678,16 +678,15 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     tányér-műveleteket (`addRows`, `removeRow`, `pin`, `unpin`, `unpinAll`, `swap`) a
     `tour.plate`-en futtatja, a `refs`-et visszateszi, a belső `notice`-t eldobja; az
     `external`, `commitNotice`, `dismissIosHint`, `saveKeret` és a túra saját műveletei
-    átmennek (az `external` Keret-változással és a `saveKeret` a túrát zárja); a többit
-    (Kész, mentés, Tányérjaim-műveletek, saját alapanyag, `undo`) nem hajtja végre. A `tour`
-    mezőt minden ágon megőrzi. A
-    nézet a `computePlateView`-ból jön a `tour.plate`-tel. A felhasználó aktuális tányérja a
-    tárolóban és az állapotban érintetlen, utána ugyanúgy ott van (rögzítésekkel). A
-    mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim
-    közé. Reducer-tesztek minden műveletre a három csoport szerint: a tányér-műveleteknél
-    (a pipa levétele is) a `data`, a `notice` és a `noticeSeq` változatlan, a `tour.plate`
-    változik, a `refs` megmarad; az `external` átjut (más Keret esetén a túra zárul); a
-    tiltottak az állapotot nem változtatják.
+    átmennek (az `external` Keret-változással és a `saveKeret` a túrát zárja); a többit (Kész,
+    mentés, Tányérjaim-műveletek, saját alapanyag, `undo`) nem hajtja végre. A `tour` mezőt
+    minden nem záró ágon megőrzi. A nézet a `computePlateView`-ból jön a `tour.plate`-tel. A
+    felhasználó aktuális tányérja a tárolóban és az állapotban érintetlen, utána ugyanúgy ott
+    van (rögzítésekkel). A mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem
+    kerül a Tányérjaim közé. Reducer-tesztek minden műveletre a három csoport szerint: a
+    tányér-műveleteknél (a pipa levétele is) a `data`, a `notice` és a `noticeSeq` változatlan,
+    a `tour.plate` változik, a `refs` megmarad; az `external` átjut (más Keret esetén a túra
+    zárul); a tiltottak az állapotot nem változtatják.
   - [ ] T14.1.4 Megszakítás: újratöltés a 3. lépés közepén → a felhasználó saját tányérja nyílik,
     túra nem indul (teszt).
   - [ ] T14.1.5 Két fül (Tech 7.3): az A fül túrája közben megnyitott B fül nem indít túrát, és a
@@ -737,7 +736,9 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
   - [ ] T14.3.4 Mozgás: `prefers-reduced-motion` mellett nincs áttűnés. Az iOS-tipp és a
     mentés-hiba sávja a túra alatt rejtve, utána a helyükön.
   - [ ] T14.3.5 Tipp-buborék: nem modális, nem sötétít, `Értem` gombbal; a célelem mellett,
-    a gombokat nem takarja; képernyőolvasónak „Tipp" nevű régió (mint az iOS-tippé).
+    a gombokat nem takarja; képernyőolvasónak „Tipp" nevű régió (mint az iOS-tippé). A célelem
+    rétegében jelenik meg (a 4. tipp a választó lapján belül), hogy nyitott lapnál se legyen
+    `inert` (Tech 7.6 UI-réteg); teszt: a 4. tipp `Értem`-je nyitott választónál működik.
 - [ ] **S14.4 — A hat lépés** (F 3., UX 8.3) · *Kész, ha:* üres böngészőben a Keret → túra →
   üres Tányér út, a kihagyás és a Keretről újraindítás végigmegy (e2e, Pixel 7 és iPhone 14).
   - [ ] T14.4.1 1. lépés: `+ Alapanyag` → a választó tetején egy „Bevezető" sor a három

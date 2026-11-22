@@ -362,9 +362,10 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 
 ### 7.6 A bevezető állapota (PRD 6.8)
 
-- **A mintatányér csak a memóriában él.** Az app-állapot (`src/state/`) egy új, **nem
-  tárolt** `tour` mezőt kap a `currentPlate` mellett: `{ step, plate: CurrentPlate, candidate,
-  pinGrams, short } | null`. A tárolóba író réteg (`persist`) a `tour` mezőt nem látja.
+- **A mintatányér csak a memóriában él.** Az app-állapot (`src/state/`) egy új, **nem tárolt**
+  `tour` mezőt kap a `currentPlate` mellett: `{ step, plate: CurrentPlate, candidate, pinGrams,
+  short } | null`. A tárolóba csak a `persistedData(state)` kerül (`reducer.ts`), amely a
+  `state.data`-t vagy a visszavonás pillanatképét adja, így a `tour` mezőt nem látja.
   - **Egy burkoló a reducer előtt** (`tourReducer`): amíg a `tour` nem `null`, a
     műveleteket három csoportba sorolja (új művelet felvételekor a csoportját is meg kell adni;
     egy kimerítő `switch` a típusellenőrzővel kikényszeríti).
@@ -377,12 +378,15 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
     pillanatképe, amely a mintatányért tartalmazná) eldobódik; a burkoló a bemenő `notice`-t
     és `noticeSeq`-et adja vissza, így a felhasználó nyitott visszavonása sem záródik le
     csendben, és a mintatányér halasztott írással sem kerülhet a tárolóba. A burkoló a `tour`
-    mezőt minden ágon visszateszi.
-  - **Átengedettek** (a szokásos `appReducer`-en futnak a valódi adaton, a `tour` megmarad):
-    `external` (a másik fül adata; ha benne a Keret eltér a túra indulásakoritól, utána a `tour`
-    `null` lesz, lent), `commitNotice`, `dismissIosHint`, valamint a túra saját műveletei
-    (`tourStart` a `tourDone: true` írással, `tourStep`, `tourEnd`). A `saveKeret` is
-    átmegy, és a túrát zárja.
+    mezőt minden nem záró ágon visszateszi.
+  - **Átengedettek** (a valódi adaton futnak):
+    - `commitNotice` és `dismissIosHint`: a szokásos `appReducer`-en, a `tour` megmarad.
+    - `external` (a másik fül adata): a szokásos `appReducer`-en; ha az új Keret **értékben**
+      (minden mezője összevetve) eltér a túra indulásakoritól, utána a `tour` `null` lesz
+      (lent), különben megmarad.
+    - `saveKeret`: a szokásos `appReducer`-en, utána a `tour` `null` lesz.
+    - A túra saját műveleteit (`tourStart` a `tourDone: true` írással, `tourStep`, `tourEnd`)
+      maga a burkoló kezeli, nem az `appReducer`; a `tourEnd` a `tour`-t `null`-ra állítja.
   - **Tiltottak** (a túra alatt a felület nem kínálja őket; ha mégis érkeznek, a burkoló
     változatlanul adja vissza az állapotot): `newPlate`, `openPlate`, `done`, `savePlate`,
     `updatePlate`, `renamePlate`, `deletePlate`, `addCustomIngredient`,
@@ -446,6 +450,9 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 - **UI-réteg** (UX 8.3):
   - A túra rétege a `<body>` közvetlen gyereke `data-modal-keep` jelöléssel, így a nyitott lap
     (`modal.ts`) nem teszi inertté; z-sorrendben a lap fölött van.
+  - A **tipp-buborék** annak a rétegnek a része, amelyben a célelem van: lapon belüli célnál
+    (a 4. tipp a választóban) a lap DOM-jában jelenik meg, így a `modal.ts` nem teszi inertté,
+    és az `Értem` koppintható; a Tányér célelemeinél a Tányér tartalmában.
   - A kiemelés a célelem ős-láncán a **testvéreket** teszi `inert`-té, nem egész részfákat
     (egy `inert` ős a célelemet is megölné); a választóban így a „Bevezető" sor élő marad, a
     kereső és a kategóriák nem.
