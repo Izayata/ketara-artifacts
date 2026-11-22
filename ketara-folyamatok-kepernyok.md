@@ -1,7 +1,7 @@
-# Ketara — Folyamatok és képernyők v0.19
+# Ketara — Folyamatok és képernyők v0.20
 
-*Kísérőanyag a PRD v1.4-hez. Minden döntés onnan származik.*
-*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint; 2026-11-15: az iOS-tipp helye az első Kereten is, PR #15)*
+*Kísérőanyag a PRD v1.5-höz. Minden döntés onnan származik.*
+*Utolsó frissítés: 2026-11-14 (Keret-szövegek a ketara-app PR #8, tányér-, csere- és választó-szövegek a PR #9, ⚠ panel-szövegek a PR #10, mentés- és Tányérjaim-szövegek a PR #11, saját alapanyag-szövegek a PR #12, az iOS-tipp felolvasott szövegei a PR #14 szerint; 2026-11-15: az iOS-tipp helye az első Kereten is, PR #15; 2026-11-21: 3. és 7.: interaktív bevezető, PRD 6.8)*
 
 ---
 
@@ -115,7 +115,8 @@ régi tányérokon. Külön ellenőrzés nem kell.
 ```mermaid
 flowchart TD
     A0[Első megnyitás] --> A6{Van már keret<br/>ezen az eszközön?}
-    A6 -- igen --> J0["Tányér — az eszközön tárolt adatokkal"]
+    A6 -- "igen, a bevezető már elindult egyszer" --> J0["Tányér — az eszközön tárolt adatokkal"]
+    A6 -- "igen, de a bevezető még nem indult" --> J
     A6 -- nem --> B["Keret: egy képernyő<br/>(sávok, étkezésszám, arány)"]
     B --> H["Egy étkezésre ez jön ki:<br/>élőben, gépelés közben"]
     H --> I["Ez stimmel, kezdjük"]
@@ -125,7 +126,9 @@ flowchart TD
     F3 -- igen --> G["Egyszer visszakérdez, nem javít magától"]
     G -- "Igen, így van" --> J
     G -- "Javítom" --> B
-    F3 -- nem --> J[Tányér, üres]
+    F3 -- nem --> J
+    J["Vezetett első tányér (túra, 6 lépés)<br/>mintatányéron, a saját Kerettel"]
+    J -- "Kezdjük vagy Kihagyom" --> K["Tányér: üres, vagy a felhasználó saját tányérja"]
 ```
 
 Nincs belépés, hozzájárulás és süti-sáv (PRD 5., 6.6). Másik eszközön vagy a böngésző
@@ -140,6 +143,26 @@ A `H` lépés a legfontosabb az egész beállításban: **mutasd meg neki a kisz
 célt, mielőtt továbbenged.** Négy éve fejből tudja, mennyi jön ki egy étkezésre. Ha a mi
 számunk más, azonnal látja, és rögtön kiderül, hogy félreértettük a papírt.
 
+**Vezetett első tányér** (PRD 6.8, UX 8.3). A Keret után a Tányéron indul, elsötétített
+képernyővel; mindig csak a következő elem koppintható, és minden lépésen ott a `Kihagyom`.
+
+| # | A felhasználó | A buborék |
+|---|---|---|
+| 1 | `+ Alapanyag`, kipipálja a három tételt, `Hozzáadás (3)` | felszólít, és megnevezi a hármat |
+| 2 | elolvassa, `Tovább` | a grammok nyers súlyok; a makrósor; a ✓ |
+| 3 | a fehérjeforrás grammjába beírja a megadott értéket | megnevezi az alapanyagot és a számot |
+| 4 | elolvassa, `Tovább` | a beírás rögzít, a lakat mutatja; a ⚠ panel: mi lóg ki, miért, mi lenne feloldva |
+| 5 | `{Alapanyag} feloldása` | felszólít a feloldásra |
+| 6 | `Kezdjük` | újra ✓; a mintatányér eltűnik, jöhet a saját |
+
+A mintatányér a gondozott lista jelöltjei közül az első, amelyen a felhasználó Keretével a ✓ és
+a rögzítésből jövő ⚠ is megmutatható; ha egyik sem ilyen, **rövid túra** jön (1., 2., 6. lépés)
+az első jelölttel, rögzítés nélkül. A félbehagyott saját tányér a túra alatt nem látszik, de
+érintetlen, és utána ott van. A túra a Keret aljáról (`Bevezető újra`, csak mentett Kerettel)
+bármikor újraindítható; ha egyszer elindult, magától nem jön vissza, akkor sem, ha az app
+közben bezárult. Aki a bevezető előtt kezdte használni az appot, annál a következő megnyitáskor
+egyszer magától indul.
+
 ---
 
 ## 4. Képernyőlista
@@ -152,7 +175,8 @@ számunk más, azonnal látja, és rögtön kiderül, hogy félreértettük a pa
 | 4 | **Tányérjaim** | Kiindulópontok: mentett alapanyag-kombinációk, megnyitáskor újraszámolva. |
 | 5 | **Keret** | A dietetikus számai, a belőlük számolt étkezési cél, alul a figyelmeztetés. |
 
-Öt képernyő. Ha ennél több lesz, valamit rosszul csinálunk.
+Öt képernyő. Ha ennél több lesz, valamit rosszul csinálunk. Az interaktív bevezető (3.) nem új
+képernyő, hanem a Tányér és a választó fölötti réteg.
 
 ---
 
@@ -604,6 +628,28 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | iOS-tipp (Tányér teteje és az első indítás Keretje, egyszer) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás → Főképernyőhöz adás. — Értem |
 | iOS-tipp, képernyőolvasónak (a nyíl helyett) | Tedd a kezdőképernyőre, különben az iPhone egy hét szünet után törölheti az adataidat. Megosztás, majd Főképernyőhöz adás. |
 | iOS-tipp sávjának neve (képernyőolvasó) | Tipp |
+| Túra, minden lépésen (a záró kivételével) | Kihagyom |
+| Túra, buborék neve (képernyőolvasó) | Bevezető, {n}. lépés a {m}-ból |
+| Túra 1. (Tányér) | Rakjunk össze egy mintatányért. Koppints a + Alapanyag gombra. |
+| Túra 1. (választó) | Pipáld ki ezt a hármat: {a}, {b}, {c}. Aztán koppints a Hozzáadás gombra. |
+| Túra 1., a választó sorának címe | Bevezető |
+| Túra 2. | Kiszámoltam az adagokat a te sávjaidhoz. A ✓ azt jelenti: a szénhidrát, a fehérje és a zsír a sávodon belül van. Minden gramm nyers súly. Alul a makrók: szénhidrát, fehérje, zsír és az arány. — Tovább |
+| Túra 2., rövid túra, ⚠ esetén | Kiszámoltam a legközelebbi tányért a te sávjaidhoz. A ⚠ megmondja, mi lóg ki, és mi segít. Minden gramm nyers súly. — Tovább |
+| Túra 3. | Ha egy alapanyagból pontosan annyit akarsz, amennyit te mondasz, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n} g (nyersen). |
+| Túra 3., ha még ✓ | Ez még belefér. Írj be többet: {n} g (nyersen). |
+| Túra 3., ha más ⚠ jön | Ezzel más jön ki, mint amit meg akarok mutatni. Írd be pontosan ezt: {n} g (nyersen). |
+| Túra 4. | A beírt gramm rögzít: a lakat mutatja, ezt a Ketara nem mozdítja. Ezzel a rögzítéssel nem jön ki: a panel megmondja, mi lóg ki, miért, és mi lenne, ha feloldanád. — Tovább |
+| Túra 5. | Oldd fel a rögzítést ezzel a gombbal: {Alapanyag} feloldása. |
+| Túra 6. | A szénhidrát, a fehérje és a zsír újra a sávon belül. Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
+| Túra 6., rövid túra | Ennyi az alap. Ez csak minta volt, eltüntetem. A Keret alján bármikor újranézheted. — Kezdjük |
+| Keret, a túra újraindítása | Bevezető újra |
+| Tipp 1 — sor-műveletek | Koppints a névre: csere vagy törlés. — Értem |
+| Tipp 2 — mentés | Ha gyakran eszed, mentsd el. Legközelebb a mai célra újraszámolva nyílik. — Értem |
+| Tipp 3 — mentett tányér | A mentett tányér mindig a mai célra számolódik újra. — Értem |
+| Tipp 4 — saját alapanyag | A csomagolás 100 g-ra (nyersen) vonatkozó adatai kellenek: szénhidrát, fehérje, zsír. — Értem |
+| Tipp 5 — ⚠ rögzítés nélkül | Ez a lépés segít a legtöbbet. — Értem |
+| Tipp 6 — több rögzítés (az elsődleges feloldó gombon) | Elég, ha egyet feloldasz. Ha az sem segít, oldd fel mindet. — Értem |
+| Tipp buborékának neve (képernyőolvasó) | Tipp |
 | A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |
 | Betelt a tárhely (korábban már mentett) | Az utolsó változást nem tudtam elmenteni, mert nincs elég hely. A korábban mentettek megmaradnak; törölj egy régi tányért, vagy szabadíts fel helyet a telefonon. |
 | Újabb app-verzió mentett | Egy újabb Ketara-verzió mentett ebben a böngészőben, ezért ez az ablak nem ment. Zárd be, és nyisd meg újra a Ketarát. |

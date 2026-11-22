@@ -1,8 +1,8 @@
-# Ketara — UX-terv v0.11
+# Ketara — UX-terv v0.12
 
-*Kísérőanyag a PRD v1.4-hez és a Folyamatok és képernyők v0.19-hez. A viselkedést azok
+*Kísérőanyag a PRD v1.5-höz és a Folyamatok és képernyők v0.20-hoz. A viselkedést azok
 rögzítik; ez a dokumentum azt írja le, **hogyan érzi és kezeli** a felhasználó.*
-*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint; 6.: saját alapanyag, PR #12 szerint; 2026-11-15: 2., 8.1: az iOS-tipp minden iOS-böngészőben és az első Kereten is, PR #15 szerint)*
+*Utolsó frissítés: 2026-11-14 (4.6, 4.7: a gombok helye a panelen, ketara-app PR #10 szerint; 4.6, 4.8, 7.: a mentés helye és a Tányérjaim, PR #11 szerint; 6.: saját alapanyag, PR #12 szerint; 2026-11-15: 2., 8.1: az iOS-tipp minden iOS-böngészőben és az első Kereten is, PR #15 szerint; 2026-11-21: 8.1, 8.3, 8.4: interaktív bevezető és helyi tippek)*
 
 A v0.1 három nyitott kérdésére a felhasználó 2026-09-27-én válaszolt; a v0.3 a PRD v1.0
 fiókját és nyilvános weboldalát követi (10. fejezet). A v0.4 a PRD v1.1 átnézéséből jövő
@@ -13,6 +13,8 @@ fiók, belépés, hozzájárulás, süti-sáv és szinkron; minden adat az eszk�
 (2026-11-13) a tech terv interjújából az iOS-tippet adja hozzá (2. fejezet). A v0.7
 (2026-11-13) a Saját alapanyag lapra a rost-emlékeztetőt (6. fejezet). A v0.11
 (2026-11-15) az iOS-tippet minden iOS-böngészőre és az első Keretre is kiterjeszti (2., 8.1).
+A v0.12 (2026-11-21) az interaktív bevezetőt adja hozzá: vezetett első tányér és helyi tippek
+(8.1, 8.3, 8.4; PRD 6.8, backlog E14).
 Kattintható prototípus: `ux/prototipus/ketara-prototipus.html`.
 
 ---
@@ -318,6 +320,10 @@ alul.
 - A kcal-sáv mezői fölött: „Ha a papíron van." — hogy üresen hagyni is természetes legyen.
 - A Mentés gomb alatt a figyelmeztetés egy sorban, másodlagos szövegként: „A Ketara
   számol, nem tanácsot ad. Nem helyettesíti a dietetikust."
+- Később megnyitott Kereten (nem első indításkor) a figyelmeztetés alatt, a verziósor fölött
+  egy szöveges gomb: `Bevezető újra` (8.3). Nem kérdez rá: a félbehagyott tányér a túra alatt
+  nem látszik, de érintetlen, és utána ott van. Csak mentett Kerettel aktív: amíg a mezők
+  eltérnek a mentettől, vagy amíg egy visszavonás-sáv látszik, halvány és nem koppintható.
 
 ### 8.2 Mikor kérdez rá a termék?
 
@@ -326,6 +332,59 @@ alul.
   Minden más (sor vagy tányér törlése, csere) visszavonással működik.
 
 ---
+
+### 8.3 Vezetett első tányér (túra)
+
+A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a választó fölötti réteg.
+
+- **Kiemelés:** a képernyő halványan elsötétül (a háttér kb. 60%-os sötét fátyol mögött), csak
+  a következő lépés eleme világos, kerek sarkú kerettel kiemelve, és csak az koppintható. A
+  többi elem képernyőolvasónak is elérhetetlen (`inert`).
+- **Buborék:** semleges háttér (nem ⚠-szín), a célelem fölött vagy alatt, ahol több hely van;
+  a célelemet nem takarja. Ha egyik oldalon sincs helye (nyitott billentyűzet a 3. lépésben,
+  320 px 200%-os betűvel), a látható terület (`visualViewport`) tetejére dokkol, és a célelem a
+  látható részbe gördül. Tartalma: rövid szöveg, alatta balra a `Kihagyom` (szöveges gomb),
+  jobbra, ha a lépés olvasós, a `Tovább` (elsődleges). Cselekvős lépésen (1., 3., 5.) nincs
+  `Tovább`: a túra a mozdulatra lép. A záró lépésen csak a `Kezdjük` van, `Kihagyom` nincs.
+- **Lépésszám** csak képernyőolvasónak („Bevezető, 2. lépés a 6-ból"; a rövid túrán 1–3,
+  „… a 3-ból"); vizuálisan nincs pontsor, hogy a buborék kicsi maradjon.
+- **Fókusz:** lépésváltáskor a buborék szövegére kerül. A rendszer-visszalépés nyitott lapnál
+  (csak az 1. lépésben, a választó) a lapot zárja, a már kipipált tételek lekerülnek a
+  mintatányérról, és a túra az 1. lépés elejére áll (a `+ Alapanyag`-ra mutat); lap nélkül a
+  túrát zárja, mint a `Kihagyom`.
+- **Az 1. lépés a választóban:** a lap tetején egy „Bevezető" sor mutatja a három tételt,
+  hogy ne kelljen kategóriát nyitni vagy görgetni; a kereső és a kategóriák a túra alatt
+  halványak. A `Hozzáadás` gomb csak mind a három pipa után (`Hozzáadás (3)`) koppintható.
+  Amíg a mintatányér kiválasztása tart, a „Bevezető" sor helyén nincs semmi, és a lap halvány.
+- **A 3. lépés** a fehérjeforrás grammjának helyben szerkesztését használja (4.2): a buborék
+  megnevezi a beírandó számot. A kiemelt elem csak a gramm-mező; a sor rögzítő ikonja a túra
+  alatt nem koppintható, hogy a rögzítés a beírással történjen. A túra akkor lép tovább, ha a
+  beírt értékkel (bármekkora is) olyan ⚠ jön, amelynek címsora a fehérje túllépése, és az oka a
+  rögzített alapanyag egymagában (Tech 7.6). Ha ✓ marad, a buborék többet kér; ha más ⚠ jön
+  (pl. a zsír vezet), a megadott számot kéri újra. A mező saját hibaszövegei (pl. 0 g) a
+  szokásos módon jelennek meg.
+- **Mentés és Kész a túra alatt** nem koppintható: a mintatányér nem kerül sehova.
+- **Az iOS-tipp és a „nem tudok menteni" sáv** a túra alatt rejtve, utána a helyükön.
+- **Nyitott visszavonás-sáv** („Törölve: … Visszavonás") mellett a túra nem indul el; megvárja,
+  amíg a sáv eltűnik, hogy a visszavonás elérhető maradjon (Tech 7.6).
+- **Mozgás:** a kiemelés 200 ms alatt úszik át a következő elemre; `prefers-reduced-motion`
+  mellett ugrik.
+- **320 px, 200%-os betű:** a buborék szövege tördelődik, a gombok egymás alá kerülnek;
+  vízszintes görgetés nincs.
+
+### 8.4 Helyi tippek
+
+- Egy kis buborék a célelem mellett, kis nyíllal rá. **Nem sötétít, nem modális**, a képernyő
+  közben teljesen használható; a gombokat nem takarja. Lapon belüli célelemnél (4. tipp: a
+  választó) a buborék a lapon belül jelenik meg, így az `Értem` nyitott lap mellett is
+  koppintható (Tech 7.6).
+- Egy `Értem` gombbal zárható. Látottnak számít akkor is, ha a felhasználó a célelemet
+  használja (pl. a névre koppint az 1. tippnél).
+- Egyszerre legfeljebb egy; ha több is esedékes, a PRD 6.8 sorrendjében az első, a következő
+  akkor, amikor az előző lezárult, és a helyzete még fennáll vagy újra előjön.
+- Képernyőolvasónak „Tipp" nevű régió, mint az iOS-tipp (2.); megjelenéskor nem veszi el a
+  fókuszt, csak bejelenti (`aria-live="polite"`), hogy főzés közben ne ugorjon el semmi.
+- Szövegek: Folyamatok 7.
 
 ## 9. Vizuális irány
 
@@ -358,6 +417,9 @@ alul.
 | Kérje-e iPhone-on a kezdőképernyőre tételt? (2026-11-13) | Igen, egyszeri, bezárható sávval (2. fejezet) |
 | Kell-e Rost mező a Saját alapanyagra? (2026-11-13) | Nem, csak egy emlékeztető sor a szénhidrát alatt (6. fejezet) |
 | Csak Safariban jelenjen-e meg az iOS-tipp? (2026-11-15) | Nem: minden iOS-böngészőben, kivéve az alkalmazásba építetteket; az első Kereten is (2. és 8.1) |
+| Milyen legyen a bevezető? (2026-11-21) | Vezetett első tányér mintatányéron a saját Kerettel, plusz hat egyszeri helyi tipp (8.3, 8.4) |
+| Kihagyható-e, újranézhető-e? (2026-11-21) | Minden lépésen `Kihagyom`; újra a Keret aljáról (8.1) |
+| Hogy néz ki? (2026-11-21) | A túrán kiemelés sötét fátyollal; a tippek nem takarnak, nem sötétítenek (8.3, 8.4) |
 
 ## 11. A prototípusról
 
@@ -378,3 +440,4 @@ alul.
 - Nem része: haptika, rendszerértesítések. A fiókrész (Belépés, Hozzájárulás, süti-sáv,
   Fiók blokk) sosem került bele, és a v1.2 óta a termékben sincs. A végfelhasználó a prototípus
   viselkedését 2026-10-08-án elfogadta; a v1.1 változásait (fent) azóta nem látta.
+- Az interaktív bevezető (8.3, 8.4) nincs benne; azt az app maga mutatja meg (backlog E14).

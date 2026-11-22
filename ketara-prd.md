@@ -1,9 +1,9 @@
-# Ketara — PRD v1.4
+# Ketara — PRD v1.5
 
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
 *Tech terv: `ketara-tech-terv.md`.*
-*Utolsó frissítés: 2026-11-15 (6.6 és 7.: az iOS-tipp minden iOS-böngészőben és az első Kereten is)*
+*Utolsó frissítés: 2026-11-21 (4/15, 6.6, 6.8, 7., 9.12: interaktív bevezető — vezetett első tányér és helyi tippek)*
 
 ---
 
@@ -81,6 +81,9 @@ telefon, a saját dietetikusi papírjával.
 13. **Tárolás az eszközön** — a keret, a saját alapanyagok, a tányérok és a „legutóbb
     használt" mennyiségek az eszközön maradnak (6.6). Hálózat nélkül is működik.
 14. **Egészségügyi figyelmeztetés** — a Ketara számol, nem tanácsot ad (6.7).
+15. **Interaktív bevezető** — a Keret után egy mintatányéron végigvezet a lényegen
+    (választó, grammok, rögzítés, ⚠, feloldás), a ritkább funkciókról pedig az első
+    alkalomkor egy-egy tipp szól (6.8).
 
 ## 5. Out of scope — és miért
 
@@ -337,8 +340,8 @@ véglegesen.
 eszközt.
 
 **Szabályok:**
-- **Az első indítás sorrendje:** Keret → üres Tányér (a `+ Alapanyag` és a `Tányérjaim`
-  gombbal).
+- **Az első indítás sorrendje:** Keret → vezetett első tányér (6.8) → üres Tányér (a
+  `+ Alapanyag` és a `Tányérjaim` gombbal).
 - **Az eszközön tárolt adat** (kanonikus lista; minden szöveg — figyelmeztetés,
   szószedet — ezt használja): a keret, a saját alapanyagok, a mentett tányérok és a
   „legutóbb használt" mennyiségek. A gondozott alapanyaglista a termék része, nem a
@@ -374,6 +377,54 @@ eszközt.
 - Adatvédelmi tájékoztató és süti-hozzájárulás nem kell: nincs fiók, nincs analitika, és
   semmi nem hagyja el az eszközt. Ha ez változik, a jogi szövegek is visszakerülnek.
 
+### 6.8 Interaktív bevezető
+**A felhasználó:** a Keret kitöltése után egy mintatányéron kipróbálja, hogyan működik az app,
+vagy kihagyja.
+**A termék:** egyszer, kérés nélkül végigvezet a lényegen; utána csak akkor szól, amikor egy
+ritkább funkció először előjön.
+
+**Vezetett első tányér (túra):**
+- **Mikor indul:** a Keret első mentése után. Akinek a bevezető megjelenése előtt már volt
+  Kerete, annál a következő megnyitáskor **egyszer magától** indul.
+- **Mintatányér a saját Kerettel:** tojás, brokkoli, olaj (a lista gondozója cserélheti), a
+  felhasználó saját sávjaival számolva. Ha a felhasználó Keretével ebből a készletből nem
+  mutatható meg a ✓ és a rögzítésből jövő ⚠, a termék a következő jelöltet próbálja; ha
+  egyik sem jó, **rövid túra** jön a rögzítés és a feloldás bemutatása nélkül (1., 2. és 6.
+  lépés), az első jelölt alapanyagaival, rögzítés nélkül.
+- **Hat lépés, mindegyiket a felhasználó csinálja meg;** a túra csak a mozdulata után lép
+  tovább: (1) a három alapanyag kiválasztása, (2) a grammok, a ✓ és a makrósor, (3) a
+  fehérjeforrás grammjának beírása (rögzítés), olyan értékkel, amely biztosan kilépteti a
+  fehérjesávból, és a ⚠ címsora a fehérjéről szól, (4) a ⚠ panel: címsor, ok, előzetes,
+  (5) feloldás → ✓, (6) záró szöveg.
+- **A mintatányér nem a felhasználó adata:** a végén eltűnik, nem frissíti a „legutóbb
+  használt" mennyiségeket, nem kerül a Tányérjaim közé. Ha a túra indulásakor volt aktuális
+  tányér, az érintetlen marad: a túra alatt nem látszik, utána ugyanúgy ott van, a
+  rögzítésekkel együtt.
+- **Kihagyás és újranézés:** minden lépésen `Kihagyom` (a záró lépésen nincs, ott a
+  `Kezdjük` zár). Ha egyszer elindult, magától nem jön vissza (akkor sem, ha az app közben
+  bezárult); a Keret alján a `Bevezető újra` gomb bármikor újraindítja, ha a Keret el van
+  mentve.
+- **Kiemelés:** a túra alatt a képernyő elsötétül, csak a következő lépés eleme koppintható.
+
+**Helyi tippek:** egy-egy bezárható buborék, mindegyik **egyszer**, amikor a helyzet először
+előjön; a túra alatt egyik sem, egyszerre legfeljebb egy. Nem sötétít, nem állít meg.
+1. Sor-műveletek: az első saját ✓ tányérnál — a névre koppintva csere vagy törlés.
+2. Tányér mentése: az első `Kész` előtt — ✓ új tányérnál, az 1. tipp után, amíg nincs
+   mentett tányér és „legutóbb használt" mennyiség (ezek csak a `Kész`-től és a mentéstől
+   jönnek) — mentve legközelebb a mai célra újraszámolva nyílik. Az első `Kész` vagy mentés
+   után már nem jön.
+3. Mentett tányér: az első Tányérjaimból megnyitottnál — a mai célra újraszámolódik.
+4. Saját alapanyag: a választóban az első „nincs ilyen" keresésnél — a csomagolás 100 g-os
+   adatai kellenek.
+5. ⚠ rögzítés nélkül: az első ilyennél — az elsődleges gomb segít a legtöbbet.
+6. Több rögzítés: az első ⚠-nál legalább két rögzítéssel, az elsődleges feloldó gombon — elég
+   egyet feloldani; ha az sem segít, mindet.
+
+Aki a bevezető megjelenése előtt már használta az appot (van mentett tányérja vagy „legutóbb
+használt" mennyisége), annál az 1–3. tipp látottnak számít; a 4–6. megmarad.
+
+A „Bevezető újra" csak a túrát indítja újra; a már látott tippeket nem hozza vissza.
+
 ## 7. Peremesetek
 
 | Eset | Mit tesz a termék |
@@ -394,7 +445,13 @@ eszközt.
 | Lehetetlen keret (alsó > felső, vagy a zsírsáv teteje < {min} × fehérjesáv alja) | Nem menti. Megnevezi a hibás sort. |
 | Gyanúsan alacsony vagy szűk keret (6.1 helykitöltő küszöbei) | A termék nem hajtja végre szó nélkül. Egyszer visszakérdez; igen után elfogadja. |
 | A makrók sávon belül, a kcal nem | ✓ marad, alatta egy sor: „Kalória: {n} kcal-lal a sáv {fölött / alatt}." A megoldó előbb kcal-ban is megfelelő megoldást keres (6.1). |
-| Első indítás | Keret → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
+| Első indítás | Keret → vezetett első tányér (6.8) → üres Tányér, a `+ Alapanyag` és a `Tányérjaim` gombbal. Nincs tányér, nincs előzmény. |
+| Meglévő felhasználó a bevezető megjelenése után | A következő megnyitáskor egyszer elindul a túra, kihagyható; a félbehagyott tányér a túra alatt nem látszik, utána ugyanúgy ott van (6.8). |
+| Az app a túra közben bezárul | Újranyitáskor a felhasználó saját tányérja nyílik, a túra kihagyottnak számít; a Keretről újraindítható. |
+| Két nyitott fül, az egyikben fut a túra | A másik fül nem indít túrát, a felhasználó tányérját mutatja. |
+| A Keret a túra közben megváltozik (másik fülről) | A túra véget ér, kihagyottnak számít; a Keretről újraindítható. |
+| `Bevezető újra` nem mentett Keret-módosítással vagy nyitott visszavonás-sávval | A gomb csak mentett Kerettel és visszavonás-sáv nélkül aktív; addig halvány. |
+| A mintatányér a felhasználó Keretével nem mutatja meg a ✓-t és a ⚠-t | A következő jelölt jön; ha egyik sem jó, rövid túra az első jelölttel, a rögzítés és a feloldás bemutatása nélkül (6.8). |
 | Nincs hálózat | Minden helyben működik. |
 | iPhone vagy iPad, böngészőben, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |
 | A böngésző nem enged menteni | Működik, de kiírja, hogy bezáráskor minden elveszik (6.6). |
@@ -506,6 +563,7 @@ tételhez, tartós tárolás kérése · a gondozott listát a projektgazda áll
 | 9.9 | v1-ben 40–60 alapanyag elég (a méret eldöntött, az elégségesség nem) | becslés | közepes | megfigyelés / megkérdezés: hányszor nyúl a „Saját alapanyag" felé az első héten |
 | 9.10 | A rögzített mennyiség ízlés szerinti választás („ennyi tojást akarok"), nem a hűtőben lévő darab súlya | **a felhasználó megerősítette** | magas | — |
 | 9.11 | A mentés nála **szándékos gesztus**, nem „hátha jó lesz" — ezért érdemes a tárolt összetételt horgonynak tekinteni | a 08-29/A opció (a mentett tányér grammjai a referencia) választásából | közepes | megfigyelés / megkérdezés: hány tányért ment el az első héten, és hányat használ újra |
+| 9.12 | A vezetett első tányér után egy új felhasználó segítség nélkül össze tud állítani egy tányért, és egy ⚠-ból ki tud jutni | tervezői következtetés; a projektgazda tanítás nélkül is érti az appot, a tesztelők nem | közepes | felhasználói teszt (S12.3): a tesztelő a túra után magyarázat nélkül összeállít egy saját tányért; hol akad el |
 
 ## 10. Vágásvonal
 
@@ -639,8 +697,12 @@ tételhez, tartós tárolás kérése · a gondozott listát a projektgazda áll
 | 2026-11-13 | **A kcal mindenhol 4/4/9**; a gondozott lista kcal-értéke ellenőrző adat | egy szabály a gondozott és a saját alapanyagra (tech terv 5.3) |
 | 2026-11-13 | **Szénhidrát rosttal együtt**; a Saját alapanyag lapon egy emlékeztető sor, hogy a csomagoláson külön álló rostot hozzá kell adni (nincs külön Rost mező) | az orvos a rosttal együtti CH-t nézi; a magyar csomagolás rost nélkül adja meg |
 | 2026-11-15 | **Az iOS-tipp minden iOS-böngészőben** (az alkalmazásba építettek kivételével), **és az első Kereten is** | iOS 16.4 óta minden böngésző a kezdőképernyőre tud tenni; a kezdőképernyőre tett app üres adatokkal indul |
+| 2026-11-21 | **Interaktív bevezető (6.8):** vezetett első tányér mintatányéron a saját Kerettel, hat lépés, amit a felhasználó csinál meg; `Kihagyom`, újraindítás a Keretről; meglévő felhasználóknál egyszer magától indul; hat egyszeri helyi tipp; a túrán kiemelés, a tippek nem takarnak | a felhasználó döntései (interjú, backlog E14); az app eddig semmit nem magyarázott el, a külső tesztelők nem ismerik |
 
 ## Javítások
+
+- **v1.5 (2026-11-21):** új 4/15 és 6.8 (interaktív bevezető); 6.6 és 7.: az első indítás
+  sorrendjében a túra; hat új peremeset; 9.12 feltételezés; döntésnapló-sor.
 
 - **v1.4 (2026-11-15):** 6.6 és 7.: az iOS-tipp nem csak Safariban, hanem minden
   iOS-böngészőben megjelenik (az alkalmazásba építettek kivételével), és az első Kereten
