@@ -675,7 +675,9 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     ha a felhasználó a Tányéron van. Tesztek: első mentés után; v1-es adattal a Tányéron;
     v1-es adattal `#/tanyerjaim`-on nyitva (nincs túra, amíg a Tányérra nem lép); v1-es
     adattal a Tányérjaimban tányér törlése, majd 5 mp-en belül a Tányérra lépés → a túra csak
-    a sáv lezárulása után indul, és a `Visszavonás` után sem indul újra.
+    a sáv lezárulása után indul el, egyszer; a `Visszavonás`-sal lezárt sáv után is (a
+    visszavonás visszahozza a `tourDone: false`-t, ezért ilyenkor is egyszer el kell indulnia);
+    egyszer elindult túra után a visszavonás már nem indítja újra.
   - [ ] T14.1.3 A mintatányér csak memóriában (Tech 7.6): új, nem tárolt `tour` mező az
     app-állapotban és egy `tourReducer` burkoló kimerítő, három csoportos listával: a
     tányér-műveleteket (`addRows`, `removeRow`, `pin`, `unpin`, `unpinAll`, `swap`) a
@@ -701,7 +703,10 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
   egység- és tulajdonság-alapú tesztekkel.
   - [ ] T14.2.1 `config.json`: `tour.candidates` — mintatányér-jelöltek sorrendben (az első:
     `tojas`, `brokkoli`, `olaj`), mindegyikben egy rögzítendő fehérjeforrással. A
-    `pnpm validate-data` ellenőrzi, hogy minden id létezik és nincs kivezetve.
+    `pnpm validate-data` ellenőrzi: minden id létezik és nincs kivezetve; egy jelölt három id-ja
+    különböző; a rögzítendő id a három egyike, és az alapanyagnak van fehérjéje. Mivel a
+    `validateConfig` nem látja az alapanyaglistát, ehhez a szkriptben egy új, a két fájlt
+    együtt néző ellenőrzés kell (`src/data/validate.ts`), tesztekkel minden hibaesetre.
   - [ ] T14.2.2 `src/domain/tour.ts` (Tech 7.6; tiszta, szinkron, a `computePlateView`-val és
     a rögzített referenciákkal): az első jelölt, amelyre (a) rögzítés nélkül ✓, és (b) a
     fehérjeforrás a kiszámolt grammal rögzítve olyan ⚠-t ad, amelynek ⚠-sorai között nincs
@@ -760,7 +765,9 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     saját tányérja látszik (első indításkor üres Tányér).
   - [ ] T14.4.7 A Keret alján `Bevezető újra` szöveges gomb: a Tányérra lép és elindítja a
     túrát (kérdés nélkül: a felhasználó tányérja nem változik). Csak mentett Kerettel aktív:
-    amíg a mezők eltérnek a mentettől, halvány és nem koppintható. A tippeket nem állítja vissza.
+    amíg a mezők eltérnek a mentettől, vagy amíg egy visszavonás-sáv látszik, halvány és nem
+    koppintható. A tippeket nem állítja vissza. Teszt: nyitott visszavonás-sávnál a gomb nem
+    indít, a sáv eltűnése után igen.
   - [ ] T14.4.8 Playwright: teljes túra; kihagyás az 1. és a 4. lépésnél; újraindítás meglévő
     tányérral (a tányér utána ott van); meglévő felhasználó v1-es adattal (egyszer indul); rövid
     túra; újratöltés túra közben (T14.1.4).
@@ -805,8 +812,9 @@ dönteni kell róluk.
 2. **A prototípus forrása** (`solver.js`, `app.html`) nincs a `ketara-artifacts` repóban, csak a
    projekt mappában (`ux/prototipus/src/`). Az orákulum-teszt (S2.4) és a tipp-logika portja
    (S8.3) ebből dolgozik.
-3. **A Tech terv 1.** még „PRD v1.2 teljes v1-es scope"-ot ír; az aktuális a v1.4 (csak az
-   iOS-tippel és a szénhidrát pontosításával bővült, a scope ugyanaz).
+3. **A Tech terv 1.** még „PRD v1.2 teljes v1-es scope"-ot ír; az aktuális a v1.5. A v1.3–v1.4
+   csak az iOS-tippel és a szénhidrát pontosításával bővült; a v1.5 új scope-elemet hoz, az
+   interaktív bevezetőt (PRD 4/15, 6.8; E14).
 
 ## Döntésnapló
 

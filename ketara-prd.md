@@ -3,7 +3,7 @@
 *Élő dokumentum. Helyben frissül, ahogy a döntések megszületnek.*
 *Kísérőanyag: `ketara-folyamatok-kepernyok.md` — folyamatok, képernyők, szövegek.*
 *Tech terv: `ketara-tech-terv.md`.*
-*Utolsó frissítés: 2026-11-21 (4/15, 6.8, 7., 9.12: interaktív bevezető — vezetett első tányér és helyi tippek)*
+*Utolsó frissítés: 2026-11-21 (4/15, 6.6, 6.8, 7., 9.12: interaktív bevezető — vezetett első tányér és helyi tippek)*
 
 ---
 
@@ -450,7 +450,7 @@ A „Bevezető újra" csak a túrát indítja újra; a már látott tippeket nem
 | Az app a túra közben bezárul | Újranyitáskor a felhasználó saját tányérja nyílik, a túra kihagyottnak számít; a Keretről újraindítható. |
 | Két nyitott fül, az egyikben fut a túra | A másik fül nem indít túrát, a felhasználó tányérját mutatja. |
 | A Keret a túra közben megváltozik (másik fülről) | A túra véget ér, kihagyottnak számít; a Keretről újraindítható. |
-| `Bevezető újra` nem mentett Keret-módosítással | A gomb csak mentett Kerettel aktív; amíg a mezők eltérnek a mentettől, halvány. |
+| `Bevezető újra` nem mentett Keret-módosítással vagy nyitott visszavonás-sávval | A gomb csak mentett Kerettel és visszavonás-sáv nélkül aktív; addig halvány. |
 | A mintatányér a felhasználó Keretével nem mutatja meg a ✓-t és a ⚠-t | A következő jelölt jön; ha egyik sem jó, rövid túra az első jelölttel, a rögzítés és a feloldás bemutatása nélkül (6.8). |
 | Nincs hálózat | Minden helyben működik. |
 | iPhone vagy iPad, böngészőben, nem a kezdőképernyőről | Egyszeri, bezárható tipp: tedd a kezdőképernyőre, különben egy hét szünet után az adatok törlődhetnek (6.6). |

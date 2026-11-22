@@ -199,7 +199,9 @@ Ami nem alapanyag, de a gondozó vagy a dietetikus állítja:
 - a zsír–fehérje arány alapértéke (2 : 1) és a tányéronkénti maximum (8);
 - a bevezető mintatányér-jelöltjei (`tour.candidates`, 7.6): sorrendben, mindegyik három
   alapanyag-id és a rögzítendő fehérjeforrás id-ja; az első `tojas`, `brokkoli`, `olaj`. Az
-  ellenőrző szkript (5.5) megnézi, hogy minden id létezik, és nincs kivezetve.
+  ellenőrző szkript (5.5) megnézi, hogy minden id létezik és nincs kivezetve, hogy egy jelölt
+  három id-ja különböző, hogy a rögzítendő id a három egyike, és hogy annak az alapanyagnak van
+  fehérjéje. Ez a két fájlt együtt nézi, ezért új ellenőrzés kell a `validateConfig` mellé.
 
 A PRD 6.1 szerint a küszöbök „alkalmazásfrissítés nélkül" cserélhetők. Statikus oldalon
 ez **egy JSON-módosítás és egy automatikus deploy** (11.): a felhasználónak nem kell
@@ -397,8 +399,10 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 - **Számolás:** a Tányér a nézetét ugyanúgy a `computePlateView`-val, a workerben kapja, csak a
   bemenetben a `currentPlate` helyén a `tour.plate` áll, amíg a túra fut. Egyszerre egy tányér
   látszik, ezért a worker „csak a legutolsó kérés" sora (`plateComputer.ts`) itt elég.
-- **Referenciák rögzítése:** a túra induláskor a jelölt három alapanyagához kiszámolja a
-  referenciákat (`refFor`, a „legutóbb használt" értékekkel) és a `tour.plate.refs`-be teszi.
+- **Referenciák rögzítése:** a túra induláskor **minden jelölt** alapanyagához kiszámolja a
+  referenciákat (`refFor`, a „legutóbb használt" értékekkel), mert a jelölt ekkor még nincs
+  kiválasztva; ezekkel fut a választás, és a választott jelölt soraié kerül a
+  `tour.plate.refs`-be. A `candidate` és a `pinGrams` a worker válaszáig `null`.
   A burkoló (fent) minden művelet után visszateszi őket, mert a reducer minden tányér-változásnál
   `refs` nélkül építi újra a tányért. Így egy másik fülről érkező „legutóbb használt"-változás
   nem mozdítja el a grammokat a túra közben.
@@ -411,7 +415,8 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   `tourDone: true` ilyenkor nem kerülne ki, a visszavonás visszahozná a `false`-t, és a sáv a
   fátyol alá kerülne. A túra akkor indul, amikor a sáv lezárult (`commitNotice` vagy `undo`),
   és a felhasználó még a Tányéron van. A `Bevezető újra` csak memóriában indítja újra (a
-  `tourDone` már `true`); nyitott visszavonás-sáv alatt ez is megvárja a lezárulást.
+  `tourDone` már `true`); nyitott visszavonás-sáv alatt a gomb halvány és nem koppintható
+  (UX 8.1), így nincs függőben lévő újraindítás.
 - **Vége** (`Kezdjük`, `Kihagyom`, vissza-gomb): a `tour` `null` lesz, a Tányér a felhasználó
   saját tányérját mutatja. Tárolói írás nincs. `Kezdjük` és `Kihagyom` esetén a túra a saját
   history-rétegét is leveszi (az `openLayer` visszaadott záró függvényével), hogy a következő

@@ -323,7 +323,7 @@ alul.
 - Később megnyitott Kereten (nem első indításkor) a figyelmeztetés alatt, a verziósor fölött
   egy szöveges gomb: `Bevezető újra` (8.3). Nem kérdez rá: a félbehagyott tányér a túra alatt
   nem látszik, de érintetlen, és utána ott van. Csak mentett Kerettel aktív: amíg a mezők
-  eltérnek a mentettől, halvány és nem koppintható.
+  eltérnek a mentettől, vagy amíg egy visszavonás-sáv látszik, halvány és nem koppintható.
 
 ### 8.2 Mikor kérdez rá a termék?
 
