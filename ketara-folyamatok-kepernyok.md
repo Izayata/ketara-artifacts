@@ -633,7 +633,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Túra 1. (Tányér) | Rakjunk össze egy mintatányért. Koppints a + Alapanyag gombra. |
 | Túra 1. (választó) | Pipáld ki ezt a hármat: {a}, {b}, {c}. Aztán koppints a Hozzáadás gombra. |
 | Túra 1., a választó sorának címe | Bevezető |
-| Túra 2. | Kiszámoltam az adagokat a te sávjaidhoz. Minden gramm nyers súly. Alul a makrók: szénhidrát, fehérje, zsír és az arány. — Tovább |
+| Túra 2. | Kiszámoltam az adagokat a te sávjaidhoz. A ✓ azt jelenti: minden érték a sávodon belül. Minden gramm nyers súly. Alul a makrók: szénhidrát, fehérje, zsír és az arány. — Tovább |
 | Túra 2., rövid túra, ⚠ esetén | Kiszámoltam a legközelebbi tányért a te sávjaidhoz. A ⚠ megmondja, mi lóg ki, és mi segít. Minden gramm nyers súly. — Tovább |
 | Túra 3. | Ha egy alapanyagból pontosan annyit akarsz, amennyit te mondasz, írd be a grammját. {Alapanyag}: koppints a grammjára, és írd be: {n} g (nyersen). |
 | Túra 3., ha még ✓ | Ez még belefér. Írj be többet: {n} g (nyersen). |
@@ -648,7 +648,7 @@ Nem a mi dolgunk felülbírálni a dietetikust; a mi dolgunk észrevenni az elg�
 | Tipp 3 — mentett tányér | A mentett tányér mindig a mai célra számolódik újra. — Értem |
 | Tipp 4 — saját alapanyag | A csomagolás 100 g-ra (nyersen) vonatkozó adatai kellenek: szénhidrát, fehérje, zsír. — Értem |
 | Tipp 5 — ⚠ rögzítés nélkül | Ez a lépés segít a legtöbbet. — Értem |
-| Tipp 6 — több rögzítés | Elég, ha egyet feloldasz. Ha az sem segít, oldd fel mindet. — Értem |
+| Tipp 6 — több rögzítés (a feloldó gomb mellett) | Elég, ha egyet feloldasz. Ha az sem segít, oldd fel mindet. — Értem |
 | Tipp buborékának neve (képernyőolvasó) | Tipp |
 | A böngésző nem enged menteni | Ebben a böngészőben nem tudok adatot menteni. Bezáráskor minden elveszik. |
 | Betelt a tárhely (korábban már mentett) | Az utolsó változást nem tudtam elmenteni, mert nincs elég hely. A korábban mentettek megmaradnak; törölj egy régi tányért, vagy szabadíts fel helyet a telefonon. |

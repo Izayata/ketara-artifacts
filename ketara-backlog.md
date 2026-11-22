@@ -662,8 +662,10 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
   marad; tesztekkel.
   - [ ] T14.1.1 Séma v2 (Tech 7.2): `ui.tourDone`, `ui.tipsSeen`; migráció v1 → v2, amely
     **mindenkinél** `tourDone: false`-t állít (így a meglévő felhasználóknál is egyszer
-    elindul). Migrációs teszt valódi v1-es mintával. Sérült adat (`sanitize.ts`): a nem logikai
-    `tourDone` `true` lesz; a `tipsSeen`-ből kiesnek az ismeretlen azonosítók és az ismétlődések.
+    elindul), és akinek van mentett tányérja vagy „legutóbb használt" értéke, annál az 1–3.
+    tippet látottnak jelöli. Migrációs tesztek valódi v1-es mintákkal (üres és használt).
+    Sérült adat (`sanitize.ts`): a nem logikai `tourDone` `true` lesz; a `tipsSeen`-ből kiesnek
+    az ismeretlen azonosítók és az ismétlődések.
   - [ ] T14.1.2 Indulás: új felhasználónál a Keret első mentése után (a gyanús-érték kérdésnél
     az `Igen, így van` után); meglévőnél, ha van Keret és `tourDone: false`, a következő
     megnyitáskor a Tányéron. Ha az app másik útvonalon nyílik (`#/tanyerjaim`, `#/keret`),
@@ -672,12 +674,14 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     tárolóba (Tech 7.6). Tesztek: első mentés után; v1-es adattal a Tányéron; v1-es adattal
     `#/tanyerjaim`-on nyitva (nincs túra, amíg a Tányérra nem lép).
   - [ ] T14.1.3 A mintatányér csak memóriában (Tech 7.6): új, nem tárolt `tour` mező az
-    app-állapotban; amíg fut, a tányér-műveletek a reducerben a `tour.plate`-et módosítják, a
+    app-állapotban és egy `tourReducer` burkoló, amely túra alatt **minden** tányér-műveletet
+    (`addRows`, `removeRow`, `pin`, `unpin`, gramm, csere) a `tour.plate`-en futtat, a `refs`-et
+    visszateszi, a `tour` mezőt minden ágon megőrzi, a többi műveletet nem hajtja végre. A
     nézet a `computePlateView`-ból jön a `tour.plate`-tel. A felhasználó aktuális tányérja a
     tárolóban és az állapotban érintetlen, utána ugyanúgy ott van (rögzítésekkel). A
-    referenciák induláskor a `tour.plate.refs`-be rögzülnek. A mintatányér nem frissíti a
-    „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim közé. Reducer-tesztek: minden
-    tányér-művelet túra alatt a `currentPlate` érintése nélkül.
+    mintatányér nem frissíti a „legutóbb használt" mennyiségeket, és nem kerül a Tányérjaim
+    közé. Reducer-tesztek minden tányér-műveletre (a pipa levétele is): túra alatt a `data`
+    változatlan, a `tour.plate` változik, a `refs` megmarad.
   - [ ] T14.1.4 Megszakítás: újratöltés a 3. lépés közepén → a felhasználó saját tányérja nyílik,
     túra nem indul (teszt).
   - [ ] T14.1.5 Két fül (Tech 7.3): az A fül túrája közben megnyitott B fül nem indít túrát, és a
@@ -720,7 +724,7 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     lépésen elérhető, a záró lépés kivételével.
   - [ ] T14.3.3 Rendszer-visszalépés (Tech 7.6): a túra induláskor saját history-réteget tesz
     le (`openLayer`). Nyitott lapnál (csak az 1. lépésben, a választó) a vissza a lapot zárja,
-    a már kipipált tételek nem kerülnek fel, és a túra az 1. lépés elejére áll (a
+    a már kipipált tételek lekerülnek a mintatányérról, és a túra az 1. lépés elejére áll (a
     `+ Alapanyag`-ra mutat); lap nélkül a túra rétegét veszi le, ami a túrát zárja, mint a
     `Kihagyom`.
   - [ ] T14.3.4 Mozgás: `prefers-reduced-motion` mellett nincs áttűnés. Az iOS-tipp és a
@@ -730,9 +734,11 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
 - [ ] **S14.4 — A hat lépés** (F 3., UX 8.3) · *Kész, ha:* üres böngészőben a Keret → túra →
   üres Tányér út, a kihagyás és a Keretről újraindítás végigmegy (e2e, Pixel 7 és iPhone 14).
   - [ ] T14.4.1 1. lépés: `+ Alapanyag` → a választó tetején egy „Bevezető" sor a három
-    tétellel; csak ezek és a `Hozzáadás (3)` koppinthatók.
+    tétellel; csak ezek koppinthatók, a `Hozzáadás` gomb csak mind a három pipa után
+    (`Hozzáadás (3)`) válik élővé. Amíg a mintatányér-választás fut, a sor nem látszik (Tech 7.6).
   - [ ] T14.4.2 2. lépés: grammok, ✓, makrósor; buborék `Tovább` gombbal.
   - [ ] T14.4.3 3. lépés: a fehérjeforrás grammjába a kiszámolt érték beírása (rögzít). A túra
+    célelem csak a gramm-mező; a rögzítő ikon a túra alatt nem koppintható. A túra
     akkor lép tovább, ha bármely beírt értékkel olyan ⚠ jön, amely a T14.2.2 (b) feltételét
     teljesíti. ✓ esetén a buborék többet kér; más ⚠ esetén (pl. a zsír vezet) a megadott
     számot kéri újra (F 7.).
@@ -757,17 +763,19 @@ egyszer magától indul; mind a hat tipp; a túrán kiemelés, a tippeknél nem 
     a lista sorrendjében az első; látottnak számít `Értem`-re vagy ha a felhasználó a
     célelemet használja.
   - [ ] T14.5.2 Tipp 1 — sor-műveletek: az első saját ✓ tányérnál az első sor nevén.
-  - [ ] T14.5.3 Tipp 2 — mentés: ✓ új, nem `Kész`-elt tányéron a `Tányér mentése` gombon,
-    amíg nincs mentett tányér és a `Kész` még soha nem volt megnyomva, az 1. tipp után. Az
-    első `Kész` vagy az első mentés látottnak jelöli (akkor is, ha meg sem jelent).
+  - [ ] T14.5.3 Tipp 2 — mentés: ✓ új, nem `Kész`-elt tányéron a `Tányér mentése` gombon, az
+    1. tipp után, amíg nincs mentett tányér és a „legutóbb használt" üres (ezt csak a `Kész`
+    és a mentés tölti, így ez jelzi, hogy még egyik sem volt). Ha a feltétel már nem áll, a
+    tipp látottnak számít (akkor is, ha meg sem jelent).
   - [ ] T14.5.4 Tipp 3 — mentett tányér: az első Tányérjaimból megnyitott tányérnál a fejléc
     alatti sornál.
   - [ ] T14.5.5 Tipp 4 — saját alapanyag: a választóban az első „Nincs ilyen a listában"
     esetnél a `+ Saját alapanyag` gomb mellett.
   - [ ] T14.5.6 Tipp 5 — ⚠ rögzítés nélkül: az első ilyennél az elsődleges gombon.
-  - [ ] T14.5.7 Tipp 6 — több rögzítés: az első ⚠-nál legalább két rögzítéssel.
+  - [ ] T14.5.7 Tipp 6 — több rögzítés: az első ⚠-nál legalább két rögzítéssel, a
+    `Rögzítések feloldása` gomb mellett, ha van; különben az elsődleges (egy feloldó) gombon.
   - [ ] T14.5.8 Tesztek: egység a motorra (sorrend, egyszer, túra alatt nem, a 2. tipp
-    `Kész`-szabálya); e2e mind a hat tippre (a seedek a `tipsSeen`-nel olcsóvá teszik).
+    feltétele); e2e mind a hat tippre (a seedek a `tipsSeen`-nel olcsóvá teszik).
 - [ ] **S14.6 — Szövegek** · *Kész, ha:* a túra és a tippek szövegei a `src/texts/hu.ts`-ben
   vannak, a Folyamatok 7. táblázatával egyezően.
   - [ ] T14.6.1 A túra, a rövid túra, a `Bevezető újra` és a hat tipp szövegei (F 7.).

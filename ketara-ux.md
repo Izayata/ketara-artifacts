@@ -349,17 +349,21 @@ A PRD 6.8 és a Folyamatok 3. szerint. Nem új képernyő: a Tányér és a vál
 - **Lépésszám** csak képernyőolvasónak („Bevezető, 2. lépés a 6-ból"; a rövid túrán 1–3,
   „… a 3-ból"); vizuálisan nincs pontsor, hogy a buborék kicsi maradjon.
 - **Fókusz:** lépésváltáskor a buborék szövegére kerül. A rendszer-visszalépés nyitott lapnál
-  (csak az 1. lépésben, a választó) a lapot zárja, a kipipált tételek nem kerülnek fel, és a
+  (csak az 1. lépésben, a választó) a lapot zárja, a már kipipált tételek lekerülnek a
+  mintatányérról, és a
   túra az 1. lépés elejére áll (a `+ Alapanyag`-ra mutat); lap nélkül a túrát zárja, mint a
   `Kihagyom`.
 - **Az 1. lépés a választóban:** a lap tetején egy „Bevezető" sor mutatja a három tételt,
   hogy ne kelljen kategóriát nyitni vagy görgetni; a kereső és a kategóriák a túra alatt
-  halványak.
+  halványak. A `Hozzáadás` gomb csak mind a három pipa után (`Hozzáadás (3)`) koppintható.
+  Amíg a mintatányér kiválasztása tart, a „Bevezető" sor helyén nincs semmi, és a lap halvány.
 - **A 3. lépés** a fehérjeforrás grammjának helyben szerkesztését használja (4.2): a buborék
-  megnevezi a beírandó számot. A túra akkor lép tovább, ha a beírt értékkel (bármekkora is)
-  olyan ⚠ jön, amelynek címsora a fehérje túllépése, és az oka a rögzített alapanyag
-  egymagában (Tech 7.6). Ha ✓ marad, a buborék többet kér; ha más ⚠ jön (pl. a zsír vezet), a
-  megadott számot kéri újra. A mező saját hibaszövegei (pl. 0 g) a szokásos módon jelennek meg.
+  megnevezi a beírandó számot. A kiemelt elem csak a gramm-mező; a sor rögzítő ikonja a túra
+  alatt nem koppintható, hogy a rögzítés a beírással történjen. A túra akkor lép tovább, ha a
+  beírt értékkel (bármekkora is) olyan ⚠ jön, amelynek címsora a fehérje túllépése, és az oka a
+  rögzített alapanyag egymagában (Tech 7.6). Ha ✓ marad, a buborék többet kér; ha más ⚠ jön
+  (pl. a zsír vezet), a megadott számot kéri újra. A mező saját hibaszövegei (pl. 0 g) a
+  szokásos módon jelennek meg.
 - **Mentés és Kész a túra alatt** nem koppintható: a mintatányér nem kerül sehova.
 - **Az iOS-tipp és a „nem tudok menteni" sáv** a túra alatt rejtve, utána a helyükön.
 - **Mozgás:** a kiemelés 200 ms alatt úszik át a következő elemre; `prefers-reduced-motion`

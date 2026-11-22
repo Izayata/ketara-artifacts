@@ -317,7 +317,9 @@ type StoredState = {
 
 **v2 (backlog E14, 7.6):** `schemaVersion: 2`; a `ui` kiegészül a `tourDone: boolean` és a
 `tipsSeen: TipId[]` mezővel. A v1 → v2 migráció mindenkinél `tourDone: false`, `tipsSeen: []`
-értéket ad; az üres kezdőállapot (új felhasználó) is `tourDone: false`, `tipsSeen: []`. A
+értéket ad, kivéve, hogy akinek van mentett tányérja vagy „legutóbb használt" értéke (tehát
+használta már az appot), annál a `tipsSeen` az 1., 2. és 3. tippet már tartalmazza; a 4–6.
+megmarad. Az üres kezdőállapot (új felhasználó) `tourDone: false`, `tipsSeen: []`. A
 sérült-adat szabály (fent) rájuk is áll: a nem logikai `tourDone` `true` lesz
 (inkább maradjon el a túra, mint hogy újra és újra induljon), a `tipsSeen`-ből kiesik minden
 ismeretlen vagy nem szöveges elem, és az ismétlődések is.
@@ -361,19 +363,28 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
 
 - **A mintatányér csak a memóriában él.** Az app-állapot (`src/state/`) egy új, **nem
   tárolt** `tour` mezőt kap a `currentPlate` mellett: `{ step, plate: CurrentPlate, candidate,
-  pinGrams, short } | null`. Amíg a `tour` nem `null`, a Tányér tányér-műveletei (`addRows`,
-  `pin`, `unpin` és a gramm beírása) a reducerben a `tour.plate`-et módosítják, nem a
-  `currentPlate`-et; a Kész és a mentés a túra alatt nem érhető el. A tárolóba író réteg
-  (`persist`) a `tour` mezőt nem látja, így a felhasználó `currentPlate`-je a tárolóban és az
-  állapotban is érintetlen marad, csak a túra alatt nem látszik; a túra után ugyanúgy ott van.
-  A túra nem hívja a „legutóbb használt" frissítését, és nem ment tányért.
+  pinGrams, short } | null`. A tárolóba író réteg (`persist`) a `tour` mezőt nem látja.
+  - **Egy burkoló a reducer előtt** (`tourReducer`): amíg a `tour` nem `null`, **minden**
+    tányér-művelet (ma: `addRows`, `removeRow`, `pin`, `unpin`, a gramm beírása, a csere; és
+    ami később jön) úgy fut le a meglévő `appReducer`-en, hogy a bemenetben a
+    `data.currentPlate` helyén a `tour.plate` áll. Az eredmény `currentPlate`-je lesz az új
+    `tour.plate`, a `refs` visszakerül rá (a `withRows` eldobná), a kimenő `data` pedig a
+    bemenő marad: a felhasználó `currentPlate`-je, a „legutóbb használt" értékek és a tányérok
+    nem változnak, tárolói írás nincs. A burkoló a `tour` mezőt minden ágon visszateszi, így a
+    `changeWithNotice` és a többi új `AppState`-et építő ág sem ejti el.
+  - A többi művelet (Kész, mentés, Tányérjaim, saját alapanyag, visszavonás) a túra alatt nem
+    érhető el; ha mégis érkezik, a burkoló nem hajtja végre. A Keret változása a túrát zárja
+    (lent).
+  - Így a felhasználó `currentPlate`-je a tárolóban és az állapotban is érintetlen marad, csak a
+    túra alatt nem látszik; a túra után ugyanúgy ott van.
 - **Számolás:** a Tányér a nézetét ugyanúgy a `computePlateView`-val, a workerben kapja, csak a
   bemenetben a `currentPlate` helyén a `tour.plate` áll, amíg a túra fut. Egyszerre egy tányér
   látszik, ezért a worker „csak a legutolsó kérés" sora (`plateComputer.ts`) itt elég.
-- **Referenciák rögzítése:** a túra induláskor a mintatányér soraihoz kiszámolja a referenciákat
-  (`refFor`, a „legutóbb használt" értékekkel) és a `tour.plate.refs`-be teszi, ahogy a mentett
-  tányér is a saját grammjait. Így egy másik fülről érkező „legutóbb használt"-változás nem
-  mozdítja el a grammokat a túra közben.
+- **Referenciák rögzítése:** a túra induláskor a jelölt három alapanyagához kiszámolja a
+  referenciákat (`refFor`, a „legutóbb használt" értékekkel) és a `tour.plate.refs`-be teszi.
+  A burkoló (fent) minden művelet után visszateszi őket, mert a reducer minden tányér-változásnál
+  `refs` nélkül építi újra a tányért. Így egy másik fülről érkező „legutóbb használt"-változás
+  nem mozdítja el a grammokat a túra közben.
 - **Indulás:** `keret !== null && !ui.tourDone` → a Tányéron indul, és **az indulással egy
   írásban** `tourDone: true` kerül a tárolóba. A Keret első mentése után ez magától teljesül;
   a v1 → v2 migráció miatt a meglévő felhasználóknál is egyszer. Ha az app másik útvonalon nyílik
@@ -396,6 +407,10 @@ megvédi az adatot attól, hogy a böngésző helyhiány miatt törölje. iOS-en
   megjelenő szövegre vonatkoznak. A túra indulásakor egyszer fut, a workerben, egy **külön
   üzenettípuson és külön várakozó helyen** (nem a tányér „csak a legutolsó" során), így egy
   közben érkező tányér-kérés nem dobja el. Csak gondozott alapanyag lehet jelölt, saját nem.
+  Amíg a válasz nem jön meg (jellemzően a választó megnyitása előtt), az 1. lépés buboréka
+  rendesen látszik, és a `+ Alapanyag` koppintható; a választó „Bevezető" sora csak a válasz
+  után jelenik meg, addig a lap a szokásos választót mutatja halványan. Ha a worker hibát ad,
+  a túra csendben véget ér, mint a `Kihagyom` (a `tourDone` már `true`).
   - A rögzítendő gramm a legkisebb 10-zel osztható érték, amellyel a fehérjeforrás egyedül
     legalább 3 g-mal a fehérjesáv teteje fölé visz.
   - A jelölt akkor jó, ha (a) rögzítés nélkül ✓, és (b) a fehérjeforrás e grammal rögzítve

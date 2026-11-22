@@ -410,14 +410,18 @@ ritkább funkció először előjön.
 előjön; a túra alatt egyik sem, egyszerre legfeljebb egy. Nem sötétít, nem állít meg.
 1. Sor-műveletek: az első saját ✓ tányérnál — a névre koppintva csere vagy törlés.
 2. Tányér mentése: az első `Kész` előtt — ✓ új tányérnál, az 1. tipp után, amíg nincs
-   mentett tányér és a `Kész` még nem volt megnyomva — mentve legközelebb a mai célra
-   újraszámolva nyílik. Az első `Kész` vagy mentés után már nem jön.
+   mentett tányér és „legutóbb használt" mennyiség (ezek csak a `Kész`-től és a mentéstől
+   jönnek) — mentve legközelebb a mai célra újraszámolva nyílik. Az első `Kész` vagy mentés
+   után már nem jön.
 3. Mentett tányér: az első Tányérjaimból megnyitottnál — a mai célra újraszámolódik.
 4. Saját alapanyag: a választóban az első „nincs ilyen" keresésnél — a csomagolás 100 g-os
    adatai kellenek.
 5. ⚠ rögzítés nélkül: az első ilyennél — az elsődleges gomb segít a legtöbbet.
-6. Több rögzítés: az első ⚠-nál legalább két rögzítéssel — elég egyet feloldani; ha az sem
-   segít, mindet.
+6. Több rögzítés: az első ⚠-nál legalább két rögzítéssel, a feloldó gomb mellett — elég
+   egyet feloldani; ha az sem segít, mindet.
+
+Aki a bevezető megjelenése előtt már használta az appot (van mentett tányérja vagy „legutóbb
+használt" mennyisége), annál az 1–3. tipp látottnak számít; a 4–6. megmarad.
 
 A „Bevezető újra" csak a túrát indítja újra; a már látott tippeket nem hozza vissza.
 
@@ -698,7 +702,7 @@ tételhez, tartós tárolás kérése · a gondozott listát a projektgazda áll
 ## Javítások
 
 - **v1.5 (2026-11-21):** új 4/15 és 6.8 (interaktív bevezető); 6.6 és 7.: az első indítás
-  sorrendjében a túra; három új peremeset; 9.12 feltételezés; döntésnapló-sor.
+  sorrendjében a túra; hat új peremeset; 9.12 feltételezés; döntésnapló-sor.
 
 - **v1.4 (2026-11-15):** 6.6 és 7.: az iOS-tipp nem csak Safariban, hanem minden
   iOS-böngészőben megjelenik (az alkalmazásba építettek kivételével), és az első Kereten
